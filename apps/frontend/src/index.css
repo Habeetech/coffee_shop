@@ -1,68 +1,64 @@
+@import "tailwindcss";
+
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-size: 62.5%;
+    font-family: Arial, Helvetica, sans-serif;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+    --coffee-dark: #3d3100;
+    --coffee-darker: #1f1800;
+    --coffee-medium: #6a5520;
+    --coffee-light: #8f7328;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    --cream-100: #f7f2e7;
+    --cream-200: #e8dcc2;
+    --cream-300: #d1c3a3;
+
+    --gold-100: #c6a667;
+    --gold-200: #b08c3b;
+    --gold-300: #8f7328;
+
+    --earth-100: #b7a99a;
+    --earth-200: #8a7a67;
+    --earth-300: #5c4f3d;
+
+    --choco-100: #7a4f2a;
+    --choco-200: #5a3a1d;
+    --choco-300: #3b2712;
+
+    --white: #ffffff;
+    --black: #000000;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+    background-color: var(--cream-100);
+    width: 100vw;
+    font-size: 1.2rem;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+    background: var(--gold-200);
+    color: var(--white);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+button:hover {
+    background: var(--gold-300);
+}
+
+@media screen and (min-width: 768px) {
+  body {
+    font-size: 1.7rem;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+@media screen and (min-width: 1280px) {
+ body {
+    font-size: 2.2rem;
+ }
 }

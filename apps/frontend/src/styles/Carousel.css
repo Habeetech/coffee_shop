@@ -1,0 +1,52 @@
+.carousel-wrapper {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.track {
+    display: flex;
+    gap: 1rem;
+    margin: 1.2rem auto;
+    transition: transform 0.2s ease-in-out;
+}
+
+.slide {
+    min-width: calc(100% - 1rem);
+}
+
+.tracker {
+    width: 30%;
+    display: flex;
+    justify-content: space-evenly;
+    margin: 1.2rem auto;
+}
+
+.dot {
+    background-color: var(--coffee-light);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out; 
+}
+.dot.active {
+    background-color: var(--coffee-darker);
+    transform: scale(1.3);
+}
+
+.order-btn {
+    padding: 1.2rem 1rem;
+    font-size: 2rem;
+    border-radius: 15px;
+    margin: 1.2rem auto;
+}
+
+@media screen and (min-width: 1280px) {
+    .carousel-wrapper {
+        width: 50%;
+    }
+
+}
