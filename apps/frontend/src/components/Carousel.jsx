@@ -19,7 +19,7 @@ export function Carousel() {
         return () => clearInterval(delayId);
     }, [])
     return (
-        <div className="carousel-wrapper">
+        <section className="carousel-wrapper">
             <div className="track" style={{ transform: `translateX(-${currentindex * 100}%)` }}>
                 {
                     promotions.map((value, i) => <div key={value} className="slide">
@@ -37,6 +37,6 @@ export function Carousel() {
             <Link to="/menu">
                 <button className="order-btn">Order Now</button>
             </Link>
-        </div>
+        </section>
     )
 }

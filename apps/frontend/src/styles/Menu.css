@@ -1,0 +1,30 @@
+.menu-wrapper h2 {
+    font-size: 3rem;
+    background-color: var(--choco-300);
+    color: var(--earth-100);
+    padding: 0.3em 0.5em;
+    text-align: center;
+}
+.menu-wrapper h3 {
+    font-size: 2rem;
+    background-color: var(--earth-100);
+    color: var(--choco-300);
+    padding: 0.3em 0.5em;
+    text-align: center;
+}
+.menu-tab-warpper {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.menu-items {
+    padding: 0.3em 0.5em;
+}
+.menu-tabs {
+background: none;
+color: none;
+}
+
+.menu-tabs.active {
+    border-bottom: 5px solid var(--coffee-darker);
+}

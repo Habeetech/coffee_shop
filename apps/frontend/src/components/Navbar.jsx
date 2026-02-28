@@ -10,6 +10,11 @@ function Navbar() {
                 <img id="logo" src={logo} alt="coffee shop logo"/>
             </Link>
             </div>
+            <button className="hamburger">
+                <span className="bar"></span>
+                <span className="bar"></span>
+                <span className="bar"></span>
+            </button>
             <nav className="nav-link">
                 <Link to="/" className="hover:opacity-80 transition">Home</Link>
                 <Link to="/menu" className="hover:opacity-80 transition">Menu</Link>

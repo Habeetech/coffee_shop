@@ -2,6 +2,7 @@
     width: 100%;
     aspect-ratio: 4/4;
     overflow: hidden;
+    border-radius: 20px;
 }
 .promotion-img {
     width: 100%;
@@ -9,4 +10,5 @@
     object-fit: cover;
     object-position: top;
     border-radius: 20px;
+    border: 5px solid var(--coffee-darker);
 }

@@ -5,7 +5,7 @@
   align-items: center;
   background-color: var(--white);
   color: var(--coffee-dark);
-  padding: 0 2rem;
+  padding: 1rem 2rem;
   margin-bottom: 2rem;
   position: sticky;
   top: 0;
@@ -15,16 +15,43 @@
 .logo-container {
   display: flex;
   align-items: center;
-  width: 15%;
+  width: 25%;
+  aspect-ratio: 4/2;
+  overflow: hidden;
 }
 
 .logo-container img {
   width: 100%;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
 }
-
-.nav-link {
+.hamburger {
+  background: none;
+  color: none;
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 3rem;
+  height: 6rem;
+  padding: 1rem 0;
+  transition: transform 0.2s ease-in-out;
+}
+.hamburger:hover {
+  background: none;
+}
+.bar {
+  border-radius: 15px;
+  width: 100%;
+  height: 0.5rem;
+  background-color: var(--coffee-dark);
+}
+.hamburger:hover {
+  transform: scale(1.05);
+}
+.nav-link {
+  display: none;
   justify-content: flex-end;
   align-items: center;
   gap: 2rem;
@@ -50,6 +77,13 @@
     }
     .nav-link {
       gap: 4rem;
+      display: flex;
+    }
+    .logo-container {
+      width: 20%;
+    }
+     .hamburger {
+      display: none;
     }
 }
 
@@ -59,5 +93,8 @@
     }
      .nav-link {
       gap: 6rem;
+    }
+     .logo-container {
+      width: 15%;
     }
 }
