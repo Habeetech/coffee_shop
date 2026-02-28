@@ -1,0 +1,21 @@
+.address {
+    background-color: var(--cream-300);
+    width: 100%;
+    margin: 1rem auto;
+    padding: 1em 2em;
+}
+.address p {
+    color: var(--coffee-darker);
+    font-size: 1.2rem;
+    
+}
+@media screen and (min-width: 768px) {
+    .address p {
+        font-size: 1.5rem;
+    }
+}
+@media screen and (min-width: 1280px) {
+    .address p {
+        font-size: 1.8rem;
+    }
+}
