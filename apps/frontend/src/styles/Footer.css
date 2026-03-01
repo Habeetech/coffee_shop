@@ -10,7 +10,9 @@
   gap: 1rem;
   font-size: 1.5rem;
 }
-
+.address-wrapper {
+  width: 100%;
+}
 .socials {
     display: flex;
     justify-content: space-around;

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import "../styles/Home.css"
 import { Carousel } from "../components/Carousel.jsx";
 import { Menu } from "../components/Menu.jsx";
-import { Address } from "../components/Address.jsx";
+
 function Home() {
     return (
         <>
@@ -19,9 +19,6 @@ function Home() {
                 </div>
                 <div className="home-menu">
                     <Menu />
-                </div>
-                <div className="address-wrapper">
-                    <Address />
                 </div>
             </main>
         </>

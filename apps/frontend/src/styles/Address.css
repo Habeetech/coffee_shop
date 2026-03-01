@@ -4,16 +4,41 @@
     margin: 1rem auto;
     padding: 1em 2em;
 }
+
 .address p {
     color: var(--coffee-darker);
     font-size: 1.2rem;
-    
+
 }
+
+.location+.location,
+.location+.phone {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--coffee-dark);
+}
+
 @media screen and (min-width: 768px) {
     .address p {
         font-size: 1.5rem;
     }
+
+    .address {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .location+.location,
+    .location+.phone {
+        border-top: none;
+        padding: 0;
+        margin: 0;
+        border-left: 1px solid var(--coffee-dark);
+        margin-left: 1.5rem;
+        padding-left: 1.5rem;
+    }
 }
+
 @media screen and (min-width: 1280px) {
     .address p {
         font-size: 1.8rem;
