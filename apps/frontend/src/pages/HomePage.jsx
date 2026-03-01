@@ -3,7 +3,7 @@ import "../styles/Home.css"
 import { Carousel } from "../components/Carousel.jsx";
 import { Menu } from "../components/Menu.jsx";
 
-function Home() {
+function HomePage() {
     return (
         <>
             <main className="container">
@@ -25,4 +25,4 @@ function Home() {
     )
 }
 
-export default Home;
+export default HomePage;
