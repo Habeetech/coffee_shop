@@ -5,6 +5,7 @@
     padding: 0.3em 0.5em;
     text-align: center;
 }
+
 .menu-wrapper h3 {
     font-size: 2rem;
     background-color: var(--earth-100);
@@ -12,11 +13,27 @@
     padding: 0.3em 0.5em;
     text-align: center;
 }
+
 .menu-tab-warpper {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
 }
+
+.filter-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1rem 0;
+}
+
+.filter-wrapper input[type="search"], .filter-wrapper select {
+    border: 2px solid var(--coffee-darker);
+    width: 30%;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
 .menu-items {
     padding: 0.3em 0.5em;
     display: flex;
@@ -24,14 +41,13 @@
     gap: 2rem;
     justify-content: center;
 }
+
 .menu-tabs {
-background: none;
+    background: none;
 }
 
 .menu-tabs.active {
     border-bottom: 5px solid var(--coffee-darker);
 }
 
-@media screen {
-    
-}
+@media screen {}
