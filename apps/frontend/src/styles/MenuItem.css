@@ -1,5 +1,5 @@
 .menuitem-wrapper {
-    min-width: 100%;
+    width: 100%;
     padding: 1rem;
     border: 5px solid var(--coffee-darker);
     border-radius: 15px;
