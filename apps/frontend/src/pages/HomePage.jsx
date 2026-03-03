@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import "../styles/Home.css"
+import "../styles/HomePage.css"
 import { Carousel } from "../components/Carousel.jsx";
-import { Menu } from "../components/Menu.jsx";
+import  MenuPage  from "./MenuPage.jsx";
 
 function HomePage() {
     return (
@@ -18,7 +18,7 @@ function HomePage() {
                     <Carousel />
                 </div>
                 <div className="home-menu">
-                    <Menu />
+                    <MenuPage />
                 </div>
             </main>
         </>
