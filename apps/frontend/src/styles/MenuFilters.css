@@ -1,0 +1,15 @@
+.filter-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1rem 0;
+    width: 100%;
+}
+
+.filter-wrapper input[type="search"], .filter-wrapper select {
+    border: 2px solid var(--coffee-darker);
+    width: 20rem;
+    border-radius: 5px;
+    padding: 0.5rem;
+
+}
