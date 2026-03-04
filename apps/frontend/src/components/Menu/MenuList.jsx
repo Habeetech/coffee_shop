@@ -1,5 +1,5 @@
 import { MenuItem } from "./MenuItem.jsx";
-import "../styles/MenuList.css"
+import "./MenuList.css"
 export function MenuList ({noResults, filtered, searchTerm, items}) {
     return (
         <div className="menu-items">

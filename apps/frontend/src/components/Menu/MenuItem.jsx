@@ -1,5 +1,5 @@
-import { getDescription } from "../helpers/getDescription.js"
-import "../styles/MenuItem.css"
+import { getDescription } from "../../helpers/getDescription.js"
+import "./MenuItem.css"
 
 export function MenuItem ({imageUrl, itemName, price}) {
     return (

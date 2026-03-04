@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MenuList} from "./MenuList.jsx"
 import { MenuFilters } from "./MenuFilters.jsx";
+import "./MenuSection.css"
 
 export function MenuSection({ itemtype, items, categories = [] }) {
     const [filtered, setFiltered] = useState(categories[0] ?? "all");
