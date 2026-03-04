@@ -1,0 +1,25 @@
+import express from "express";
+//import router from "./router.js";
+//import errorHandler from "./middleware/errorHandler.js"
+import cors from "cors"
+import morgan from "morgan"
+
+
+const app = express();
+
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+if (process.env.FRONTEND_URL)
+{
+    app.use(cors({origin: process.env.FRONTEND_URL}))
+}
+else {
+    app.use(cors())
+}
+app.use(morgan('dev'))
+//app.use("/api", router);
+//app.use(errorHandler);
+
+export default app;
