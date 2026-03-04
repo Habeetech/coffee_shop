@@ -1,4 +1,5 @@
 import { MenuItem } from "./MenuItem.jsx";
+import placholder from "../../assets/placeholders/no-photo.png"
 import "./MenuList.css"
 export function MenuList ({noResults, filtered, searchTerm, items}) {
     return (
@@ -16,7 +17,7 @@ export function MenuList ({noResults, filtered, searchTerm, items}) {
           items.map((item) => (
             <MenuItem
               key={item.id}
-              imageUrl={item.url}
+              imageUrl={!item.url ? placholder : item.url}
               itemName={item.name}
               price={item.price}
             />
