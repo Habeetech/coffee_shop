@@ -1,6 +1,6 @@
 import express from "express";
-//import router from "./router.js";
-//import errorHandler from "./middleware/errorHandler.js"
+import router from "./router.js";
+import errorHandler from "./middleware/errorHandler.js"
 import cors from "cors"
 import morgan from "morgan"
 
@@ -19,7 +19,8 @@ else {
     app.use(cors())
 }
 app.use(morgan('dev'))
-//app.use("/api", router);
-//app.use(errorHandler);
+app.use("/api", router);
+app.get("/", (req, res) => res.send("Hello, you've hit the server root"));
+app.use(errorHandler);
 
 export default app;
