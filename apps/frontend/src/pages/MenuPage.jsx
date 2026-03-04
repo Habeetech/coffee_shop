@@ -1,6 +1,6 @@
 import { useState } from "react"
 import "../styles/MenuPage.css"
-import { MenuSection } from "../components/MenuSection";
+import { MenuSection } from "../components/Menu/MenuSection";
 
 const drinks = [
     {
@@ -189,37 +189,49 @@ function MenuPage() {
                 <button className={`menu-tabs ${activeTab === "crisps" ? "active" : ""}`} onClick={() => setActiveTab("crisps")}><h3>Crisps</h3></button>
             </div>
             <div className="menu-section">
-                {activeTab === "drinks" ? <MenuSection
-                    itemtype="drinks"
-                    items={drinks}
-                    categories={["all", "hot-coffee", "iced-coffee", "tea", "iced-tea", "milkshake", "smoothies"]}
-                /> :
-                    activeTab === "sandwiches" ? <MenuSection
+                {activeTab === "drinks" && (
+                    <MenuSection
+                        key="drinks"
+                        itemtype="drinks"
+                        items={drinks}
+                        categories={["all", "hot-coffee", "iced-coffee", "tea", "iced-tea", "milkshake", "smoothies"]}
+                    />
+                )}
+
+                {activeTab === "sandwiches" && (
+                    <MenuSection
+                        key="sandwiches"
                         itemtype="sandwiches"
                         items={foods}
                         categories={["all", "vegan", "vegetarian", "non-vegetarian"]}
                     />
-                        :
-                        activeTab === "cakes" ? <div className="menu-items">
-                            <MenuSection
-                                itemtype="cakes"
-                                items={cakes}
-                                categories={["all", "whole-cake", "loaf-cake", "pastries", "shortbreads"]}
-                            />
-                        </div> :
-                            activeTab === "buscuits" ? <div className="menu-items">
-                                <MenuSection
-                                    itemtype="buscuits"
-                                    items={buscuits}
-                                />
-                            </div> :
-                                activeTab === "crisps" ? <div className="menu-items">
-                                    <MenuSection
-                                        itemtype="crisps"
-                                        items={crisps}
-                                    />
-                                </div> : ""
-                }
+                )}
+
+                {activeTab === "cakes" && (
+                    <MenuSection
+                        key="cakes"
+                        itemtype="cakes"
+                        items={cakes}
+                        categories={["all", "whole-cake", "loaf-cake", "pastries", "shortbreads"]}
+                    />
+                )}
+
+                {activeTab === "buscuits" && (
+                    <MenuSection
+                        key="buscuits"
+                        itemtype="buscuits"
+                        items={buscuits}
+                    />
+                )}
+
+                {activeTab === "crisps" && (
+                    <MenuSection
+                        key="crisps"
+                        itemtype="crisps"
+                        items={crisps}
+                    />
+                )}
+
             </div>
         </section>
     )

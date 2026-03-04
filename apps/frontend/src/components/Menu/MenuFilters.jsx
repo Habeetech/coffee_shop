@@ -1,4 +1,4 @@
-import "../styles/MenuFilters.css"
+import "./MenuFilters.css"
 export function MenuFilters({
   itemtype,
   categories = [],

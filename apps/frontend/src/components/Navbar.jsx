@@ -8,7 +8,7 @@ import menuIcon from "../assets/icons/menu.png"
 import profileIcon from "../assets/icons/profile.png"
 import contactIcon from "../assets/icons/contact.png"
 import { getDescription } from "../helpers/getDescription.js"
-import "../styles/Navbar.css"
+import "./Navbar.css"
 import { useState } from "react";
 
 function Navbar() {

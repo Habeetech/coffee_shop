@@ -1,4 +1,4 @@
-import "../styles/Address.css"
+import "./Address.css"
 export function Address() {
     return (
         <address className="address" id="contact">

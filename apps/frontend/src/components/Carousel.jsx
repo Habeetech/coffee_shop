@@ -1,5 +1,5 @@
 import { Promotion } from "./Promotion.jsx"
-import "../styles/Carousel.css"
+import "./Carousel.css"
 import buyOneGetOne from "../assets/promotions/buy-one-get-one.webp"
 import sfColdCoffee from "../assets/promotions/sf-cold-coffe.jpeg"
 import startYourDay from "../assets/promotions/start-your-day.jpg"
