@@ -14,7 +14,7 @@ export const createDrinkSchema = z.object({
     name: z.string({ required_error: "Name is required" })
       .trim()
       .min(1, "Name cannot be empty")
-      .max(20, "Name is too long"),
+      .max(50, "Name is too long"),
 
     price: z.number({ required_error: "Price is required" })
       .gt(0, "Price must be greater than zero"),
@@ -36,7 +36,7 @@ export const updateDrinkSchema = z.object({
     name: z.string({ required_error: "Name is required" })
       .trim()
       .min(1, "Name cannot be empty")
-      .max(20, "Name is too long"),
+      .max(50, "Name is too long"),
 
     price: z.number({ required_error: "Price is required" })
       .gt(0, "Price must be greater than zero"),

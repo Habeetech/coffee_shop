@@ -11,12 +11,20 @@ POST http://localhost:3000/api/drinks
 Content-Type: application/json
 
 {
-  "name": "Breakfast Tea",
-  "price": 2.25,
-  "category": "tea",
+  "name": "Mango Bubble Berry Tea",
+  "price": 3.25,
+  "category": "iced-tea",
   "url": ""
 }
+###
+POST http://localhost:3000/api/drinks
+Content-Type: application/json
 
+{
+  "name": "Caramel Latte",
+  "price": 4.95,
+  "category": "hot-coffee"
+}
 ### Update a drink
 PUT http://localhost:3000/api/drinks/69a9b70bd577d50595a5ffc0
 Content-Type: application/json
