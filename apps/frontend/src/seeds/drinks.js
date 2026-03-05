@@ -1,23 +1,15 @@
-import flatwhite from "../assets/products/flatwhite.webp"
-import cappucino from "../assets/products/cappucino.webp"
-import cortado from "../assets/products/cortado.webp"
-import icedCappucino from "../assets/products/iced-cappucino.webp"
-import icedLatte from "../assets/products/iced-latte.webp"
-import icedMocha from "../assets/products/iced-mocha.webp"
-import latte from "../assets/products/latte.webp"
-
 export const drinks = [
     {
         id: 1,
         name: "Flatwhite",
-        url: flatwhite,
+        url: "",
         price: 3.45,
         category: "hot-coffee"
     },
     {
         id: 2,
         name: "Latte",
-        url: latte,
+        url: "",
         price: 3.99,
         category: "hot-coffee"
     },
@@ -45,7 +37,7 @@ export const drinks = [
     {
         id: 6,
         name: "Iced Latte",
-        url: icedLatte,
+        url: "",
         price: 3.99,
         category: "iced-coffee"
     },
@@ -73,28 +65,28 @@ export const drinks = [
     {
         id: 10,
         name: "Cappucino",
-        url: cappucino,
+        url: "",
         price: 3.99,
         category: "hot-coffee"
     },
     {
         id: 11,
         name: "Cortado",
-        url: cortado,
+        url: "",
         price: 2.95,
         category: "hot-coffee"
     },
     {
         id: 12,
         name: "Iced Cappucino",
-        url: icedCappucino,
+        url: "",
         price: 3.99,
         category: "iced-coffee"
     },
     {
         id: 13,
         name: "Iced Mocha",
-        url: icedMocha,
+        url: "",
         price: 4.65,
         category: "iced-coffee"
     }

@@ -1,28 +1,22 @@
-import carrotCake from "../assets/products/carrot-cake.webp"
-import lemonDrizzle from "../assets/products/lemon-drizzle.webp"
-import millionaireSlice from "../assets/products/millioniare-slice.webp"
-import raspberryAlmond from "../assets/products/raspberry-almond.webp"
-import tiffin from "../assets/products/tiffin.webp"
-
 export const cakes = [
     {
         id: 1,
         name: "Carrot Cake",
-        url: carrotCake,
+        url: "",
         price: 3.99,
         category: "whole-cake"
     },
     {
         id: 2,
         name: "Lemon Drizzle Loaf",
-        url: lemonDrizzle,
+        url: "",
         price: 3.45,
         category: "loaf-cake"
     },
     {
         id: 3,
         name: "Millionaire Slice",
-        url: millionaireSlice,
+        url: "",
         price: 2.65,
         category: "shortbreads"
     },
@@ -36,14 +30,14 @@ export const cakes = [
      {
         id: 5,
         name: "Chocolate tiffin",
-        url: tiffin,
+        url: "",
         price: 2.65,
         category: "shortbreads"
     },
      {
         id: 6,
         name: "Raspberry and Almond Slice",
-        url: raspberryAlmond,
+        url: "",
         price: 2.65,
         category: "shortbreads"
     },
