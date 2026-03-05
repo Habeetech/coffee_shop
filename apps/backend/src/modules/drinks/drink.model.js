@@ -4,14 +4,16 @@ const drinkSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "A drink must have a name"], 
-        trim: true
+        trim: true,
+        unique: true
     },
     price: {
         type: Number,
-        required: true
+        required: true,
     },
     category: {
         type: String,
+        enum: ["hot-coffee", "iced-coffee", "tea", "iced-tea", "milkshake", "smoothies"],
         required: true,
         trim: true
     },

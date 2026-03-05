@@ -4,7 +4,7 @@ GET  http://localhost:3000
 GET http://localhost:3000/api/drinks
 
 ### Get one drink
-GET http://localhost:3000/api/drinks/69a881b8b5fc11f3d5c71acd
+GET http://localhost:3000/api/drinks/1
 
 ### Add a drink
 POST http://localhost:3000/api/drinks
@@ -18,13 +18,13 @@ Content-Type: application/json
 }
 
 ### Update a drink
-PUT http://localhost:3000/api/drinks/69a881b8b5fc11f3d5c71acf
+PUT http://localhost:3000/api/drinks/69a9b70bd577d50595a5ffc0
 Content-Type: application/json
 
 {
-  "name": "Mocha Deluxe",
+  "name": "Caramel Latte",
   "price": 4.95
 }
 
 ### Delete a drink
-DELETE http://localhost:3000/api/drinks/69a881b8b5fc11f3d5c71acf
+DELETE http://localhost:3000/api/drinks/69a9b70bd577d50595a5ffc0

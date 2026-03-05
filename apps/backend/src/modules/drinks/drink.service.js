@@ -14,9 +14,19 @@ export const getADrink = async (id) => {
     return requestedDrink;
 }
 export const addDrink = async (data) => {
-    const drinkToAdd = await Drink.create(data)
-    return drinkToAdd;
-}
+    const { name, price, size } = data;
+
+    if (!name) {
+        throw new AppError("Drink name is required", 400);
+    }
+
+    const existing = await Drink.findOne({ name });
+    if (existing) {
+        throw new AppError("Drink name already exists", 409);
+    }
+
+    return await Drink.create(data);
+};
 export const updateDrink = async (id, data) => {
     const updatedDrink = await Drink.findByIdAndUpdate(id, data, { new: true })
     if (!updatedDrink) {
