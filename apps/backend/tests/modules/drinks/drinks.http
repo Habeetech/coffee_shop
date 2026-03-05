@@ -26,12 +26,11 @@ Content-Type: application/json
   "category": "hot-coffee"
 }
 ### Update a drink
-PUT http://localhost:3000/api/drinks/69a9b70bd577d50595a5ffc0
+PUT http://localhost:3000/api/drinks/69a9b70bd577d50595a5ffcb
 Content-Type: application/json
 
 {
-  "name": "Caramel Latte",
-  "price": 4.95
+  "url": "/iced-mocha.webp"
 }
 
 ### Delete a drink

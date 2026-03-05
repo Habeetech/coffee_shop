@@ -22,6 +22,7 @@ function MenuPage() {
     return (
         <section className="menu-wrapper">
             <h2>Menu</h2>
+            {console.log(drinks)}
             <div className="menu-tab-warpper">
                 <button className={`menu-tabs ${activeTab === "drinks" ? "active" : ""}`}
                     onClick={() => {

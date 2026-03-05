@@ -108,7 +108,7 @@ describe("Drinks Api Validation", () => {
 
   test("POST /api/drinks violates character constraints", async () => {
     const newDrink = {
-      name: "This name is way too long to be valid",
+      name: "This name is way too long to be valid because i purposely want to make it more than fifty chaaracters",
       price: 4.55,
       category: "tea",
       url: ""

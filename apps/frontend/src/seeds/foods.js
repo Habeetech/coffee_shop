@@ -1,7 +1,3 @@
-import tunamelt from "../assets/products/tunamelt.webp"
-import cheeseTomato from "../assets/products/cheese-tomato.webp"
-import hamCheese from "../assets/products/ham-cheese.webp"
-
 export const foods = [
     {
         id: 1,
@@ -27,21 +23,21 @@ export const foods = [
     {
         id: 4,
         name: "Cheese and Tomato",
-        url: cheeseTomato,
+        url: "",
         price: 5.25,
         category: "vegetarian"
     },
     {
         id: 5,
         name: "Tunamelt Panini",
-        url: tunamelt,
+        url: "",
         price: 5.65,
         category: "non-vegetarian"
     },
     {
         id: 6,
         name: "Ham and Cheese",
-        url: hamCheese,
+        url: "",
         price: 4.65,
         category: "non-vegetarian"
     }

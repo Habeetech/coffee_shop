@@ -28,7 +28,10 @@ export const addDrink = async (data) => {
     return await Drink.create(data);
 };
 export const updateDrink = async (id, data) => {
-    const updatedDrink = await Drink.findByIdAndUpdate(id, data, { new: true })
+    const updatedDrink = await Drink.findByIdAndUpdate(id, data, { 
+        returnDocument: "after",
+        runValidators: true
+     })
     if (!updatedDrink) {
         throw new AppError(`The drink with id: ${id} cannot be found`, 404)
     }

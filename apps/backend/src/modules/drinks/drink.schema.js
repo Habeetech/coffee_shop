@@ -36,20 +36,29 @@ export const updateDrinkSchema = z.object({
     name: z.string({ required_error: "Name is required" })
       .trim()
       .min(1, "Name cannot be empty")
-      .max(50, "Name is too long"),
+      .max(50, "Name is too long")
+      .optional(),
 
     price: z.number({ required_error: "Price is required" })
-      .gt(0, "Price must be greater than zero"),
+      .gt(0, "Price must be greater than zero")
+      .optional(),
 
     category: z.enum(categoryValues, {
       required_error: "Category is required",
       errorMap: () => ({ message: "Please select a valid category" })
-    }),
+    })
+      .optional(),
 
-    url: z.union([
-      z.string().trim().url("Invalid URL format"),
-      z.literal("")
-    ]).optional()
+    url: z.string()
+      .trim()
+      .refine(
+        val =>
+          val === "" ||
+          val.startsWith("/") ||
+          /^https?:\/\/.+/.test(val),
+        { message: "Invalid URL format" }
+      )
+      .optional()
   }).strict(),
 
   params: z.object({
