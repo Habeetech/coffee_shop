@@ -1,8 +1,10 @@
 import request from "supertest";
 import mongoose from "mongoose";
 import app from "../../../src/app.js";
-import resetDrinks from "../../../src/utils/resetDrinks.js";
+import resetData from "../../../src/utils/resetData.js";
 import dotenv from "dotenv";
+import Drink from "../../../src/modules/drinks/drink.model.js";
+import drinks from "../../../src/seeders/drinkSeed.js"
 dotenv.config();
 
 describe("Drinks API", () => {
@@ -15,7 +17,7 @@ describe("Drinks API", () => {
   });
 
   beforeEach(async () => {
-    await resetDrinks();
+    await resetData(drinks, Drink);
   });
 
   test("GET /api/drinks returns an array", async () => {
@@ -94,7 +96,7 @@ describe("Drinks Api Validation", () => {
   });
 
   beforeEach(async () => {
-    await resetDrinks();
+    await resetData(drinks, Drink);
   });
 
   test("POST /api/drinks with an empty object", async () => {

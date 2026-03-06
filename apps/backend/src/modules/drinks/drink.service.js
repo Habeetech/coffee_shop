@@ -1,7 +1,6 @@
 import AppError from "../../utils/AppError.js"
 import Drink from "./drink.model.js"
-//import resetDrinks from "../../utils/resetDrinks.js"
-//resetDrinks();
+
 export const getDrinks = async () => {
     return await Drink.find();
 }
@@ -14,7 +13,7 @@ export const getADrink = async (id) => {
     return requestedDrink;
 }
 export const addDrink = async (data) => {
-    const { name, price, size } = data;
+    const { name } = data;
 
     if (!name) {
         throw new AppError("Drink name is required", 400);

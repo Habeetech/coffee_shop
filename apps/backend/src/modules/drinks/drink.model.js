@@ -9,7 +9,7 @@ const drinkSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        required: true,
+        required: [true, "You must set a price for the drink"]
     },
     category: {
         type: String,
