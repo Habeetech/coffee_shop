@@ -1,0 +1,29 @@
+### Root
+GET  http://localhost:3000
+### Get all foods
+GET http://localhost:3000/api/foods
+
+### Get one food
+GET http://localhost:3000/api/foods/69aaa4895796fca64ff63aa5
+
+### Add a food
+POST http://localhost:3000/api/foods
+Content-Type: application/json
+
+{
+  "name": "Wilthere Ham and Cheese",
+  "price": 5.25,
+  "category": "non-vegetarian",
+  "url": ""
+}
+
+### Update a food
+PUT http://localhost:3000/api/foods/69aaa4895796fca64ff63aa5
+Content-Type: application/json
+
+{
+  "price": 5.50
+}
+
+### Delete a food
+DELETE http://localhost:3000/api/foods/69aaa4895796fca64ff63aa5
