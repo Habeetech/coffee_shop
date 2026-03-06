@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import "../styles/MenuPage.css"
-import { foods } from "../seeds/foods.js"
-import { cakes } from "../seeds/cakes.js"
-import { buscuits } from "../seeds/buscuitsAndCrisps.js"
-import { crisps } from "../seeds/buscuitsAndCrisps.js"
 import { MenuSection } from "../components/Menu/MenuSection";
 
 
 function MenuPage() {
-    const [activeTab, setActiveTab] = useState("drinks");
-    const [drinks, setDrinks] = useState([])
-
-    useEffect( () => {
-
-        fetch("http://localhost:3000/api/drinks")
-        .then(res => res.json())
-        .then(data => setDrinks(data))
-        .catch(err => console.error(err));
-        return;
-    },[])
+    
     return (
         <section className="menu-wrapper">
             <h2>Menu</h2>
