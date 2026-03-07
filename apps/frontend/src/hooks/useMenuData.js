@@ -8,6 +8,7 @@ export default function useMenuData(endpoint) {
     useEffect(() => {
         const controller = new AbortController();
         setIsLoading(true);
+        
         const fetchData = async () => {
             try {
                 const response = await fetch(endpoint, { signal: controller.signal });
@@ -34,7 +35,9 @@ export default function useMenuData(endpoint) {
                 setIsLoading(false);
             }
         }
-        fetchData();
+            fetchData();
+    
+        
 
         return () => controller.abort();
     }, [endpoint])

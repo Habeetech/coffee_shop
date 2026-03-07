@@ -1,70 +1,87 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState, useRef } from "react"
 import "../styles/MenuPage.css"
 import { MenuSection } from "../components/Menu/MenuSection";
-
+import useMenuData from "../hooks/useMenuData";
+import { CATEGORY_MAP } from "../config/categorymap.js"
+import { TABS } from "../config/tabs.js"
 
 function MenuPage() {
-    
+    const tabRefs = useRef([]);
+    const [focusedIndex, setFocusedIndex] = useState(0)
+    const handleKeyDown = (e, index) => {
+        const total = tabRefs.current.length
+        const lastIndex = total - 1;
+        const next = index + 1;
+        const prev = index - 1;
+        if (e.key === "Home") {
+            setFocusedIndex(0)
+        }
+        else if (e.key === "End") {
+            setFocusedIndex(lastIndex)
+        }
+        else if (e.key === "ArrowRight") {
+            setFocusedIndex((next + total) % total)
+        }
+        else if (e.key === "ArrowLeft") {
+            setFocusedIndex((prev + total) % total)
+        }
+        else if (e.key === "Enter" || e.key === " ") {
+            setFocusedIndex(index);
+            setActiveTab(TABS[index].key)
+        }
+    }
+    useEffect(() => {
+        tabRefs.current[focusedIndex]?.focus();
+    }, [focusedIndex])
+    const [activeTab, setActiveTab] = useState("drinks")
+    const endpoint = `http://localhost:3000/api/${activeTab}`
+    const { result, isLoading, errors } = useMenuData(endpoint);
     return (
         <section className="menu-wrapper">
             <h2>Menu</h2>
-            {console.log(drinks)}
-            <div className="menu-tab-warpper">
-                <button className={`menu-tabs ${activeTab === "drinks" ? "active" : ""}`}
-                    onClick={() => {
-                        setActiveTab("drinks")
-                    }}
+            <div className="menu-tab-warpper" role="tablist">
+                {
 
-                ><h3>Drinks</h3></button>
-                <button className={`menu-tabs ${activeTab === "sandwiches" ? "active" : ""}`} onClick={() => setActiveTab("sandwiches")}><h3>Sandwiches</h3></button>
-                <button className={`menu-tabs ${activeTab === "cakes" ? "active" : ""}`} onClick={() => setActiveTab("cakes")}><h3>Cakes</h3></button>
-                <button className={`menu-tabs ${activeTab === "buscuits" ? "active" : ""}`} onClick={() => setActiveTab("buscuits")}><h3>Buscuits</h3></button>
-                <button className={`menu-tabs ${activeTab === "crisps" ? "active" : ""}`} onClick={() => setActiveTab("crisps")}><h3>Crisps</h3></button>
+                    TABS.map((tabItem, index) => (
+                        <button key={tabItem.key}
+                            id={`tab-${tabItem.key}`}
+                            role="tab"
+                            aria-selected={activeTab === tabItem.key}
+                            aria-controls={`panel-${tabItem.key}`}
+                            tabIndex={focusedIndex === index ? 0 : -1}
+                            className={`menu-tabs ${activeTab === tabItem.key ? "active" : ""}`}
+                            ref={(el) => (tabRefs.current[index] = el)}
+                            onClick={() => {
+                                setActiveTab(tabItem.key)
+                                setFocusedIndex(index)
+                            }
+                            }
+                            onKeyDown={(e) => handleKeyDown(e, index)}
+                        >
+                            {tabItem.label}
+                        </button>
+                    ))
+                }
             </div>
-            <div className="menu-section">
-                {activeTab === "drinks" && (
-                    <MenuSection
-                        key="drinks"
-                        itemtype="drinks"
-                        items={drinks}
-                        categories={["all", "hot-coffee", "iced-coffee", "tea", "iced-tea", "milkshake", "smoothies"]}
-                    />
-                )}
-
-                {activeTab === "sandwiches" && (
-                    <MenuSection
-                        key="sandwiches"
-                        itemtype="sandwiches"
-                        items={foods}
-                        categories={["all", "vegan", "vegetarian", "non-vegetarian"]}
-                    />
-                )}
-
-                {activeTab === "cakes" && (
-                    <MenuSection
-                        key="cakes"
-                        itemtype="cakes"
-                        items={cakes}
-                        categories={["all", "whole-cake", "loaf-cake", "pastries", "shortbreads"]}
-                    />
-                )}
-
-                {activeTab === "buscuits" && (
-                    <MenuSection
-                        key="buscuits"
-                        itemtype="buscuits"
-                        items={buscuits}
-                    />
-                )}
-
-                {activeTab === "crisps" && (
-                    <MenuSection
-                        key="crisps"
-                        itemtype="crisps"
-                        items={crisps}
-                    />
-                )}
-
+            <div
+                role="tabpanel"
+                id={`panel-${activeTab}`}
+                aria-labelledby={`tab-${activeTab}`}
+                className="menu-section"
+    
+            >
+                {
+                    isLoading ? <div className="spinner"></div>
+                        : errors ? <div className="error">
+                            <p>{`An error occured: Could not get ${activeTab} from the server`}</p>
+                            <button className="close" >X</button>
+                        </div> :
+                            <MenuSection
+                                key={activeTab}
+                                itemtype={activeTab}
+                                items={result}
+                                categories={CATEGORY_MAP[activeTab]}
+                            />}
             </div>
         </section>
     )
