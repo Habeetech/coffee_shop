@@ -4,6 +4,12 @@ import Food from "../modules/foods/food.model.js";
 import foods from "../seeders/foodSeed.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import Cake from "../modules/cakes/cake.model.js";
+import cakes from "../seeders/cakeSeed.js";
+import Buscuit from "../modules/buscuits/buscuit.model.js"
+import { buscuits } from "../seeders/buscuitsAndCrispsSeed.js"
+import { crisps } from "../seeders/buscuitsAndCrispsSeed.js";
+import Crisp from "../modules/crisps/crisp.model.js"
 
 dotenv.config();
 
@@ -32,4 +38,7 @@ const seed = async (items, model) => {
 };
 
 //seed(drinks, Drink);
-seed(foods, Food);
+//seed(foods, Food);
+//seed(cakes, Cake);
+//seed(buscuits, Buscuit);
+seed(crisps, Crisp);

@@ -1,0 +1,36 @@
+
+### Get all cakes
+GET http://localhost:3000/api/cakes
+
+### Get one cake
+GET http://localhost:3000/api/cakes/69ade26465ff5542c2c37876
+
+### Add a cake
+POST http://localhost:3000/api/cakes
+Content-Type: application/json
+
+{
+  "name": "Orange Raspberry Victoria Sponge",
+  "price": 3.99,
+  "category": "whole-cake",
+  "url": ""
+}
+###
+POST http://localhost:3000/api/cakes
+Content-Type: application/json
+
+{
+  "name": "Butter Crossiant",
+  "price": 2.95,
+  "category": "pastries"
+}
+### Update a cake
+PUT http://localhost:3000/api/cakes/69ade2f565ff5542c2c3787c
+Content-Type: application/json
+
+{
+  "price": 2.25
+}
+
+### Delete a cake
+DELETE http://localhost:3000/api/cakes/69ade26465ff5542c2c37876

@@ -8,6 +8,8 @@ export default function useMenuData(endpoint) {
     useEffect(() => {
         const controller = new AbortController();
         setIsLoading(true);
+        setErrors(null);
+        setResult([])
         
         const fetchData = async () => {
             try {

@@ -14,9 +14,11 @@ function MenuPage() {
         const next = index + 1;
         const prev = index - 1;
         if (e.key === "Home") {
+            e.preventDefault();
             setFocusedIndex(0)
         }
         else if (e.key === "End") {
+            e.preventDefault();
             setFocusedIndex(lastIndex)
         }
         else if (e.key === "ArrowRight") {
@@ -68,7 +70,7 @@ function MenuPage() {
                 id={`panel-${activeTab}`}
                 aria-labelledby={`tab-${activeTab}`}
                 className="menu-section"
-    
+                aria-hidden="false"
             >
                 {
                     isLoading ? <div className="spinner"></div>

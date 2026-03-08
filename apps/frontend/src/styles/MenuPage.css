@@ -22,9 +22,12 @@
 
 .menu-tabs {
     padding: 1rem 1.5rem;
-    background-color: var(--coffee-medium);
+    background-color: var(--coffee-light);
     color: var(--white);
     font-size: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 0 4px var(--coffee-darker);
+    border-radius: 8px;
 }
 
 .menu-tabs.active {
@@ -32,6 +35,18 @@
 }
 .menu-tabs:hover {
 background-color: var(--coffee-darker);
+}
+.menu-tabs:focus {
+    outline: none;
+}
+.menu-tabs:focus-visible {
+    outline: 2px solid var(--coffee-darker);
+    outline-offset: 4px;
+    border-radius: 6px;
+    transform: scale(1.02);
+    background-color: var(--coffee-medium);
+    transition: outline-color 150ms ease-in-out, box-shadow 150ms ease-in-out, transform 150ms ease-in-out;
+    box-shadow: 0 0 4px var(--coffee-darker);
 }
 .error {
     border: 2px solid var(--coffee-light);
