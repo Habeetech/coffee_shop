@@ -1,0 +1,36 @@
+
+### Create a User
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "CF_User",
+  "password": "customer",
+  "confirmPassword": "customer",
+  "email": "coffeeshop@example.com"
+}
+
+### Login in a User
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "Habeetech",
+  "password": "habeeb-long"
+}
+###
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "CF_Manger",
+  "password": "coffeeShop"
+}
+### 
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "CF_User",
+  "password": "customer"
+}

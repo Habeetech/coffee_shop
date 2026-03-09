@@ -1,0 +1,34 @@
+### Change User Role
+PUT http://localhost:3000/api/user/69af4af6d5939f6cc64642fe
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzczMDk1MDYzLCJleHAiOjE3NzMwOTg2NjN9.dD0aZjBaQXH87XMG_qPkhP5v8QQjaBCZPq21zOHiag4
+
+{
+  "role": "manager"
+}
+
+### Get my profile
+GET http://localhost:3000/api/user/mine
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzczMDk1MDYzLCJleHAiOjE3NzMwOTg2NjN9.dD0aZjBaQXH87XMG_qPkhP5v8QQjaBCZPq21zOHiag4
+
+### Get all users
+GET http://localhost:3000/api/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MzA5NTQ0NiwiZXhwIjoxNzczMDk5MDQ2fQ.-_105ykLlguZ7AxuWa-5SWeYqISX1_YK7dDaNB6tX30
+
+#### Update my profile (CF_Manager: 69af4af6d5939f6cc64642fe)
+PUT http://localhost:3000/api/user/mine
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFmNGFmNmQ1OTM5ZjZjYzY0NjQyZmUiLCJ1c2VybmFtZSI6IkNGX01hbmdlciIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzczMDk1Nzc2LCJleHAiOjE3NzMwOTkzNzZ9.quT1E4GHKWbr4IxIUhFmgkfbR44CVw0OzprXWuS0RMM
+Content-Type: application/json
+
+{
+    "username": "CF_Manager"
+}
+### (CF_User: 69af4d27d5939f6cc6464306)
+PUT http://localhost:3000/api/user/mine
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFmNGQyN2Q1OTM5ZjZjYzY0NjQzMDYiLCJ1c2VybmFtZSI6IkNGX1VzZXIiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MzA5NjMwMCwiZXhwIjoxNzczMDk5OTAwfQ.EKijsodqWyuNdhOCrMKIwGinMdi0l3F3hoGzbg3nbwc
+Content-Type: application/json
+
+{
+    "firstName": "User",
+    "lastName": "Customer"
+}
