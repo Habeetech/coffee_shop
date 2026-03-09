@@ -1,7 +1,7 @@
 export const TABS = [
   { key: "drinks", label: "Drinks" },
-  { key: "foods", label: "Sandwiches" },
+  { key: "sandwiches", label: "Sandwiches" },
   { key: "cakes", label: "Cakes" },
-  { key: "buscuits", label: "Buscuits" },
+  { key: "biscuits", label: "Biscuits" },
   { key: "crisps", label: "Crisps" }
 ]

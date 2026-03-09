@@ -36,7 +36,7 @@ function MenuPage() {
         tabRefs.current[focusedIndex]?.focus();
     }, [focusedIndex])
     const [activeTab, setActiveTab] = useState("drinks")
-    const endpoint = `http://localhost:3000/api/${activeTab}`
+    const endpoint = `http://localhost:3000/api/products/?type=${activeTab}`
     const { result, isLoading, errors } = useMenuData(endpoint);
     return (
         <section className="menu-wrapper">

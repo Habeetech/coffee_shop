@@ -1,15 +1,7 @@
-import Drink from "../modules/drinks/drink.model.js";
-import drinks from "../seeders/drinkSeed.js";
-import Food from "../modules/foods/food.model.js";
-import foods from "../seeders/foodSeed.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Cake from "../modules/cakes/cake.model.js";
-import cakes from "../seeders/cakeSeed.js";
-import Buscuit from "../modules/buscuits/buscuit.model.js"
-import { buscuits } from "../seeders/buscuitsAndCrispsSeed.js"
-import { crisps } from "../seeders/buscuitsAndCrispsSeed.js";
-import Crisp from "../modules/crisps/crisp.model.js"
+import Product from "../modules/products/product.model.js";
+import products from "../seeders/productSeed.js"
 
 dotenv.config();
 
@@ -20,7 +12,9 @@ const seed = async (items, model) => {
         await mongoose.connect(process.env.MONGODB_URI);
         console.log("Connected!");
 
-        console.log("Clearing existing items...");
+       // await mongoose.connection.dropDatabase();
+    //console.log("Droped Database")
+       console.log("Clearing existing items...");
         await model.deleteMany({});
         
         console.log("Inserting seed data...");
@@ -37,8 +31,4 @@ const seed = async (items, model) => {
     }
 };
 
-//seed(drinks, Drink);
-//seed(foods, Food);
-//seed(cakes, Cake);
-//seed(buscuits, Buscuit);
-seed(crisps, Crisp);
+seed(products, Product);

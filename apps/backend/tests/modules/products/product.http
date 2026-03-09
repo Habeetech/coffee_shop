@@ -1,0 +1,42 @@
+### Root
+GET  http://localhost:3000
+### Get all products
+GET http://localhost:3000/api/products
+
+### Get Products by type
+GET http://localhost:3000/api/products/?type=cakes
+
+### Get one product
+GET http://localhost:3000/api/products/69aec52dc964f514c51ebd99
+
+### Add a product
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+  "name": "Mango Bubble Berry Tea",
+  "price": 3.25,
+  "type": "drinks",
+  "category": "iced-tea",
+  "url": ""
+}
+###
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+  "name": "Caramel Latte",
+  "price": 4.95,
+  "type": "drinks",
+  "category": "hot-coffee"
+}
+### Update a product
+PUT http://localhost:3000/api/products/69aec52dc964f514c51ebd99
+Content-Type: application/json
+
+{
+  "price": 4.99
+}
+
+### Delete a product
+DELETE http://localhost:3000/api/products/69aec52dc964f514c51ebd99
