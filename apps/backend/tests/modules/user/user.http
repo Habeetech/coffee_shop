@@ -13,7 +13,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZ
 
 ### Get all users
 GET http://localhost:3000/api/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MzA5NTQ0NiwiZXhwIjoxNzczMDk5MDQ2fQ.-_105ykLlguZ7AxuWa-5SWeYqISX1_YK7dDaNB6tX30
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MzEzMTA1MSwiZXhwIjoxNzczMTM0NjUxfQ.ogzCe5sUU14s3DCLP7RSORI_QqepopEMw4ZzeJrj95s
+
+#### Get By Id
+GET http://localhost:3000/api/user/69af4d27d5939f6cc6464306
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MzEzMTA1MSwiZXhwIjoxNzczMTM0NjUxfQ.ogzCe5sUU14s3DCLP7RSORI_QqepopEMw4ZzeJrj95s
 
 #### Update my profile (CF_Manager: 69af4af6d5939f6cc64642fe)
 PUT http://localhost:3000/api/user/mine
@@ -25,10 +29,29 @@ Content-Type: application/json
 }
 ### (CF_User: 69af4d27d5939f6cc6464306)
 PUT http://localhost:3000/api/user/mine
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFmNGQyN2Q1OTM5ZjZjYzY0NjQzMDYiLCJ1c2VybmFtZSI6IkNGX1VzZXIiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MzA5NjMwMCwiZXhwIjoxNzczMDk5OTAwfQ.EKijsodqWyuNdhOCrMKIwGinMdi0l3F3hoGzbg3nbwc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFmNGQyN2Q1OTM5ZjZjYzY0NjQzMDYiLCJ1c2VybmFtZSI6IkNGX1VzZXIiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MzEzMTExMCwiZXhwIjoxNzczMTM0NzEwfQ.qrWaLRMP6AhKpBE0bPdqWdehaV9feeZa8P29FyXlvZ0
 Content-Type: application/json
 
 {
-    "firstName": "User",
     "lastName": "Customer"
+}
+
+### Delete a User 
+DELETE  http://localhost:3000/api/user/69af4d27d5939f6cc6464306
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MzEzMTA1MSwiZXhwIjoxNzczMTM0NjUxfQ.ogzCe5sUU14s3DCLP7RSORI_QqepopEMw4ZzeJrj95s
+
+### Delete my Profile
+DELETE  http://localhost:3000/api/user/mine
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFmNGQyN2Q1OTM5ZjZjYzY0NjQzMDYiLCJ1c2VybmFtZSI6IkNGX1VzZXIiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MzEzMjg2MSwiZXhwIjoxNzczMTM2NDYxfQ.WHm-h_6_CPBVz0MhkW4DQoOh0uRuCC8vNPEwZvCbMdo
+Content-Type: application/json
+
+
+### Change my Password
+PUT  http://localhost:3000/api/user/mine/changepassword
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFmNGQyN2Q1OTM5ZjZjYzY0NjQzMDYiLCJ1c2VybmFtZSI6IkNGX1VzZXIiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MzEzMjg2MSwiZXhwIjoxNzczMTM2NDYxfQ.WHm-h_6_CPBVz0MhkW4DQoOh0uRuCC8vNPEwZvCbMdo
+Content-Type: application/json
+
+{
+    "password": "new-password",
+    "confirmPassword": "new-password"
 }

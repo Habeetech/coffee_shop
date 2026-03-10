@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-    lastname: {
+    lastName: {
         type: String,
         trim: true
     },
@@ -35,7 +35,8 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
-        trim: true
+        trim: true,
+        unique: true,
     },
     address: {
         type: {

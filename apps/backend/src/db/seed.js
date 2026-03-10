@@ -1,34 +1,21 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import products from "../seeders/productSeed.js";
 import Product from "../modules/products/product.model.js";
-import products from "../seeders/productSeed.js"
 
 dotenv.config();
 
-const seed = async (items, model) => {
+const seedProducts = async () => {
     try {
-
-        console.log("Connecting to MongoDB...");
         await mongoose.connect(process.env.MONGODB_URI);
-        console.log("Connected!");
-
-       // await mongoose.connection.dropDatabase();
-    //console.log("Droped Database")
-       console.log("Clearing existing items...");
-        await model.deleteMany({});
-        
-        console.log("Inserting seed data...");
-        await model.insertMany(items);
-
-        console.log("Database seeded successfully!");
-
-    
-        await mongoose.disconnect();
-        process.exit(0); 
+        await Product.deleteMany({});
+        await Product.insertMany(products);
+        console.log("Products seeded successfully!");
     } catch (error) {
         console.error("Seed failed:", error);
-        process.exit(1);
+    } finally {
+        await mongoose.connection.close();
     }
 };
 
-seed(products, Product);
+seedProducts();
