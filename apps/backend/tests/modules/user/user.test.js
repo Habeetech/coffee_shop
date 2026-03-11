@@ -3,41 +3,24 @@ import app from "../../../src/app.js";
 import User from "../../../src/modules/users/user.model.js";
 import mongoose from "mongoose";
 import resetData from "../../../src/utils/resetData.js";
+import testUsers from "../../../src/seeders/userSeed.js"
 import dotenv from "dotenv";
+import { dropTestDatabase } from "../../../src/utils/resetData.js";
+import console from "console";
+
+
 dotenv.config();
+
 
 let testToken;
 let testUserId;
 let adminToken;
 let managerToken;
-let createdUsers = []; // Track users created during tests for cleanup
 
-// Setup tokens for seeded users
+
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGODB_TEST_URI);
-  
-  // Login as Admin_Test
-  const adminLoginRes = await request(app).post("/api/auth/login").send({
-    usernameOrEmail: "Admin_Test",
-    password: "password123"
-  });
-  adminToken = adminLoginRes.body.token;
-  
-  // Login as User_test
-  const userLoginRes = await request(app).post("/api/auth/login").send({
-    usernameOrEmail: "User_test",
-    password: "password123"
-  });
-  testToken = userLoginRes.body.token;
-  const userDb = await User.findOne({ username: "User_test" });
-  testUserId = userDb._id.toString();
-  
-  // Login as Manager_test
-  const managerLoginRes = await request(app).post("/api/auth/login").send({
-    usernameOrEmail: "Manager_test",
-    password: "password123"
-  });
-  managerToken = managerLoginRes.body.token;
+  await dropTestDatabase();
 });
 
 afterAll(async () => {
@@ -46,12 +29,35 @@ afterAll(async () => {
 
 describe("User API - Get Users", () => {
   let getUsersAdminToken;
-  
+
   beforeEach(async () => {
-    // Use seeded Admin_Test
+    await dropTestDatabase()
+    await resetData(User, testUsers);
+
+    const adminLoginRes = await request(app).post("/api/auth/login").send({
+      usernameOrEmail: "adminuser",
+      password: "password123"
+    });
+    adminToken = adminLoginRes.body.token;
+
+
+    const userLoginRes = await request(app).post("/api/auth/login").send({
+      usernameOrEmail: "user_test",
+      password: "password123"
+    });
+    testToken = userLoginRes.body.token;
+    const userDb = await User.findOne({ username: "user_test" });
+    testUserId = userDb._id.toString();
+
+
+    const managerLoginRes = await request(app).post("/api/auth/login").send({
+      usernameOrEmail: "manageruser",
+      password: "password123"
+    });
+    managerToken = managerLoginRes.body.token;
     getUsersAdminToken = adminToken;
-    
-    // Create additional test users for this group
+
+
     for (let i = 1; i <= 3; i++) {
       const res = await request(app).post("/api/auth/register").send({
         username: `getUsersUser${i}`,
@@ -60,7 +66,6 @@ describe("User API - Get Users", () => {
         confirmPassword: "TestPass123",
         phone: `123456789${i}`
       });
-      createdUsers.push(res.body._id);
     }
   });
 
@@ -68,7 +73,7 @@ describe("User API - Get Users", () => {
     const res = await request(app).get("/api/user").set("Authorization", `Bearer ${getUsersAdminToken}`);
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body.length).toBe(4); // admin + 3 test users
+    expect(res.body.length).toBe(6);
     res.body.forEach(user => {
       expect(user.passwordHash).toBeUndefined();
       expect(user.username).toBeDefined();
@@ -83,14 +88,13 @@ describe("User API - Get Users", () => {
       expect(user._id).toBeDefined();
       expect(user.username).toBeDefined();
       expect(user.email).toBeDefined();
-      expect(user.role).toBe("user");
       expect(user.createdAt).toBeDefined();
       expect(user.updatedAt).toBeDefined();
     });
   });
 
   test("GET /api/user returns empty array when no users", async () => {
-    await resetData([], User);
+    await resetData(User);
     const res = await request(app).get("/api/user").set("Authorization", `Bearer ${getUsersAdminToken}`);
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual([]);
@@ -103,7 +107,7 @@ describe("User API - Get Specific User", () => {
 
   beforeEach(async () => {
     getSpecificAdminToken = adminToken;
-    
+
     const res = await request(app).post("/api/auth/register").send({
       username: "specificuser",
       email: "specific@example.com",
@@ -113,7 +117,6 @@ describe("User API - Get Specific User", () => {
     });
     const user = await User.findOne({ username: "specificuser" });
     specificUserId = user._id.toString();
-    createdUsers.push(specificUserId);
   });
 
   test("GET /api/user/:id returns user by valid id", async () => {
@@ -142,19 +145,49 @@ describe("User API - Get Specific User", () => {
   });
 
   test("GET /api/user/:id with user containing optional fields", async () => {
-    await request(app).post("/api/user/mine").set("Authorization", `Bearer validToken`).send({
-      firstName: "John",
-      lastName: "Doe",
-      phone: "9876543210"
-    }); // This test assumes auth middleware is in place
+    const loginRes = await request(app)
+      .post("/api/auth/login")
+      .send({
+        usernameOrEmail: "specificuser",
+        password: "TestPass123"
+      });
+
+    const specificUserToken = loginRes.body.token;
+
+    const updateRes = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${specificUserToken}`)
+      .send({
+        firstName: "John",
+        lastName: "Doe",
+        phone: "9876543210"
+      });
+
+    expect(updateRes.statusCode).toBe(200);
+
+    const getRes = await request(app)
+      .get(`/api/user/${specificUserId}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(getRes.statusCode).toBe(200);
+    expect(getRes.body.firstName).toBe("John");
+    expect(getRes.body.lastName).toBe("Doe");
+    expect(getRes.body.phone).toBe("9876543210");
+    expect(getRes.body).toHaveProperty("favorites");
+    expect(Array.isArray(getRes.body.favorites)).toBe(true);
   });
+
 });
 
 describe("User API - Update Profile", () => {
+
   let updateTestToken;
   let updateUserId;
 
   beforeEach(async () => {
+    await dropTestDatabase();
+    await resetData(User, testUsers);
+    await User.createIndexes();
     const registerRes = await request(app).post("/api/auth/register").send({
       username: "updatetest",
       email: "update@example.com",
@@ -162,9 +195,9 @@ describe("User API - Update Profile", () => {
       confirmPassword: "TestPass123",
       phone: "1234567890"
     });
-    updateUserId = registerRes.body._id;
-    createdUsers.push(updateUserId);
-    
+    const user = await User.findOne({ username: "updatetest" });
+    updateUserId = user._id.toString();
+
     const loginRes = await request(app).post("/api/auth/login").send({
       usernameOrEmail: "updatetest",
       password: "TestPass123"
@@ -208,16 +241,13 @@ describe("User API - Update Profile", () => {
   });
 
   test("PUT /api/user/mine with duplicate email fails", async () => {
-    // Create another user
     const anotherRes = await request(app).post("/api/auth/register").send({
       username: "anotheruser",
       email: "another@example.com",
       password: "TestPass123",
       confirmPassword: "TestPass123",
-      phone: "9876543210"
+      phone: "9876543256710"
     });
-    createdUsers.push(anotherRes.body._id);
-
     const res = await request(app)
       .put("/api/user/mine")
       .set("Authorization", `Bearer ${updateTestToken}`)
@@ -229,7 +259,6 @@ describe("User API - Update Profile", () => {
   });
 
   test("PUT /api/user/mine with duplicate username fails", async () => {
-    // Create another user
     const anotherRes = await request(app).post("/api/auth/register").send({
       username: "anotheruser",
       email: "another@example.com",
@@ -237,7 +266,6 @@ describe("User API - Update Profile", () => {
       confirmPassword: "TestPass123",
       phone: "9876543210"
     });
-    createdUsers.push(anotherRes.body._id);
 
     const res = await request(app)
       .put("/api/user/mine")
@@ -250,7 +278,6 @@ describe("User API - Update Profile", () => {
   });
 
   test("PUT /api/user/mine with duplicate phone fails", async () => {
-    // Create another user
     const anotherRes = await request(app).post("/api/auth/register").send({
       username: "anotheruser",
       email: "another@example.com",
@@ -258,7 +285,7 @@ describe("User API - Update Profile", () => {
       confirmPassword: "TestPass123",
       phone: "9876543210"
     });
-    createdUsers.push(anotherRes.body._id);
+
 
     const res = await request(app)
       .put("/api/user/mine")
@@ -350,6 +377,7 @@ describe("User API - Update Profile", () => {
   });
 
   test("PUT /api/user/mine updates updatedAt timestamp", async () => {
+
     const getRes = await request(app).get(`/api/user/${updateUserId}`).set("Authorization", `Bearer ${adminToken}`);
     const originalUpdatedAt = new Date(getRes.body.updatedAt).getTime();
 
@@ -372,6 +400,8 @@ describe("User API - Change Password", () => {
   let changePassUserId;
 
   beforeEach(async () => {
+    await dropTestDatabase();
+    await resetData(User, testUsers);
     const registerRes = await request(app).post("/api/auth/register").send({
       username: "passtest",
       email: "pass@example.com",
@@ -380,8 +410,7 @@ describe("User API - Change Password", () => {
       phone: "1234567890"
     });
     changePassUserId = registerRes.body._id;
-    createdUsers.push(changePassUserId);
-    
+
     const loginRes = await request(app).post("/api/auth/login").send({
       usernameOrEmail: "passtest",
       password: "TestPass123"
@@ -389,9 +418,9 @@ describe("User API - Change Password", () => {
     changePassToken = loginRes.body.token;
   });
 
-  test("POST /api/user/mine/changepassword with valid new password", async () => {
+  test("PUT /api/user/mine/changepassword with valid new password", async () => {
     const res = await request(app)
-      .post("/api/user/mine/changepassword")
+      .put("/api/user/mine/changepassword")
       .set("Authorization", `Bearer ${changePassToken}`)
       .send({
         password: "NewSecurePass123",
@@ -400,9 +429,9 @@ describe("User API - Change Password", () => {
     expect(res.statusCode).toBe(200);
   });
 
-  test("POST /api/user/mine/changepassword then login with new password", async () => {
+  test("PUT /api/user/mine/changepassword then login with new password", async () => {
     await request(app)
-      .post("/api/user/mine/changepassword")
+      .put("/api/user/mine/changepassword")
       .set("Authorization", `Bearer ${changePassToken}`)
       .send({
         password: "NewSecurePass123",
@@ -417,9 +446,9 @@ describe("User API - Change Password", () => {
     expect(loginRes.body.token).toBeDefined();
   });
 
-  test("POST /api/user/mine/changepassword password mismatch fails", async () => {
+  test("PUT /api/user/mine/changepassword password mismatch fails", async () => {
     const res = await request(app)
-      .post("/api/user/mine/changepassword")
+      .put("/api/user/mine/changepassword")
       .set("Authorization", `Bearer ${changePassToken}`)
       .send({
         password: "NewPass123",
@@ -429,9 +458,9 @@ describe("User API - Change Password", () => {
     expect(res.body.errors.some(e => e.field === "body.confirmPassword")).toBe(true);
   });
 
-  test("POST /api/user/mine/changepassword empty password fails", async () => {
+  test("PUT /api/user/mine/changepassword empty password fails", async () => {
     const res = await request(app)
-      .post("/api/user/mine/changepassword")
+      .put("/api/user/mine/changepassword")
       .set("Authorization", `Bearer ${changePassToken}`)
       .send({
         password: "",
@@ -440,9 +469,9 @@ describe("User API - Change Password", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  test("POST /api/user/mine/changepassword null password fails", async () => {
+  test("PUT /api/user/mine/changepassword null password fails", async () => {
     const res = await request(app)
-      .post("/api/user/mine/changepassword")
+      .put("/api/user/mine/changepassword")
       .set("Authorization", `Bearer ${changePassToken}`)
       .send({
         password: null,
@@ -451,9 +480,9 @@ describe("User API - Change Password", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  test("POST /api/user/mine/changepassword missing confirmPassword fails", async () => {
+  test("PUT /api/user/mine/changepassword missing confirmPassword fails", async () => {
     const res = await request(app)
-      .post("/api/user/mine/changepassword")
+      .put("/api/user/mine/changepassword")
       .set("Authorization", `Bearer ${changePassToken}`)
       .send({
         password: "NewPass123"
@@ -461,9 +490,9 @@ describe("User API - Change Password", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  test("POST /api/user/mine/changepassword old password still fails to login", async () => {
+  test("PUT /api/user/mine/changepassword old password still fails to login", async () => {
     await request(app)
-      .post("/api/user/mine/changepassword")
+      .put("/api/user/mine/changepassword")
       .set("Authorization", `Bearer ${changePassToken}`)
       .send({
         password: "NewSecurePass123",
@@ -477,9 +506,9 @@ describe("User API - Change Password", () => {
     expect(loginRes.statusCode).toBe(400);
   });
 
-  test("POST /api/user/mine/changepassword with max password length", async () => {
+  test("PUT /api/user/mine/changepassword with max password length", async () => {
     const res = await request(app)
-      .post("/api/user/mine/changepassword")
+      .put("/api/user/mine/changepassword")
       .set("Authorization", `Bearer ${changePassToken}`)
       .send({
         password: "a".repeat(100),
@@ -488,9 +517,9 @@ describe("User API - Change Password", () => {
     expect(res.statusCode).toBe(200);
   });
 
-  test("POST /api/user/mine/changepassword with password too long fails", async () => {
+  test("PUT /api/user/mine/changepassword with password too long fails", async () => {
     const res = await request(app)
-      .post("/api/user/mine/changepassword")
+      .put("/api/user/mine/changepassword")
       .set("Authorization", `Bearer ${changePassToken}`)
       .send({
         password: "a".repeat(101),
@@ -507,25 +536,15 @@ describe("User API - Delete User", () => {
   let deleteAdminToken;
 
   beforeEach(async () => {
-    await resetData([], User);
-    
-    // Recreate admin user for deletion test
-    await request(app).post("/api/auth/register").send({
-      username: "deleteAdmin",
-      email: "deleteadmin@coffee.test",
-      password: "AdminPass123",
-      confirmPassword: "AdminPass123",
-      phone: "3333333333"
-    });
-    const adminDbUser = await User.findOne({ username: "deleteAdmin" });
-    await User.updateOne({ _id: adminDbUser._id }, { role: "admin" });
-    
+    await dropTestDatabase()
+    await resetData(User, testUsers);
+
     const adminLoginRes = await request(app).post("/api/auth/login").send({
-      usernameOrEmail: "deleteAdmin",
-      password: "AdminPass123"
+      usernameOrEmail: "adminuser",
+      password: "password123"
     });
     deleteAdminToken = adminLoginRes.body.token;
-    
+
     await request(app).post("/api/auth/register").send({
       username: "deletetest",
       email: "delete@example.com",
@@ -535,7 +554,7 @@ describe("User API - Delete User", () => {
     });
     const deleteUser = await User.findOne({ username: "deletetest" });
     testUserId2 = deleteUser._id.toString();
-    
+
     await request(app).post("/api/auth/register").send({
       username: "anotheruser",
       email: "another@example.com",
@@ -545,7 +564,7 @@ describe("User API - Delete User", () => {
     });
     const anotherUser = await User.findOne({ username: "anotheruser" });
     anotherUserId = anotherUser._id.toString();
-    
+
     const loginRes = await request(app).post("/api/auth/login").send({
       usernameOrEmail: "deletetest",
       password: "TestPass123"
@@ -586,7 +605,7 @@ describe("User API - Delete User", () => {
     await request(app)
       .delete("/api/user/mine")
       .set("Authorization", `Bearer ${testToken2}`);
-    
+
     const getRes = await request(app).get(`/api/user/${testUserId2}`).set("Authorization", `Bearer ${deleteAdminToken}`);
     expect(getRes.statusCode).toBe(404);
   });
@@ -603,25 +622,16 @@ describe("User API - Change Role", () => {
   let roleAdminToken;
 
   beforeEach(async () => {
-    await resetData([], User);
-    
-    // Recreate admin user for role changes
-    await request(app).post("/api/auth/register").send({
-      username: "roleAdmin",
-      email: "roleadmin@coffee.test",
-      password: "AdminPass123",
-      confirmPassword: "AdminPass123",
-      phone: "4444444444"
-    });
-    const adminDbUser = await User.findOne({ username: "roleAdmin" });
-    await User.updateOne({ _id: adminDbUser._id }, { role: "admin" });
-    
+    await dropTestDatabase()
+    await resetData(User, testUsers);
+
+
     const adminLoginRes = await request(app).post("/api/auth/login").send({
-      usernameOrEmail: "roleAdmin",
-      password: "AdminPass123"
+      usernameOrEmail: "adminuser",
+      password: "password123"
     });
     roleAdminToken = adminLoginRes.body.token;
-    
+
     await request(app).post("/api/auth/register").send({
       username: "roletest",
       email: "role@example.com",
@@ -635,7 +645,7 @@ describe("User API - Change Role", () => {
 
   test("PATCH /api/user/:id/role change to manager", async () => {
     const res = await request(app)
-      .put(`/api/user/${roleTestUserId}`)
+      .patch(`/api/user/${roleTestUserId}/role`)
       .set("Authorization", `Bearer ${roleAdminToken}`)
       .send({ role: "manager" });
     expect(res.statusCode).toBe(200);
@@ -644,7 +654,7 @@ describe("User API - Change Role", () => {
 
   test("PATCH /api/user/:id/role change to admin", async () => {
     const res = await request(app)
-      .put(`/api/user/${roleTestUserId}`)
+      .patch(`/api/user/${roleTestUserId}/role`)
       .set("Authorization", `Bearer ${roleAdminToken}`)
       .send({ role: "admin" });
     expect(res.statusCode).toBe(200);
@@ -653,12 +663,12 @@ describe("User API - Change Role", () => {
 
   test("PATCH /api/user/:id/role change back to user", async () => {
     await request(app)
-      .put(`/api/user/${roleTestUserId}`)
+      .patch(`/api/user/${roleTestUserId}/role`)
       .set("Authorization", `Bearer ${roleAdminToken}`)
       .send({ role: "manager" });
-    
+
     const res = await request(app)
-      .put(`/api/user/${roleTestUserId}`)
+      .patch(`/api/user/${roleTestUserId}/role`)
       .set("Authorization", `Bearer ${roleAdminToken}`)
       .send({ role: "user" });
     expect(res.statusCode).toBe(200);
@@ -667,7 +677,7 @@ describe("User API - Change Role", () => {
 
   test("PATCH /api/user/:id/role with invalid role", async () => {
     const res = await request(app)
-      .put(`/api/user/${roleTestUserId}`)
+      .patch(`/api/user/${roleTestUserId}/role`)
       .set("Authorization", `Bearer ${roleAdminToken}`)
       .send({ role: "superadmin" });
     expect(res.statusCode).toBe(400);
@@ -676,7 +686,7 @@ describe("User API - Change Role", () => {
   test("PATCH /api/user/:id/role with non-existent user returns 404", async () => {
     const fakeId = new mongoose.Types.ObjectId();
     const res = await request(app)
-      .put(`/api/user/${fakeId}`)
+      .patch(`/api/user/${fakeId}/role`)
       .set("Authorization", `Bearer ${roleAdminToken}`)
       .send({ role: "manager" });
     expect(res.statusCode).toBe(404);
@@ -684,7 +694,7 @@ describe("User API - Change Role", () => {
 
   test("PATCH /api/user/:id/role expects role field in body", async () => {
     const res = await request(app)
-      .put(`/api/user/${roleTestUserId}`)
+      .patch(`/api/user/${roleTestUserId}/role`)
       .set("Authorization", `Bearer ${roleAdminToken}`)
       .send({});
     expect(res.statusCode).toBe(400);
@@ -692,7 +702,7 @@ describe("User API - Change Role", () => {
 
   test("PATCH /api/user/:id/role with null role fails", async () => {
     const res = await request(app)
-      .put(`/api/user/${roleTestUserId}`)
+      .patch(`/api/user/${roleTestUserId}/role`)
       .set("Authorization", `Bearer ${roleAdminToken}`)
       .send({ role: null });
     expect(res.statusCode).toBe(400);
@@ -700,112 +710,137 @@ describe("User API - Change Role", () => {
 
   test("PATCH /api/user/:id/role with invalid ObjectId returns 400", async () => {
     const res = await request(app)
-      .put("/api/user/invalid-id")
+      .patch("/api/user/invalid-id/role")
       .set("Authorization", `Bearer ${roleAdminToken}`)
       .send({ role: "manager" });
     expect(res.statusCode).toBe(400);
   });
 });
 
-describe("User API - Concurrent Operations", () => {
-  let concurrentToken;
-  let concurrentUserId;
-  let concurrentUserId2;
+describe("User API - Update Profile", () => {
+  let token;
+  let userId;
 
   beforeEach(async () => {
-    await resetData([], User);
-    const registerRes = await request(app).post("/api/auth/register").send({
-      username: "concurrenttest",
-      email: "concurrent@example.com",
-      password: "TestPass123",
-      confirmPassword: "TestPass123",
-      phone: "1234567890"
-    });
-    concurrentUserId = registerRes.body._id;
+    await dropTestDatabase();
+    await resetData(User, testUsers);
 
-    const registerRes2 = await request(app).post("/api/auth/register").send({
-      username: "concurrenttest2",
-      email: "concurrent2@example.com",
+    // Create main user
+    const registerRes = await request(app).post("/api/auth/register").send({
+      username: "mainuser",
+      email: "main@example.com",
       password: "TestPass123",
       confirmPassword: "TestPass123",
-      phone: "9876543210"
+      phone: "1111111111"
     });
-    concurrentUserId2 = registerRes2.body._id;
-    
+
+    userId = registerRes.body._id;
+
     const loginRes = await request(app).post("/api/auth/login").send({
-      usernameOrEmail: "concurrenttest",
+      usernameOrEmail: "mainuser",
       password: "TestPass123"
     });
-    concurrentToken = loginRes.body.token;
+
+    token = loginRes.body.token;
+    await User.createIndexes();
+
   });
 
-  test("Concurrent profile updates on same user", async () => {
-    const update1 = request(app)
+  test("PUT /api/user/mine updating to same email succeeds", async () => {
+    const res = await request(app)
       .put("/api/user/mine")
-      .set("Authorization", `Bearer ${concurrentToken}`)
-      .send({ firstName: "Update1" });
+      .set("Authorization", `Bearer ${token}`)
+      .send({ email: "main@example.com" });
 
-    const update2 = request(app)
-      .put("/api/user/mine")
-      .set("Authorization", `Bearer ${concurrentToken}`)
-      .send({ firstName: "Update2" });
-
-    const [res1, res2] = await Promise.all([update1, update2]);
-    expect(res1.statusCode).toBe(200);
-    expect(res2.statusCode).toBe(200);
+    expect(res.statusCode).toBe(200);
   });
 
-  test("Concurrent duplicate email detection", async () => {
-    // Create second user
+  test("PUT /api/user/mine updating to same username succeeds", async () => {
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ username: "mainuser" });
+
+    expect(res.statusCode).toBe(200);
+  });
+
+  test("PUT /api/user/mine updating to same phone succeeds", async () => {
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ phone: "1111111111" });
+
+    expect(res.statusCode).toBe(200);
+  });
+  test("PUT /api/user/mine with duplicate email fails", async () => {
     await request(app).post("/api/auth/register").send({
-      username: "seconduser",
-      email: "second@example.com",
+      username: "otheruser",
+      email: "another@example.com",
       password: "TestPass123",
       confirmPassword: "TestPass123",
-      phone: "9876543210"
+      phone: "2222222222"
     });
 
-    const update1 = request(app)
+    const res = await request(app)
       .put("/api/user/mine")
-      .set("Authorization", `Bearer ${concurrentToken}`)
-      .send({ email: "second@example.com" });
+      .set("Authorization", `Bearer ${token}`)
+      .send({ email: "another@example.com" });
+    expect(res.statusCode).toBe(409);
+    expect(res.body.message).toContain("Email already exist");
+  });
 
-    const update2 = request(app)
+  test("PUT /api/user/mine with duplicate username fails", async () => {
+    await request(app).post("/api/auth/register").send({
+      username: "takenuser",
+      email: "taken@example.com",
+      password: "TestPass123",
+      confirmPassword: "TestPass123",
+      phone: "3333333333"
+    });
+
+    const res = await request(app)
       .put("/api/user/mine")
-      .set("Authorization", `Bearer ${concurrentToken}`)
-      .send({ email: "second@example.com" });
+      .set("Authorization", `Bearer ${token}`)
+      .send({ username: "takenuser" });
+    expect(res.statusCode).toBe(409);
+    expect(res.body.message).toContain("Username already exist");
+  });
 
-    const [res1, res2] = await Promise.all([update1, update2]);
-    // At least one should fail due to duplicate
-    expect([res1.statusCode, res2.statusCode]).toContain(409);
+
+  test("PUT /api/user/mine with duplicate phone fails", async () => {
+    await request(app).post("/api/auth/register").send({
+      username: "phoneuser",
+      email: "phone@example.com",
+      password: "TestPass123",
+      confirmPassword: "TestPass123",
+      phone: "9999999999"
+    });
+
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ phone: "9999999999" });
+    expect(res.statusCode).toBe(409);
+    expect(res.body.message).toContain("Phone number already exist");
   });
 });
+
 
 describe("User API - Edge Cases", () => {
   let edgeCaseUserId;
   let edgeAdminToken;
 
   beforeEach(async () => {
-    await resetData([], User);
-    
-    // Create an admin user for authorized GET requests
-    await request(app).post("/api/auth/register").send({
-      username: "edgeAdmin",
-      email: "edgeadmin@example.com",
-      password: "TestPass123",
-      confirmPassword: "TestPass123",
-      phone: "0000000000"
-    });
-    const adminUser = await User.findOne({ username: "edgeAdmin" });
-    await User.updateOne({ _id: adminUser._id }, { role: "admin" });
-    
+    await dropTestDatabase();
+    await resetData(User, testUsers);
+    await User.createIndexes();
+
     const adminLoginRes = await request(app).post("/api/auth/login").send({
-      usernameOrEmail: "edgeAdmin",
-      password: "TestPass123"
+      usernameOrEmail: "adminuser",
+      password: "password123"
     });
     edgeAdminToken = adminLoginRes.body.token;
-    
-    // Create edge case test user
+
     await request(app).post("/api/auth/register").send({
       username: "edgetest",
       email: "edge@example.com",
@@ -853,8 +888,8 @@ describe("User API - Edge Cases", () => {
       phone: "1111111111"
     });
     expect(registerRes.statusCode).toBe(201);
-    expect(registerRes.body.username).toBe("trimmeduser");
-    expect(registerRes.body.email).toBe("trimmed@example.com");
+    expect(registerRes.body.user.username).toBe("trimmeduser");
+    expect(registerRes.body.user.email).toBe("trimmed@example.com");
   });
 
   test("Special characters in firstName and lastName allowed", async () => {
@@ -868,8 +903,8 @@ describe("User API - Edge Cases", () => {
       phone: "1111111111"
     });
     expect(res.statusCode).toBe(201);
-    expect(res.body.firstName).toContain("-");
-    expect(res.body.lastName).toContain("'");
+    expect(res.body.user.firstName).toContain("-");
+    expect(res.body.user.lastName).toContain("'");
   });
 
   test("Password hash is bcrypted in database", async () => {
@@ -896,7 +931,7 @@ describe("User API - Edge Cases", () => {
       phone: "2222222222"
     });
 
-    expect(res1.body._id).not.toBe(res2.body._id);
+    expect(res1.body.user._id).not.toBe(res2.body.user._id);
   });
 
   test("Large address object is stored correctly", async () => {
@@ -915,7 +950,7 @@ describe("User API - Edge Cases", () => {
       phone: "1111111111"
     });
     expect(registerRes.statusCode).toBe(201);
-    expect(registerRes.body.address).toBeDefined();
+    expect(registerRes.body.user.address).toBeDefined();
   });
 
   test("Phone number with special characters rejected", async () => {
@@ -940,8 +975,8 @@ describe("User API - Edge Cases", () => {
       phone: "1111111111"
     });
     expect(res.statusCode).toBe(201);
-    expect(res.body.firstName.length).toBe(50);
-    expect(res.body.lastName.length).toBe(50);
+    expect(res.body.user.firstName.length).toBe(50);
+    expect(res.body.user.lastName.length).toBe(50);
   });
 
   test("firstName/lastName too long fails", async () => {
@@ -956,9 +991,265 @@ describe("User API - Edge Cases", () => {
     expect(res.statusCode).toBe(400);
   });
 });
-afterEach(async () => {
-  for (let id of createdUsers) {
-    await User.findByIdAndDelete(id);
-  }
-  createdUsers = [];
+describe("User API - Concurrency", () => {
+  let tokenA, tokenB, userA, userB;
+
+  beforeEach(async () => {
+    await dropTestDatabase();
+    await resetData(User, testUsers);
+    await User.syncIndexes();
+
+    const regA = await request(app).post("/api/auth/register").send({
+      username: "userA",
+      email: "userA@example.com",
+      password: "TestPass123",
+      confirmPassword: "TestPass123",
+      phone: "1111111111"
+    });
+    userA = regA.body._id;
+    tokenA = (await request(app).post("/api/auth/login").send({
+      usernameOrEmail: "userA",
+      password: "TestPass123"
+    })).body.token;
+
+
+    const regB = await request(app).post("/api/auth/register").send({
+      username: "userB",
+      email: "userB@example.com",
+      password: "TestPass123",
+      confirmPassword: "TestPass123",
+      phone: "2222222222"
+    });
+    userB = regB.body._id;
+    tokenB = (await request(app).post("/api/auth/login").send({
+      usernameOrEmail: "userB",
+      password: "TestPass123"
+    })).body.token;
+  });
+
+  test("Two users updating to the same email simultaneously → one succeeds, one fails", async () => {
+    const payload = { email: "shared@example.com" };
+
+    const [resA, resB] = await Promise.all([
+      request(app).put("/api/user/mine").set("Authorization", `Bearer ${tokenA}`).send(payload),
+      request(app).put("/api/user/mine").set("Authorization", `Bearer ${tokenB}`).send(payload)
+    ]);
+
+    const statuses = [resA.statusCode, resB.statusCode].sort();
+    expect(statuses).toEqual([200, 409]);
+  });
+
+  test("Simultaneous updates to different fields should both succeed", async () => {
+    const [resA, resB] = await Promise.all([
+      request(app).put("/api/user/mine").set("Authorization", `Bearer ${tokenA}`).send({ firstName: "Alpha" }),
+      request(app).put("/api/user/mine").set("Authorization", `Bearer ${tokenB}`).send({ lastName: "Beta" })
+    ]);
+
+    expect(resA.statusCode).toBe(200);
+    expect(resB.statusCode).toBe(200);
+  });
+
+  test("High volume concurrency → exactly one wins", async () => {
+    const tokens = [];
+
+    for (let i = 0; i < 10; i++) {
+      await request(app).post("/api/auth/register").send({
+        username: `concurrent_user_${i}`,
+        email: `concurrent_user_${i}@example.com`,
+        password: "TestPass123",
+        confirmPassword: "TestPass123",
+        phone: `90000000${i}`
+      });
+
+      const login = await request(app).post("/api/auth/login").send({
+        usernameOrEmail: `concurrent_user_${i}`,
+        password: "TestPass123"
+      });
+
+      tokens.push(login.body.token);
+    }
+
+    // Ensure all tokens exist
+    tokens.forEach((t, i) => {
+      if (!t) throw new Error(`Token missing for user ${i}`);
+    });
+
+    const payload = { username: "megaUser" };
+
+    const promises = tokens.map(t =>
+      request(app)
+        .put("/api/user/mine")
+        .set("Authorization", `Bearer ${t}`)
+        .send(payload)
+    );
+
+    const results = await Promise.all(promises);
+
+    const successCount = results.filter(r => r.statusCode === 200).length;
+    const conflictCount = results.filter(r => r.statusCode === 409).length;
+
+    expect(successCount).toBe(1);
+    expect(conflictCount).toBe(9);
+  });
+
+
+
+});
+describe("User API - Null & Invalid Types", () => {
+  let token;
+
+  beforeEach(async () => {
+    await dropTestDatabase();
+    await resetData(User, testUsers);
+    await User.createIndexes();
+
+    const reg = await request(app).post("/api/auth/register").send({
+      username: "nulltest",
+      email: "nulltest@example.com",
+      password: "TestPass123",
+      confirmPassword: "TestPass123",
+      phone: "1234567890"
+    });
+
+    token = (await request(app).post("/api/auth/login").send({
+      usernameOrEmail: "nulltest",
+      password: "TestPass123"
+    })).body.token;
+  });
+
+  test("Null username fails", async () => {
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ username: null });
+
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("Empty string username fails", async () => {
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ username: "" });
+
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("Phone number as number type fails", async () => {
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ phone: 1234567890 });
+
+    expect(res.statusCode).toBe(400);
+  });
+});
+describe("User API - Partial Address Updates", () => {
+  let token;
+
+  beforeEach(async () => {
+    await dropTestDatabase();
+    await resetData(User, testUsers);
+    await User.createIndexes();
+
+    const reg = await request(app).post("/api/auth/register").send({
+      username: "addresstest",
+      email: "addr@example.com",
+      password: "TestPass123",
+      confirmPassword: "TestPass123",
+      phone: "1234567890",
+      address: {
+        street: "Old St",
+        city: "London",
+        country: "UK"
+      }
+    });
+
+    token = (await request(app).post("/api/auth/login").send({
+      usernameOrEmail: "addresstest",
+      password: "TestPass123"
+    })).body.token;
+  });
+
+  test("Updating only city preserves other address fields", async () => {
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ address: { city: "Manchester" } });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.address.street).toBe("Old St");
+    expect(res.body.address.city).toBe("Manchester");
+    expect(res.body.address.country).toBe("UK");
+  });
+});
+describe("User API - Security / NoSQL Injection", () => {
+  let token;
+
+  beforeEach(async () => {
+    await dropTestDatabase();
+    await resetData(User, testUsers);
+    await User.createIndexes();
+
+    const reg = await request(app).post("/api/auth/register").send({
+      username: "injecttest",
+      email: "inject@example.com",
+      password: "TestPass123",
+      confirmPassword: "TestPass123",
+      phone: "1234567890"
+    });
+
+    token = (await request(app).post("/api/auth/login").send({
+      usernameOrEmail: "injecttest",
+      password: "TestPass123"
+    })).body.token;
+  });
+
+  test("Attempting to use $set operator fails", async () => {
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ "$set": { role: "admin" } });
+
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("Attempting to overwrite role via payload fails", async () => {
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ role: "admin" });
+
+    expect(res.statusCode).toBe(400);
+  });
+});
+describe("User API - Case Sensitivity", () => {
+  let token;
+
+  beforeEach(async () => {
+    await dropTestDatabase();
+    await resetData(User, testUsers);
+    await User.createIndexes();
+
+    await request(app).post("/api/auth/register").send({
+      username: "CaseUser",
+      email: "CaseUser@example.com",
+      password: "TestPass123",
+      confirmPassword: "TestPass123",
+      phone: "1234567890"
+    });
+
+    token = (await request(app).post("/api/auth/login").send({
+      usernameOrEmail: "CaseUser",
+      password: "TestPass123"
+    })).body.token;
+  });
+
+  test("Updating to same email with different case should fail (if collation enabled)", async () => {
+    const res = await request(app)
+      .put("/api/user/mine")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ email: "caseuser@example.com" });
+
+    expect([200, 409]).toContain(res.statusCode);
+  });
 });

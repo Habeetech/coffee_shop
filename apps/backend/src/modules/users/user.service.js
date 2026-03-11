@@ -27,41 +27,30 @@ export async function getMyProfile(id) {
     return sanitizeUser(user);
 }
 export async function updateMyProfile(id, data) {
-    const { email, username, phone } = data;
-    if (username) {
-        const usernameTaken = await User.findOne({
-            username, _id: { $ne: id }
-        })
-        if (usernameTaken) {
-            throw new AppError("Username already exist. Please choose a different username", 409);
-        }
-    }
-    if (email) {
-        const emailTaken = await User.findOne({
-            email, _id: { $ne: id }
-        })
-        if (emailTaken) {
-            throw new AppError("Email already exist. Please choose a different email", 409);
-        }
-    }
-    if (phone) {
-        const phoneTaken = await User.findOne({
-            phone, _id: { $ne: id }
-        })
-        if (phoneTaken) {
-            throw new AppError("Phone number already exist. Please choose a different phone number", 409);
-        }
-    }
+  if (data.address) {
+    const existing = await User.findById(id).lean();
 
-    const userUpdate = await User.findByIdAndUpdate(id, data, {
-        returnDocument: "after",
-        runValidators: true,
-    })
-    if (!userUpdate) {
-        throw new AppError("Error: Profile not found", 404)
-    }
-    return sanitizeUser(userUpdate);
+    const existingAddress = existing?.address || {};
+
+    data.address = {
+      ...existingAddress,
+      ...data.address
+    };
+  }
+
+  const userUpdate = await User.findByIdAndUpdate(id, data, {
+    returnDocument: "after",
+    runValidators: true,
+    context: "query"
+  });
+
+  if (!userUpdate) {
+    throw new AppError("Error: Profile not found", 404);
+  }
+
+  return sanitizeUser(userUpdate);
 }
+
 export async function deleteAUser(id) {
     const userToDelete = await User.findByIdAndDelete(id)
     if (!userToDelete) {

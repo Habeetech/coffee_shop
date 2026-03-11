@@ -4,10 +4,10 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "CF_User",
+  "username": "CF_User24",
   "password": "customer",
   "confirmPassword": "customer",
-  "email": "coffeeshop@example.com"
+  "email": "coffeeshop24@example.com"
 }
 
 ### Login in a User
@@ -31,6 +31,14 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "usernameOrEmail": "CF_User",
-  "password": "new-password"
+  "usernameOrEmail": "CF_User24",
+  "password": "customer"
+}
+###
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "CF_User2",
+  "password": "customer"
 }

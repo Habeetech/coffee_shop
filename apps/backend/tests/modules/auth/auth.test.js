@@ -1,12 +1,11 @@
 import request from "supertest";
 import app from "../../../src/app.js";
 import User from "../../../src/modules/users/user.model.js";
+import testUsers from "../../../src/seeders/userSeed.js"
 import mongoose from "mongoose";
 import resetData from "../../../src/utils/resetData.js";
 import dotenv from "dotenv";
 dotenv.config();
-
-let createdUsers = [];
 
 describe("Auth API - Register", () => {
   beforeAll(async () => {
@@ -18,10 +17,9 @@ describe("Auth API - Register", () => {
   });
 
   beforeEach(async () => {
-    // No reset for users
-  });
+  await resetData(User, testUsers);
+});
 
-  // Valid Registration
   test("POST /api/auth/register with valid data creates user", async () => {
     const res = await request(app).post("/api/auth/register").send({
       username: "testuser",
@@ -31,11 +29,10 @@ describe("Auth API - Register", () => {
       phone: "1234567890"
     });
     expect(res.statusCode).toBe(201);
-    expect(res.body.username).toBe("testuser");
-    expect(res.body.email).toBe("test@example.com");
-    expect(res.body.passwordHash).toBeUndefined();
-    expect(res.body.role).toBe("user");
-    createdUsers.push(res.body._id);
+    expect(res.body.user.username).toBe("testuser");
+    expect(res.body.user.email).toBe("test@example.com");
+    expect(res.body.user.passwordHash).toBeUndefined();
+    expect(res.body.user.role).toBe("user");
   });
 
   test("POST /api/auth/register with optional all fields", async () => {
@@ -50,7 +47,6 @@ describe("Auth API - Register", () => {
     });
     expect(res.statusCode).toBe(201);
     expect(res.body.firstName === "John" || !res.body.firstName).toBe(true);
-    createdUsers.push(res.body._id);
   });
 
   // Duplicate Detection
@@ -62,7 +58,6 @@ describe("Auth API - Register", () => {
       confirmPassword: "SecurePass123",
       phone: "1111111111"
     });
-    createdUsers.push(firstRes.body._id);
 
     const res = await request(app).post("/api/auth/register").send({
       username: "duplicate",
@@ -83,7 +78,6 @@ describe("Auth API - Register", () => {
       confirmPassword: "SecurePass123",
       phone: "1111111111"
     });
-    createdUsers.push(firstRes.body._id);
 
     const res = await request(app).post("/api/auth/register").send({
       username: "user2",
@@ -104,7 +98,6 @@ describe("Auth API - Register", () => {
       confirmPassword: "SecurePass123",
       phone: "9876543210"
     });
-    createdUsers.push(firstRes.body._id);
 
     const res = await request(app).post("/api/auth/register").send({
       username: "user2",
@@ -117,7 +110,6 @@ describe("Auth API - Register", () => {
     expect(res.body.message).toContain("Phone number already exist");
   });
 
-  // Password Validation
   test("POST /api/auth/register password mismatch fails", async () => {
     const res = await request(app).post("/api/auth/register").send({
       username: "testuser",
@@ -162,7 +154,6 @@ describe("Auth API - Register", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  // Email Validation
   test("POST /api/auth/register with invalid email format fails", async () => {
     const res = await request(app).post("/api/auth/register").send({
       username: "testuser",
@@ -208,7 +199,6 @@ describe("Auth API - Register", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  // Username Validation
   test("POST /api/auth/register with invalid username characters fails", async () => {
     const res = await request(app).post("/api/auth/register").send({
       username: "test user!",
@@ -230,8 +220,7 @@ describe("Auth API - Register", () => {
       phone: "1234567890"
     });
     expect(res.statusCode).toBe(201);
-    expect(res.body.username).toBe("test_user.123-name");
-    createdUsers.push(res.body._id);
+    expect(res.body.user.username).toBe("test_user.123-name");
   });
 
   test("POST /api/auth/register with empty username fails", async () => {
@@ -257,7 +246,6 @@ describe("Auth API - Register", () => {
     expect(res.body.errors.some(e => e.field === "body.username")).toBe(true);
   });
 
-  // Whitespace Handling
   test("POST /api/auth/register trims whitespace from username", async () => {
     const res = await request(app).post("/api/auth/register").send({
       username: "  testuser  ",
@@ -267,8 +255,7 @@ describe("Auth API - Register", () => {
       phone: "1234567890"
     });
     expect(res.statusCode).toBe(201);
-    expect(res.body.username).toBe("testuser");
-    createdUsers.push(res.body._id);
+    expect(res.body.user.username).toBe("testuser");
   });
 
   test("POST /api/auth/register trims whitespace from email", async () => {
@@ -280,11 +267,9 @@ describe("Auth API - Register", () => {
       phone: "1234567890"
     });
     expect(res.statusCode).toBe(201);
-    expect(res.body.email).toBe("test@example.com");
-    createdUsers.push(res.body._id);
+    expect(res.body.user.email).toBe("test@example.com");
   });
 
-  // Missing Required Fields
   test("POST /api/auth/register missing username fails", async () => {
     const res = await request(app).post("/api/auth/register").send({
       email: "test@example.com",
@@ -317,7 +302,6 @@ describe("Auth API - Register", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  // Edge Cases
   test("POST /api/auth/register with unknown fields fails in strict mode", async () => {
     const res = await request(app).post("/api/auth/register").send({
       username: "testuser",
@@ -339,7 +323,6 @@ describe("Auth API - Register", () => {
       phone: "1234567890"
     });
     expect(res.statusCode).toBe(201);
-    createdUsers.push(res.body._id);
   });
 
   test("POST /api/auth/register with password too long fails", async () => {
@@ -362,7 +345,6 @@ describe("Auth API - Register", () => {
       phone: "12345678"
     });
     expect(res.statusCode).toBe(201);
-    createdUsers.push(res.body._id);
   });
 
   test("POST /api/auth/register with very long phone fails", async () => {
@@ -387,7 +369,7 @@ describe("Auth API - Login", () => {
   });
 
   beforeEach(async () => {
-    // Create test user
+    await resetData(User, testUsers);
     const registerRes = await request(app).post("/api/auth/register").send({
       username: "testuser",
       email: "test@example.com",
@@ -395,10 +377,9 @@ describe("Auth API - Login", () => {
       confirmPassword: "TestPass123",
       phone: "1234567890"
     });
-    createdUsers.push(registerRes.body._id);
   });
 
-  // Valid Login
+
   test("POST /api/auth/login with valid username returns token", async () => {
     const res = await request(app).post("/api/auth/login").send({
       usernameOrEmail: "testuser",
@@ -428,7 +409,7 @@ describe("Auth API - Login", () => {
     expect(tokenParts.length).toBe(3);
   });
 
-  // Invalid Credentials
+
   test("POST /api/auth/login with non-existent username fails", async () => {
     const res = await request(app).post("/api/auth/login").send({
       usernameOrEmail: "nonexistent",
@@ -481,7 +462,7 @@ describe("Auth API - Login", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  // Username Validation
+ 
   test("POST /api/auth/login with valid username format", async () => {
     const res = await request(app).post("/api/auth/login").send({
       usernameOrEmail: "testuser",
@@ -498,7 +479,7 @@ describe("Auth API - Login", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  // Whitespace Handling
+
   test("POST /api/auth/login trims whitespace from usernameOrEmail", async () => {
     const res = await request(app).post("/api/auth/login").send({
       usernameOrEmail: "  testuser  ",
@@ -516,7 +497,7 @@ describe("Auth API - Login", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  // Missing Fields
+ 
   test("POST /api/auth/login missing usernameOrEmail fails", async () => {
     const res = await request(app).post("/api/auth/login").send({
       password: "TestPass123"
@@ -567,7 +548,6 @@ describe("Auth API - Login", () => {
   });
 
   test("POST /api/auth/login multiple users - correct user identified by username", async () => {
-    // Create second user
     const anotherRes = await request(app).post("/api/auth/register").send({
       username: "anotheruser",
       email: "another@example.com",
@@ -575,7 +555,6 @@ describe("Auth API - Login", () => {
       confirmPassword: "AnotherPass123",
       phone: "9876543210"
     });
-    createdUsers.push(anotherRes.body._id);
 
     const res = await request(app).post("/api/auth/login").send({
       usernameOrEmail: "testuser",
@@ -586,7 +565,7 @@ describe("Auth API - Login", () => {
   });
 
   test("POST /api/auth/login multiple users - correct user identified by email", async () => {
-    // Create second user
+
     const anotherRes = await request(app).post("/api/auth/register").send({
       username: "anotheruser",
       email: "another@example.com",
@@ -594,7 +573,6 @@ describe("Auth API - Login", () => {
       confirmPassword: "AnotherPass123",
       phone: "9876543210"
     });
-    createdUsers.push(anotherRes.body._id);
 
     const res = await request(app).post("/api/auth/login").send({
       usernameOrEmail: "test@example.com",
@@ -604,9 +582,3 @@ describe("Auth API - Login", () => {
   });
 });
 
-afterEach(async () => {
-  for (let id of createdUsers) {
-    await User.findByIdAndDelete(id);
-  }
-  createdUsers = [];
-});

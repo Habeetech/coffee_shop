@@ -12,11 +12,20 @@ const errorHandler = (err, req, res, next) => {
   }
 
   if (err?.code === 11000) {
+    const field = Object.keys(err.keyPattern)[0];
+
+    const messages = {
+      email: "Email already exist. Please choose a different email",
+      username: "Username already exist. Please choose a different username",
+      phone: "Phone number already exist. Please choose a different phone number"
+    };
+
     return res.status(409).json({
       success: false,
-      message: "Duplicate value"
+      message: messages[field] || "Duplicate value"
     });
   }
+
 
   if (err?.name === "CastError") {
     return res.status(400).json({

@@ -163,3 +163,32 @@ export const changePasswordSchema = z.object({
     })
   }
 })
+
+export const changeUserRoleSchema = z.object({
+  body: z.object({
+    role: z.string({
+      required_error: "Role is required"
+    })
+    .trim()
+    .min(1, "Role cannot be empty")
+  }).strict()
+})
+.superRefine((data, ctx) => {
+  const { role } = data.body;
+
+  const validRoles = ["user", "manager", "admin"];
+
+  if (!validRoles.includes(role)) {
+    ctx.addIssue({
+      path: ["body", "role"],
+      message: "Role must be one of: user, manager, admin",
+      code: z.ZodIssueCode.custom
+    });
+  }
+});
+
+export const deleteUserSchema = z.object({
+  params: z.object({
+    id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid user ID")
+  })
+});
