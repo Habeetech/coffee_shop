@@ -2,6 +2,7 @@ import AppError from "../../utils/AppError.js";
 import User from "../users/user.model.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 export const registerAccount = async (userRequest) => {
     const { username, email, password: plainPassword, phone } = userRequest;
@@ -58,4 +59,42 @@ export const loginRequest = async (userRequest) => {
 
     return { token, user: safeUser };
 
+}
+export async function forgotPassword(emailOrPhone) {
+  const user = await User.findOne({
+    $or: [{ email: emailOrPhone }, { phone: emailOrPhone }]
+  });
+
+  if (!user) {
+    return;
+  }
+
+  const rawToken = crypto.randomBytes(32).toString("hex");
+  const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+  user.resetPasswordToken = hashedToken;
+  user.resetPasswordExpires = Date.now() + 1000 * 60 * 10;
+  await user.save();
+
+  return {rawToken, user};
+}
+export async function resetPassword(token, newPassword) {
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    throw new AppError("Invalid or expired reset token", 400);
+  }
+
+  user.passwordHash = await bcrypt.hash(newPassword, 10);
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+
+  await user.save();
+
+  return user;
 }

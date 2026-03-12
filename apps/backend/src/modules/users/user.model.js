@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     role: {
         type: String,
         enum: ["user", "manager", "admin"],
@@ -59,15 +61,16 @@ const userSchema = new mongoose.Schema({
         },
     },
     favorites: [
-        {type: mongoose.Schema.Types.ObjectId, ref: "Product"}
+        { type: mongoose.Schema.Types.ObjectId, ref: "Product" }
     ],
     loyaltyPoints: {
         type: Number,
         default: 0
     },
-    defaultStore: { type: mongoose.Schema.Types.ObjectId, 
-        ref: "Store", 
+    defaultStore: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Store",
     }
-},{ timestamps: true})
+}, { timestamps: true })
 const User = mongoose.model("User", userSchema)
 export default User;

@@ -4,10 +4,10 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "CF_User24",
-  "password": "customer",
-  "confirmPassword": "customer",
-  "email": "coffeeshop24@example.com"
+  "username": "forgetUser",
+  "password": "forgetUser",
+  "confirmPassword": "forgetUser",
+  "email": "nairalord96@gmail.com"
 }
 
 ### Login in a User
@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
   "usernameOrEmail": "Habeetech",
-  "password": "habeeb-long"
+  "password": "new-password"
 }
 ###
 POST http://localhost:3000/api/auth/login
@@ -41,4 +41,20 @@ Content-Type: application/json
 {
   "usernameOrEmail": "CF_User2",
   "password": "customer"
+}
+
+### forget password
+POST http://localhost:3000/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "emailOrPhone": "oluhabnoni@gmail.com"
+}
+### reset password
+POST http://localhost:3000/api/auth/reset-password/f89399ce3527175c457c2502f52c32be12f29045ecc890eee7ab197959c4cc3a
+Content-Type: application/json
+
+{
+  "password": "new-password",
+  "confirmPassword": "new-password"
 }

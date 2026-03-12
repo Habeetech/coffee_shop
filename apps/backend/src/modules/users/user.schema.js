@@ -192,3 +192,53 @@ export const deleteUserSchema = z.object({
     id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid user ID")
   })
 });
+
+export const forgotPasswordSchema = z.object({
+  body: z.object({
+    emailOrPhone: z.string({
+      required_error: "Please provide an email or phone number"
+    })
+    .trim()
+    .min(1, "Email or phone cannot be empty")
+    .max(100, "Email or phone is too long")
+  }).strict()
+}).superRefine((data, ctx) => {
+  const value = data.body.emailOrPhone;
+
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const isPhone = /^[0-9+\-()\s]{8,20}$/.test(value);
+
+  if (!isEmail && !isPhone) {
+    ctx.addIssue({
+      path: ["body", "emailOrPhone"],
+      message: "Must be a valid email or phone number",
+      code: z.ZodIssueCode.custom
+    });
+  }
+});
+export const resetPasswordSchema = z.object({
+  params: z.object({
+    token: z.string().min(1, "Reset token is required")
+  }),
+  body: z.object({
+    password: z.string({ required_error: "Password is required" })
+      .trim()
+      .min(1, "Password cannot be empty")
+      .max(100, "Password is too long"),
+
+    confirmPassword: z.string({ required_error: "Confirm password is required" })
+      .trim()
+      .min(1, "Confirm password cannot be empty")
+      .max(100, "Confirm password is too long")
+  }).strict()
+}).superRefine((data, ctx) => {
+  const { password, confirmPassword } = data.body;
+
+  if (password !== confirmPassword) {
+    ctx.addIssue({
+      path: ["body", "confirmPassword"],
+      message: "Your passwords do not match",
+      code: z.ZodIssueCode.custom
+    });
+  }
+});
