@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from "react"
 import "../styles/MenuPage.css"
-import { MenuSection } from "../components/Menu/MenuSection";
+import { MenuSection } from "../components/menu/MenuSection";
 import useMenuData from "../hooks/useMenuData";
 import { CATEGORY_MAP } from "../config/categorymap.js"
 import { TABS } from "../config/tabs.js"

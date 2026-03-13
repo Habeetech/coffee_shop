@@ -1,4 +1,4 @@
-import { getDescription } from "../../helpers/getDescription.js"
+import { getDescription } from "../../utils/getDescription.js"
 import "./MenuItem.css"
 import placeholder from "../../assets/placeholders/no-photo.png"
 

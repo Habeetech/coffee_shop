@@ -3,7 +3,7 @@ import "./Carousel.css"
 import buyOneGetOne from "../assets/promotions/buy-one-get-one.webp"
 import sfColdCoffee from "../assets/promotions/sf-cold-coffe.jpeg"
 import startYourDay from "../assets/promotions/start-your-day.jpg"
-import { getDescription } from "../helpers/getDescription.js"
+import { getDescription } from "../utils/getDescription.js"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 

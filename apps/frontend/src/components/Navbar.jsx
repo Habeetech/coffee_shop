@@ -3,11 +3,11 @@ import logo from "../assets/brand/CoffeeShop.png"
 import homeIcon from "../assets/icons/home.png";
 import loginIcon from "../assets/icons/login.png"
 import logoutIcon from "../assets/icons/logout.png"
-import cartIcon from "../assets/icons/cart.png"
+import CartIcon from "./cart/CartIcon.jsx";
 import menuIcon from "../assets/icons/menu.png"
 import profileIcon from "../assets/icons/profile.png"
 import contactIcon from "../assets/icons/contact.png"
-import { getDescription } from "../helpers/getDescription.js"
+import { getDescription } from "../utils/getDescription.js"
 import "./Navbar.css"
 import { useState } from "react";
 
@@ -34,8 +34,11 @@ function Navbar() {
                         </svg>
                     </button>
                     }
-                    <Link to="/cart"><img className="navbar-icon" src={cartIcon} alt={getDescription(cartIcon)} /></Link>
-
+                    <div className="cart-icon-container">
+                        <Link to="/cart">
+                            <CartIcon />
+                        </Link>
+                    </div>
                 </div>
             </header>
             <nav className={`navbar ${showMenu == false ? "hidden" : ""}`}>
