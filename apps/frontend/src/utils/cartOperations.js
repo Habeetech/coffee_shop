@@ -1,6 +1,6 @@
 
 export const addItem = (cartItem, quantity = 1, maxStocks = undefined, carts) => {
-    const key = cartItem.productId + JSON.stringify(cartItem.options);
+    const key = cartItem._id + JSON.stringify(cartItem.options || "");
     const newCartItem = {...cartItem, identityKey: key}
     const existing = carts.find(item => item.identityKey === newCartItem.identityKey)
    let newCart = []
@@ -44,6 +44,26 @@ export const updateQuantity = (cartItem, quantity, maxStocks = undefined, carts)
     }
     const newCartItem = {...cartItem, quantity: newQuantity}
     return carts.map(item => item.identityKey === newCartItem.identityKey? newCartItem : item);
+}
+export const increment = (cartItem, maxStocks = undefined, carts) => {
+    const newQuantity = cartItem.quantity + 1;
+    if (maxStocks) {
+          if (newQuantity > maxStocks) {
+            throw new Error("We don't have enough item in stock, Please reduce the quantity");
+          }
+    }
+    const newCartItem = {...cartItem, quantity: newQuantity}
+     return carts.map(item => item.identityKey === newCartItem.identityKey? newCartItem : item);
+}
+export const decrement = (cartItem, maxStocks = undefined, carts) => {
+   const newQuantity = cartItem.quantity - 1;
+    if (maxStocks) {
+          if (newQuantity <= 0) {
+            throw new Error("You can't have zero quantity. Remove the item instead");
+          }
+    }
+    const newCartItem = {...cartItem, quantity: newQuantity}
+     return carts.map(item => item.identityKey === newCartItem.identityKey? newCartItem : item);
 }
 export const calculateTotals = (carts) => {
     return carts.reduce((acc, item) => acc += item.price * item.quantity, 0)

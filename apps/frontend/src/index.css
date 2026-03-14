@@ -43,12 +43,12 @@ body {
 }
 
 button {
-    background: var(--gold-200);
+    background: var(--gold-300);
     color: var(--white);
 }
 
 button:hover {
-    background: var(--gold-300);
+    background: var(--coffee-dark);
 }
 
 @media screen and (min-width: 768px) {

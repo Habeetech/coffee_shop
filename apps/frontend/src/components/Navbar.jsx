@@ -35,9 +35,7 @@ function Navbar() {
                     </button>
                     }
                     <div className="cart-icon-container">
-                        <Link to="/cart">
                             <CartIcon />
-                        </Link>
                     </div>
                 </div>
             </header>
