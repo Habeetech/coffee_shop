@@ -1,0 +1,60 @@
+.drawer-overlay {
+    --bg-opacity: 0%;
+    background-color: color-mix(in srgb, var(--coffee-darker) var(--bg-opacity), transparent);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    backdrop-filter: blur(4px);
+    z-index: 20;
+    top: 0;
+    left: 0;
+}
+
+.drawer-panel {
+    z-index: 30;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    background-color: var(--coffee-darker);
+    width: 90%;
+    box-shadow: -2px 0 10px var(--coffee-darker);
+    border-radius: 10px 0 0 10px;
+    overflow-y: auto;
+}
+
+.cart-close {
+    position: absolute;
+    right: 80%;
+    top: 10px;
+    margin-right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 100;
+}
+@media screen and (min-width: 480px) {
+    .drawer-panel {
+        width: 80%;
+    }
+    .cart-close {
+        right: 80%;
+    }
+}
+@media screen and (min-width: 768px) {
+     .drawer-panel {
+        width: 70%;
+    }
+    .cart-close {
+        right: 70%;
+    }
+}
+@media screen and (min-width: 1280px) {
+     .drawer-panel {
+        width: 60%;
+    }
+    .cart-close {
+        right: 60%;
+    }
+}

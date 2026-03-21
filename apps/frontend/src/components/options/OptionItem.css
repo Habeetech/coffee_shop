@@ -1,0 +1,21 @@
+.option-group {
+    display: flex;
+    gap: 1rem;
+    width: 70%;
+    
+}
+.option-group select {
+width: 100%;
+border-radius: 10px;
+background-color: var(--cream-100);
+color: var(--coffee-darker);
+}
+
+.option-group select option {
+  color: var(--coffee-darker);
+  background-color: var(--white); 
+}
+.option-group label {
+   text-align: left;
+    color: var(--coffee-darker);
+}

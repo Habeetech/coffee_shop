@@ -18,8 +18,7 @@ export function MenuList({ noResults, filtered, searchTerm, items }) {
           <MenuItem
             key={item._id}
             imageUrl={!item.url ? placholder : `${API_URL}/images${item.url}`}
-            itemName={item.name}
-            price={item.price}
+            value={item}
           />
         ))
       )}

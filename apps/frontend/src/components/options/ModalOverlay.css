@@ -1,0 +1,20 @@
+.shared-overlay {
+    width: 100vw;
+    height: 100vh;
+     --bg-opacity: 0%;
+    background-color: color-mix(in srgb, var(--coffee-darker) var(--bg-opacity), transparent);
+     backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+.overlay-child {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

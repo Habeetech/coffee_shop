@@ -1,0 +1,37 @@
+### Get options 
+GET http://localhost:3000/api/options
+
+### Create option 
+POST http://localhost:3000/api/options
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MzY3MTI3OCwiZXhwIjoxNzczNjc0ODc4fQ.okv2XTl9ZlBDMZClIjtbRm5di5mK74nSv55rvPHnoHQ
+Content-Type: application/json
+
+{
+    "options": {
+        "test45": [
+            {
+        "label": "test",
+        "priceModifier": 0
+    }]
+    }
+}
+### Update Option Group (test45: 69b8082bc8a2279704d43042) (test1: 69b805942e5b4934382d6992) (test: 69b804b73feeb0552c3ec5c3)
+PUT http://localhost:3000/api/options
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MzY3MTI3OCwiZXhwIjoxNzczNjc0ODc4fQ.okv2XTl9ZlBDMZClIjtbRm5di5mK74nSv55rvPHnoHQ
+Content-Type: application/json
+
+{
+    "options": {
+        "test45": [
+            {
+        "label": "testUpdated",
+        "priceModifier": 0.25
+    }]
+    }
+}
+### Delete a group
+DELETE http://localhost:3000/api/options/test1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MzY3MTI3OCwiZXhwIjoxNzczNjc0ODc4fQ.okv2XTl9ZlBDMZClIjtbRm5di5mK74nSv55rvPHnoHQ
+### Delete an item
+DELETE http://localhost:3000/api/options/test1/69b805942e5b4934382d6992
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MzY3MTI3OCwiZXhwIjoxNzczNjc0ODc4fQ.okv2XTl9ZlBDMZClIjtbRm5di5mK74nSv55rvPHnoHQ
