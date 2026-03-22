@@ -60,9 +60,9 @@ export default function CartItem({ item, isExpanded, onToggle }) {
             <button className="details-toggle-btn" onClick={onToggle}>
                 {isExpanded ? "Hide Details" : "Show Details"}
             </button>
+            {isExpanded && <div className="cart-item-details">
+                {item.type === "drinks" && (
 
-            {isExpanded && (
-                <div className="cart-item-details">
                     <div className="cart-item-selectors">
                         <div className="cart-size-selector">
                             <span className="selector-label">Size:</span>
@@ -89,17 +89,17 @@ export default function CartItem({ item, isExpanded, onToggle }) {
                         ))}
                     </div>
 
-                    <div className="cart-item-notes">
-                        <label>Special Requests:</label>
-                        <textarea
-                            value={localNote}
-                            onChange={(e) => setLocalNote(e.target.value)}
-                            onBlur={() => updateNotes(item, localNote)}
-                            maxLength={100}
-                        />
-                    </div>
+                )}
+                <div className="cart-item-notes">
+                    <label>Special Requests:</label>
+                    <textarea
+                        value={localNote}
+                        onChange={(e) => setLocalNote(e.target.value)}
+                        onBlur={() => updateNotes(item, localNote)}
+                        maxLength={100}
+                    />
                 </div>
-            )}
+            </div>}
         </div>
     );
 }
