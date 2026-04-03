@@ -3,11 +3,22 @@
     display: grid;
     grid-template-rows: auto;
     gap: 1rem;
-    color: var(--coffee-darker);
     font-size: 1rem;
     text-align: center;
 }
-
+.payment-info {
+    
+}
+.checkout-welcome {
+    padding: 1rem;
+}
+.checkout-header {
+    font-size: 2rem;
+    background-color: var(--choco-300);
+    color: var(--cream-100);
+    padding: 0.5rem 0;
+    margin-bottom: 0.5rem;
+}
 .checkout-wrapper h3 {
     font-size: 1.5rem;
     text-align: center;
@@ -24,7 +35,7 @@
     gap: 1rem;
     align-items: center;
     justify-content: center;
-    
+
 }
 
 .checkout-btns button {
@@ -44,7 +55,9 @@
     .checkout-wrapper h3 {
         font-size: 1.7rem;
     }
-
+    .checkout-header {
+        font-size: 2.2rem;
+    }
     .checkout-btns {
         flex-direction: row;
         gap: 2rem;
@@ -64,20 +77,38 @@
 @media screen and (min-width: 768px) {
     .checkout-wrapper {
         font-size: 1.5rem;
-        grid-template-columns: 1fr 2fr;
-        grid-template-areas: "summary details"
-            "buttons buttons";
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-areas:
+            "header header header"
+            "welcome welcome welcome"
+            "summary details payment"
+            "buttons buttons buttons";
     }
-     .checkout-summary {
+
+    .checkout-header {
+        grid-area: header;
+    }
+    .checkout-welcome {
+        grid-area: welcome;
+    }
+    .payment-info {
+        grid-area: payment;
+    }
+
+    .checkout-summary {
         grid-area: summary;
     }
+
     .checkout-form-section {
         grid-area: details;
     }
+
     .checkout-wrapper h3 {
         font-size: 2rem;
     }
-
+ .checkout-header {
+        font-size: 2.5rem;
+    }
     .checkout-btns {
         gap: 3rem;
         font-size: 2.2rem;
@@ -86,7 +117,7 @@
         justify-content: flex-end;
         grid-area: buttons;
     }
-   
+
 }
 
 @media screen and (min-width: 1280px) {
@@ -97,7 +128,9 @@
     .checkout-wrapper h3 {
         font-size: 2.5rem;
     }
-
+ .checkout-header {
+        font-size: 2.7rem;
+    }
     .checkout-btns {
         grid-area: buttons;
         font-size: 2.5rem;

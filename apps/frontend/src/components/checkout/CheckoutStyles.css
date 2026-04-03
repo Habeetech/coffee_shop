@@ -1,0 +1,46 @@
+.payment-options {
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 0.5rem;
+}
+.paymentIcon-wrapper {
+    width: 100%;
+    flex: 1;
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.payment-tile {
+     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: transparent;
+    color: var(--coffee-darker);
+}
+.payment-tile:hover {
+    background: none;
+      box-shadow: 0 0 2px 2px var(--coffee-darker);
+}
+.payment-tile:focus {
+    box-shadow: 0 0 2px 2px var(--coffee-darker);
+}
+.paymentIcon-wrapper img {
+    width: 90%;
+    height: 70%;
+    border-radius: 15px;
+}
+.paymentIcon-wrapper figcaption {
+    font-size: 1.2rem;
+}
+.card-payment-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}

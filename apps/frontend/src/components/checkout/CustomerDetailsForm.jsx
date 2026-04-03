@@ -1,4 +1,4 @@
-import "./CustomerDetailsForm.css"
+import InputField from "../form/InputField"
 export default function CustomerDetailsForm({
     customer,
     errors,
@@ -7,41 +7,37 @@ export default function CustomerDetailsForm({
 }) {
     return (
         <fieldset className="customer-details">
-            <label>
-                First Name:
-                <input
-                    type="text"
-                    name="firstName"
-                    value={customer.firstName}
-                    onChange={(e) => handleCustomerChange(e.target)}
-                    disabled={Boolean(user)}
-                />
-            </label>
-            {errors.firstName && <p className="error">{errors.firstName}</p>}
+            <InputField
+                label="First Name"
+                type="text"
+                name="firstName"
+                error={errors.firstName}
+                value={customer.firstName}
+                required={true}
+                onChange={handleCustomerChange}
+                disabled={Boolean(user)}
+            />
+            <InputField
+                label="Last Name"
+                type="text"
+                name="lastName"
+                required={true}
+                error={errors.lastName}
+                value={customer.lastName}
+                onChange={handleCustomerChange}
+                disabled={Boolean(user)}
+            />
+            <InputField
+                label="Email"
+                type="email"
+                name="email"
+                required={true}
+                error={errors.email}
+                value={customer.email}
+                onChange={handleCustomerChange}
+                disabled={Boolean(user)}
+            />
 
-            <label>
-                Last Name:
-                <input
-                    type="text"
-                    name="lastName"
-                    value={customer.lastName}
-                    onChange={(e) => handleCustomerChange(e.target)}
-                    disabled={Boolean(user)}
-                />
-            </label>
-            {errors.lastName && <p className="error">{errors.lastName}</p>}
-
-            <label>
-                Email:
-                <input
-                    type="email"
-                    name="email"
-                    value={customer.email}
-                    onChange={(e) => handleCustomerChange(e.target)}
-                    disabled={Boolean(user)}
-                />
-            </label>
-            {errors.email && <p className="error">{errors.email}</p>}
         </fieldset>
     )
 }

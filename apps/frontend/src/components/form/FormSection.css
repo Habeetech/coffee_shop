@@ -1,0 +1,21 @@
+.form-section {
+  margin: 2rem auto;
+  background: var(--cream-300);
+  border-radius: 10px;
+  border: 1px solid var(--cream-100);
+  box-shadow: 0 1px 2px var(--coffee-darker);
+  width: 90%;
+}
+
+.form-section h3 {
+  border-radius: 10px 10px 0 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--cream-100);
+}
+.section-children {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem;
+}

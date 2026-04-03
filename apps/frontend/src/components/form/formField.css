@@ -1,0 +1,40 @@
+.input-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.address-form {
+    width: 100%;
+}
+.input-field input {
+    border: 2px solid var(--coffee-darker);
+    border-radius: 5px;
+    width: 80%;
+    padding: 0.2rem;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.radio-group {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.radio-option {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-error {
+    color: red;
+}
+.checkbox-field {
+    display: flex;
+    gap: 0.5rem;
+}

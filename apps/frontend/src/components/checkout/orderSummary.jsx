@@ -1,8 +1,10 @@
 import { getDescription } from "../../utils/getDescription.js";
-import "./OrderSummary.css"
+
+import FormSection from "../form/FormSection.jsx";
 export default function OrderSummary ({carts}) {
-    return (<>
-      <h3 className="cart-summary-title">Order Summary</h3>
+    return (<FormSection 
+    title="Order Summary"
+    >
                     {carts.map(cartItem => <div
                         key={cartItem.identityKey}
                         className="cart-summary-item"
@@ -14,5 +16,5 @@ export default function OrderSummary ({carts}) {
                         <p>Price: £ {Number(cartItem.price).toFixed(2)}</p>
                         <p>Quantity: {cartItem.quantity}</p>
                     </div>)}
-    </>)
+    </FormSection>)
 }
