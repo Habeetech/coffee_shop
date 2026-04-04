@@ -1,0 +1,8 @@
+POST http://localhost:3000/api/create-payment-intent
+Content-Type: application/json
+
+{
+  "items": [
+    { "id": "69aebce1c596aec116a49565", "quantity": 1, "options": [{ "id": "69b7fa17c368f56a4b38c302" }] }
+  ]
+}
