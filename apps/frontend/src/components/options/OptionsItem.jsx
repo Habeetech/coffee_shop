@@ -8,7 +8,7 @@ export default function OptionsItem({ optionKey, values, onSelect, selectedValue
                 value={selectedValue || ""}
                 onChange={(e) => {
                     const selectedOption = values.find(v => v.label === e.target.value);
-                    onSelect(optionKey, e.target.value, selectedOption?.priceModifier || 0);
+                    onSelect(optionKey, e.target.value, selectedOption?.priceModifier || 0, selectedOption?._id);
                 }}
             >
                 <option value="">{`Choose ${optionKey}`}</option>

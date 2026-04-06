@@ -1,20 +1,13 @@
 import  validateCustomer  from "../validators/customerValidator";
-import validatePayment  from "../validators/paymentValidator";
-import validateBillingAddress  from "../validators/billingValidator";
 
-export default function useCheckout({ carts, total, customer, payment, user }) {
+export default function useCheckout({ carts, total, customer, user }) {
     const runValidation = () => {
         const customerErrors = validateCustomer(customer, user);
-        const paymentErrors = validatePayment(payment);
-        const billingErrors = validateBillingAddress(payment);
-
-        const hasAnyErrors = Boolean(customerErrors || paymentErrors || billingErrors);
+        const hasAnyErrors = Boolean(customerErrors);
 
         return {
             hasAnyErrors,
             customerErrors,
-            paymentErrors,
-            billingErrors
         };
     };
 
@@ -26,8 +19,8 @@ export default function useCheckout({ carts, total, customer, payment, user }) {
             createdAt: Date.now(),
             status: "pending"
         };
-
-        const res = await fetch("/orders", {
+        const API_URL = import.meta.env.VITE_API_URL;
+        const res = await fetch(`${API_URL}/api/orders`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(order)

@@ -48,47 +48,9 @@ background-color: var(--coffee-darker);
     transition: outline-color 150ms ease-in-out, box-shadow 150ms ease-in-out, transform 150ms ease-in-out;
     box-shadow: 0 0 4px var(--coffee-darker);
 }
-.error {
-    border: 2px solid var(--coffee-light);
-    padding: 1rem;
-    color: var(--coffee-darker);
-    background-color: var(--earth-100);
-    margin: 1rem auto;
-    width: 80%;
-    display: flex;
-    justify-content: space-between;
-    border-radius: 10px;
-    font-size: 1.2rem;
-}
-.error button {
-    background-color: transparent;
-    color: var(--coffee-darker);
-    transition: transform 0.2s ease-in-out;
-}
-.error button:hover {
-    transform: scale(1.2);
-}
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-.spinner {
-    /* border-top: 3px solid var(--coffee-light);
-    border-bottom: 3px solid var(--coffee-darker); */
-    border: 5px inset var(--coffee-light);
-    border-radius: 50%;
-    width: 5rem;
-    height: 5rem;
-    margin: 2.5rem auto;
-    animation-name: spin;
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
-    animation-timing-function: steps();
-}
+
+
+
 @media screen and (min-width: 768px) {
     .menu-tabs {
         font-size: 2rem;

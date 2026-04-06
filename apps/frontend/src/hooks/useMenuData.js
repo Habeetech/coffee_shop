@@ -19,7 +19,6 @@ export default function useMenuData(endpoint) {
                     setIsLoading(false);
                     return;
                 }
-
                 if (!response.ok) {
                     throw new Error("An error occured: Could not get the data from the server")
                 }
@@ -36,6 +35,7 @@ export default function useMenuData(endpoint) {
                 setErrors(e);
                 setIsLoading(false);
             }
+
         }
             fetchData();
     

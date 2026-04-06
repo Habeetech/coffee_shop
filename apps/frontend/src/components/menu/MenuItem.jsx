@@ -8,23 +8,35 @@ export function MenuItem({ imageUrl, value }) {
     const openCart = useCartStore(state => state.openCart);
     const addItem = useCartStore(state => state.addItem);
     const openModal = useOptionsStore(state => state.openModal);
+    const allOptions = useOptionsStore(state => state.options);
 
     const { name, price, type } = value;
 
     const handleQuickAdd = () => {
         const base = Number(price) || 0;
+        let defaultOptions = {};
+
+        if (type === "drinks" && allOptions?.options?.size) {
+            const smallOption = allOptions.options.size.find(
+                opt => opt.name === "Small" || opt.value === "Small"
+            );
+
+            if (smallOption) {
+                defaultOptions = { size: smallOption };
+            }
+        }
+
         const itemToCart = {
             ...value,
             url: imageUrl,
             basePrice: base,
             price: base,
-            options: { size: "Small" }
+            options: defaultOptions
         };
 
         addItem(itemToCart);
         openCart();
     };
-
 
     const handleCustomise = () => {
         openModal({ ...value, url: imageUrl });

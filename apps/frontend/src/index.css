@@ -50,7 +50,48 @@ button {
 button:hover {
     background: var(--coffee-dark);
 }
-
+.error {
+    border: 2px solid var(--coffee-light);
+    padding: 2rem;
+    color: var(--coffee-darker);
+    background-color: var(--earth-100);
+    margin: 1rem auto;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+.error-close-btn {
+    background-color: transparent;
+    color: var(--coffee-darker);
+    transition: transform 0.2s ease-in-out;
+}
+.error-close-btn:hover {
+    transform: scale(1.2);
+    background: none;
+}
+.modal-close {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    margin-right: 10px;
+    color: var(--coffee-darker);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+.modal-close:hover {
+    transform: scale(1.1);
+    color: var(--coffee-light);
+}
 @media screen and (min-width: 768px) {
   body {
     font-size: 1.7rem;

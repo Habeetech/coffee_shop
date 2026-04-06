@@ -19,7 +19,8 @@ const useOptionsStore = create(persist
         fetchOptions: async () => {
             const hours = 24 * 60 * 60 * 1000;
             if (get().lastFetched && Date.now() - get().lastFetched < hours) return;
-            const endpoint = `http://localhost:3000/api/options`
+            const API_URL = import.meta.env.VITE_API_URL;
+            const endpoint = `${API_URL}/api/options`
 
             try {
                 set({ isLoading: true });

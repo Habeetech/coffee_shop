@@ -1,59 +1,58 @@
 import "../styles/CheckoutPage.css"
-import { useState, useEffect } from "react"
+import { useState, useEffect, use, useRef } from "react"
 import useCheckout from "../hooks/useCheckout.js"
 import useCartStore from "../store/useCartStore.js";
 import useUserStore from "../store/useUserStore.js";
-import ModalOverlay from "../components/options/ModalOverlay.jsx"
 import { useNavigate } from "react-router-dom";
 import FormSection from "../components/form/FormSection.jsx";
 import TextButton from "../components/buttons/TextButton.jsx";
+import CloseModal from "../components/buttons/CloseModal.jsx"
 import DangerButton from "../components/buttons/DangerButton.jsx"
 import PaymentInformation from "../components/checkout/PaymentInformtion.jsx";
 import OrderSummary from "../components/checkout/orderSummary.jsx";
 import CustomerDetailsForm from "../components/checkout/CustomerDetailsForm.jsx";
 import DeliveryOptions from "../components/checkout/DeliveryOptions.jsx";
 import AddressForm from "../components/form/AddressForm.jsx";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import Spinner from "../components/Spinner.jsx";
+import ModalOverlay from "../components/options/ModalOverlay.jsx"
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
 
 export default function CheckoutPage() {
+    const [errorMsg, setErrorMsg] = useState("")
     const navigate = useNavigate();
-    const { carts, clearCart, total } = useCartStore();
+    const { carts, total } = useCartStore();
     const user = useUserStore(state => state.user);
+    const [clientSecret, setClientSecret] = useState(null);
+    const API_URL = import.meta.env.VITE_API_URL;
+    const formRef = useRef(null);
+    useEffect(() => {
+        if (carts.length > 0) {
+            fetch(`${API_URL}/api/create-payment-intent`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ items: carts, amount: Math.round(total() * 100) })
+            })
+                .then(res => res.json())
+                .then(data => setClientSecret(data.clientSecret))
+                .catch(err => console.error("Unable to get client secret", err))
+        }
 
+    }, [carts]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [openConfirmation, setOpenConfirmation] = useState(false);
 
     const [payment, setPayment] = useState({
         method: "",
-        card_holder_name: "",
-        card_number: "",
-        cvv: "",
-        expiry: "",
-        use_customer_address: false,
-        billing_address: {
-            street: "",
-            city: "",
-            state: "",
-            country: "",
-            postal: ""
-        }
-    });
-
-    const [paymentErrors, setPaymentErrors] = useState({
-        card: {
-            card_holder_name: "",
-            card_number: "",
-            expiry: "",
-            cvv: ""
+        stripe: {
+            status: "pending",
+            token: ""
         },
-        billing_address: {
-            street: "",
-            city: "",
-            state: "",
-            country: "",
-            postal: ""
+        collection: {
+            status: "pending"
         }
     });
-
 
     const [errors, setErrors] = useState({});
     const [customer, setCustomer] = useState({
@@ -82,34 +81,26 @@ export default function CheckoutPage() {
         }
     }, [user]);
 
-    const handleBillingAddressChange = (target) => {
-        if (target.name === "billing_address") {
-            setPayment(prev => ({
-                ...prev,
-                billing_address: target.value
-            }));
-            return;
-        }
-
-        setPayment(prev => ({
-            ...prev,
-            billing_address: {
-                ...prev.billing_address,
-                [target.name]: target.value
-            }
-        }));
-    };
-
     const handlePaymentChange = (target) => {
         const { name, type, checked, value } = target;
+        if (name === "method") {
+            setPayment(prev => ({
+                ...prev,
+                [name]: value
+            }))
+            return;
+        }
         setPayment(prev => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value
-        }));
+            [prev.method]: {
+                ...prev[prev.method],
+                [name]: type === "checkbox" ? checked : value
+            }
+        }))
     };
 
     const handleCustomerChange = (target) => {
-    
+
         setCustomer(prev => ({ ...prev, [target.name]: target.value }));
     };
 
@@ -126,60 +117,71 @@ export default function CheckoutPage() {
         carts,
         total,
         customer,
-        payment,
         user
     });
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
 
-        const { hasAnyErrors, customerErrors, paymentErrors, billingErrors } = runValidation();
+        const { hasAnyErrors, customerErrors } = runValidation();
 
         setErrors(customerErrors || {});
-        setPaymentErrors({
-            card: paymentErrors || {},
-            billing_address: billingErrors || {}
-        });
 
         if (hasAnyErrors) {
             setIsSubmitting(false);
-            return;
+            formRef.current?.scrollIntoView({ behavior: "smooth" })
+            return null;
         }
-        setOpenConfirmation(true);
         setIsSubmitting(false);
-/* 
         try {
-            await submitOrder();
-            clearCart();
-            setOpenConfirmation(true);
+            const result = await submitOrder();
+
+
+            if (!result) {
+                throw new Error("Order Creation failed on the backend");
+            }
+            return result;
+
         } catch (e) {
-            console.error("Failed Request: ", e);
+            console.error("Order Failed: ", e);
+            setErrorMsg("A problem occured while processing your order. Please try again later")
+            return null;
         } finally {
             setIsSubmitting(false);
-        } */
+        }
     };
 
+    if (carts.length === 0) {
+        return (
+            <main className="checkout-wrapper empty-checkout">
+                <h2 className="checkout-header">Your cart is empty</h2>
+                <p>You need to add some delicious items before checking out!</p>
+                <TextButton onClick={() => navigate("/menu")}>
+                    Return to Menu
+                </TextButton>
+            </main>
+        );
+    }
     return (
         <>
-            {openConfirmation && (
-                <div className="order-confirmation-msg">
-                    <ModalOverlay
-                        children={
-                            <p>
-                                Thanks. Your order has been submitted <br />
-                                You will be notified when it's ready for Delivery / Collection
-                            </p>
-                        }
-                        onClose={() => setOpenConfirmation(false)}
-                    />
-                </div>
+            {errorMsg && (
+                <ModalOverlay
+                onClose={() => setErrorMsg("")}
+                >
+                    <div className="error">
+                        <p>{errorMsg}</p>
+                        <CloseModal
+                            onClose={() => setErrorMsg("")}
+                            className="error-close-btn"
+                        />
+                    </div>
+                </ModalOverlay>
             )}
-
             <main className="checkout-wrapper">
                 <h2 className="checkout-header">Checkout</h2>
 
                 <section className="checkout-welcome">
-                    <p>Thanks for your order {user?.firstName || "Guest"}</p>
+                    <p>Thanks for your order {user?.firstName || ""}</p>
 
                     {!user?.firstName && (
                         <p>
@@ -194,7 +196,9 @@ export default function CheckoutPage() {
                     <OrderSummary carts={carts} />
                 </section>
 
-                <section className="checkout-form-section">
+                <section className="checkout-form-section"
+                    ref={formRef}
+                >
                     <FormSection title="Customer Details">
                         <CustomerDetailsForm
                             customer={customer}
@@ -218,18 +222,22 @@ export default function CheckoutPage() {
                 </section>
 
                 <section className="payment-info">
-                    <PaymentInformation
-                        payment={payment}
-                        errors={paymentErrors}
-                        handleSubmit={handleSubmit}
-                        isSubmitting={isSubmitting}
-                        handlePayment={handlePaymentChange}
-                        handleBillingAddressChange={handleBillingAddressChange}
-                        address={customer.address}
-                        total={total}
-                    />
+                    {clientSecret ? (
+                        <Elements stripe={stripePromise} options={{ clientSecret }}>
+                            <PaymentInformation
+                                payment={payment}
+                                handleSubmit={handleSubmit}
+                                isSubmitting={isSubmitting}
+                                handlePayment={handlePaymentChange}
+                                address={customer.address}
+                                secret={clientSecret}
+                                total={total}
+                            />
+                        </Elements>
+                    ) : (
+                        <Spinner />
+                    )}
                 </section>
-
                 <section className="checkout-btns">
                     <DangerButton onClick={() => navigate(-1)}>
                         Cancel

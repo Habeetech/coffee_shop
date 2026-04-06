@@ -1,11 +1,13 @@
 import CartItem from "./CartItem.jsx";
 import useCartStore from "../../store/useCartStore.js";
 import "./CartPanel.css";
+import { Link } from "react-router-dom"
 
 export default function CartPanel() {
   const carts = useCartStore(state => state.carts);
   const total = useCartStore(state => state.total());
   const clearCart = useCartStore(state => state.clearCart);
+  const closeCart = useCartStore(state => state.closeCart);
 
   const expandedId = useCartStore(state => state.expandedId);
   const setExpandedId = useCartStore(state => state.setExpandedId);
@@ -32,7 +34,10 @@ export default function CartPanel() {
       <div className="cart-footer">
         <p className="cart-totals">Total: £{Number(total).toFixed(2)}</p>
         <div className="cart-btns-wrapper">
-          <button className="cart-checkout">Checkout</button>
+          <Link to="/checkout"><button 
+          className="cart-checkout"
+          onClick={closeCart}
+          >Checkout</button></Link>
           <button className="clear-cart" onClick={clearCart}>Clear Cart</button>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { MenuSection } from "../components/menu/MenuSection";
 import useMenuData from "../hooks/useMenuData";
 import { CATEGORY_MAP } from "../config/categorymap.js"
 import { TABS } from "../config/tabs.js"
+import Spinner from "../components/Spinner.jsx";
 
 function MenuPage() {
     const tabRefs = useRef([]);
@@ -73,7 +74,7 @@ function MenuPage() {
                 aria-hidden="false"
             >
                 {
-                    isLoading ? <div className="spinner"></div>
+                    isLoading ? <Spinner />
                         : errors ? <div className="error">
                             <p>{`An error occured: Could not get ${activeTab} from the server`}</p>
                             <button className="close" >X</button>

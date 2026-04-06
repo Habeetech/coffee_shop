@@ -5,6 +5,7 @@ import OptionsItem from "./OptionsItem.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import ModalOverlay from "./ModalOverlay.jsx";
 import "./OptionsModal.css";
+import CloseModal from "../buttons/CloseModal.jsx";
 
 export default function OptionsModal() {
     const { isOptionsOpen, selectedItem, closeModal, options: masterOptions } = useOptionsStore();
@@ -14,11 +15,14 @@ export default function OptionsModal() {
 
     const { size: sizeList, ...extrasList } = masterOptions?.options || {};
 
-
-    const handleSelect = (key, label, modifier = 0) => {
+    const handleClose = (e) => {
+        e.stopPropagation()
+            closeModal();
+    }
+    const handleSelect = (key, label, modifier = 0, id) => {
         setSelections(prev => ({
             ...prev,
-            [key]: { label, modifier: Number(modifier) || 0 }
+            [key]: { label, modifier: Number(modifier) || 0, id }
         }));
     };
 
@@ -35,7 +39,9 @@ export default function OptionsModal() {
             basePrice: base,
             price: base + totalExtra,
             options: Object.fromEntries(
-                Object.entries(selections).map(([k, v]) => [k, v.label])
+                Object.entries(selections).map(([k, v]) => [k,
+                    { label: v.label, _id: v.id }
+                ])
             ),
         };
 
@@ -50,7 +56,8 @@ export default function OptionsModal() {
             setSelections({
                 size: {
                     label: defaultSize?.label || "Small",
-                    modifier: Number(defaultSize?.priceModifier) || 0
+                    modifier: Number(defaultSize?.priceModifier) || 0,
+                    id: defaultSize?._id
                 }
             });
         }
@@ -70,19 +77,9 @@ export default function OptionsModal() {
                         exit={{ scale: 0.8, opacity: 0 }}
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
                     >
-                           <button
-              className="option-close"
-              aria-label="Close Modal"
-              onClick={(e) => {
-                e.stopPropagation()
-                closeModal();
-              }}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24">
-                <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="2" />
-                <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" strokeWidth="2" />
-              </svg>
-            </button>
+                     <CloseModal 
+                     onClose={handleClose}
+                     />
                         <h3 className="modal-header">Customize {selectedItem?.name}</h3>
 
                         <div className="size-selector">
@@ -92,7 +89,7 @@ export default function OptionsModal() {
                                     <button
                                         key={s._id}
                                         className={`size-btn ${selections.size?.label === s.label ? "active" : ""}`}
-                                        onClick={() => handleSelect("size", s.label, s.priceModifier)}
+                                        onClick={() => handleSelect("size", s.label, s.priceModifier, s._id)}
                                     >
                                         {s.label}
                                     </button>
@@ -106,7 +103,7 @@ export default function OptionsModal() {
                                     key={key}
                                     optionKey={key}
                                     values={values}
-                                    onSelect={(k, val, mod) => handleSelect(k, val, mod)}
+                                    onSelect={(k, val, mod, id) => handleSelect(k, val, mod, id)}
                                     selectedValue={selections[key]?.label || ""}
                                 />
                             ))}

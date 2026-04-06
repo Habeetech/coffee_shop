@@ -6,10 +6,16 @@ import OptionsModal from "../components/options/OptionsModal.jsx";
 import { useEffect } from "react";
 import useOptionsStore from "../store/useOptionsStore.js";
 
+
 function MainLayout() {
+    
+const fetchOptions = useOptionsStore(state => state.fetchOptions)
+const isLoading = useOptionsStore(state => state.isLoading)
     useEffect(() => {
-        useOptionsStore.getState().fetchOptions();
-    }, []);
+        if (!isLoading){
+            fetchOptions();
+        }
+    }, [fetchOptions, isLoading]);
     return (
         <div className="main-layout">
             <CartDrawer />

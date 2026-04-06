@@ -4,38 +4,48 @@ import useCartStore from "../../store/useCartStore";
 import useOptionsStore from "../../store/useOptionsStore";
 import OptionsItem from "../options/OptionsItem";
 import "./CartItem.css";
-
+const EMPTY_OPTIONS = {};
 export default function CartItem({ item, isExpanded, onToggle }) {
     const { name, price, quantity, url, options: selectedOptions, notes, identityKey } = item;
 
-    const availableOptions = useOptionsStore(state => state.options?.options || {});
+    const availableOptions = useOptionsStore(state => state.options?.options || EMPTY_OPTIONS);
     const { size: availableSizes, ...extras } = availableOptions;
 
     const { removeItem, increment, decrement, updateOptions, updateNotes, setExpandedId } = useCartStore();
     const [localNote, setLocalNote] = useState(notes || "");
 
     const handleOptionChange = (key, newValue) => {
-        const updatedOptions = { ...selectedOptions, [key]: newValue };
+        const categoryOptions = key === "size" ? availableSizes : extras[key];
+        const match = categoryOptions?.find(opt => opt.label === newValue);
+
+        if(!match) return;
+
+        const updatedOptions = {
+            ...selectedOptions,
+            [key]: { label: match.label, id: match._id }
+        };
+
+
 
         let totalModifier = 0;
-        const selectedSizeObj = availableSizes?.find(s => s.label === updatedOptions.size);
+
+        const currentSizeLabel = updatedOptions.size?.label;
+        const selectedSizeObj = availableSizes?.find(s => s.label === currentSizeLabel);
         totalModifier += (Number(selectedSizeObj?.priceModifier) || 0);
 
         Object.entries(extras).forEach(([extraKey, values]) => {
-            const match = values.find(v => v.label === updatedOptions[extraKey]);
-            if (match) totalModifier += (Number(match.priceModifier) || 0);
+            const selectedExtraLabel = updatedOptions[extraKey]?.label;
+            if (selectedExtraLabel) {
+                const matchExtra = values.find(v => v.label === selectedExtraLabel);
+                if (matchExtra) totalModifier += (Number(matchExtra.priceModifier) || 0);
+            }
         });
 
-        const base = Number(item.basePrice) || Number(item.price) || 0;
+        const base = Number(item.basePrice) || 0;
         const newCalculatedPrice = base + totalModifier;
-
         const newKey = item._id + JSON.stringify(updatedOptions);
 
-
-        if (isExpanded) {
-            setExpandedId(newKey);
-        }
-
+        if (isExpanded) setExpandedId(newKey);
         updateOptions(item, updatedOptions, newCalculatedPrice);
     };
 
@@ -70,7 +80,7 @@ export default function CartItem({ item, isExpanded, onToggle }) {
                                 {availableSizes?.map((s) => (
                                     <button
                                         key={s._id}
-                                        className={`size-btn-small ${selectedOptions?.size === s.label ? "active" : ""}`}
+                                        className={`size-btn-small ${selectedOptions?.size.label === s.label ? "active" : ""}`}
                                         onClick={() => handleOptionChange("size", s.label)}
                                     >
                                         {s.label}
@@ -83,7 +93,7 @@ export default function CartItem({ item, isExpanded, onToggle }) {
                                 key={key}
                                 optionKey={key}
                                 values={values}
-                                selectedValue={selectedOptions ? selectedOptions[key] : ""}
+                                selectedValue={selectedOptions ? selectedOptions[key]?.label : ""}
                                 onSelect={handleOptionChange}
                             />
                         ))}
