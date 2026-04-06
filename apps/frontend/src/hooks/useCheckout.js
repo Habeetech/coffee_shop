@@ -14,9 +14,8 @@ export default function useCheckout({ carts, total, customer, user }) {
     const submitOrder = async () => {
         const order = {
             items: carts,
-            total,
-            customer,
-            createdAt: Date.now(),
+            total: Number(total().toFixed(2)),
+            customer: customer,
             status: "pending"
         };
         const API_URL = import.meta.env.VITE_API_URL;

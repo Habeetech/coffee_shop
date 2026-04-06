@@ -5,6 +5,7 @@ import Spinner from "../components/Spinner.jsx";
 import TextButton from "../components/buttons/TextButton";
 
 export default function OrderSuccessPage() {
+    const [orderDetails, setOrderDetails] = useState(null)
     const [searchParams] = useSearchParams();
     const [status, setStatus] = useState("loading");
     const clearCart = useCartStore(state => state.clearCart);
@@ -26,6 +27,7 @@ export default function OrderSuccessPage() {
         .then(data => {
             if (data.success) {
                 setStatus("success");
+                setOrderDetails(data.order);
                 clearCart();
             } else {
                 setStatus("error");
@@ -40,13 +42,14 @@ export default function OrderSuccessPage() {
         <main className="success-container">
             {status === "success" ? (
                 <>
-                    <h1>Order Confirmed! ☕</h1>
+                    <h2>Order Confirmed! ☕</h2>
                     <p>Your caffeine is on the way.</p>
+                    <p>Order Id: {orderDetails?._id}</p>
                     <Link to="/menu"><TextButton>Order More</TextButton></Link>
                 </>
             ) : (
                 <>
-                    <h1>Something went wrong</h1>
+                    <h2>Something went wrong</h2>
                     <p>We couldn't verify your payment. Please contact support.</p>
                 </>
             )}

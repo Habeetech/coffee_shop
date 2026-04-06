@@ -49,7 +49,14 @@ export async function createPaymentIntent(items, amount, currency = "gbp") {
     const intent = await stripeInstance.paymentIntents.create({
         amount: total,
         currency: currency,
-        automatic_payment_methods: { enabled: true }
+        automatic_payment_methods: { enabled: true },
+        metadata: {
+            orderId: ""
+        }
     });
     return { clientSecret: intent.client_secret };
+}
+
+export async function verifyPayment({clientSecret}) {
+    
 }
