@@ -1,0 +1,60 @@
+### Pay on collection
+POST http://localhost:3000/api/orders
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "_id": "69aec52dc964f514c51ebd99",
+      "name": "Mango Bubble Berry Tea",
+      "url": "https://yourdomain.com/path/to/images/mango.png",
+      "price": 4.50,
+      "basePrice": 5.50,
+      "quantity": 1,
+      "type": "drinks",
+      "category": "iced-tea",
+      "options": {}
+    }
+  ],
+  "total": 5.50,
+  "customer": {
+    "firstName": "Habeeb",
+    "lastName": "Ola",
+    "email": "example@email.com",
+    "deliveryOption": "collection",
+    "address": {}
+  },
+  "status": "pending",
+  "paymentMethod": "collection",
+  "stripeId": ""
+}
+### Stripe Payment
+POST http://localhost:3000/api/orders
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "_id": "69aec52dc964f514c51ebd99",
+      "name": "Mango Bubble Berry Tea",
+      "url": "https://yourdomain.com/path/to/images/mango.png",
+      "price": 4.50,
+      "basePrice": 5.50,
+      "quantity": 1,
+      "type": "drinks",
+      "category": "iced-tea",
+      "options": {}
+    }
+  ],
+  "total": 5.50,
+  "customer": {
+    "firstName": "Habeeb",
+    "lastName": "Ola",
+    "email": "example@email.com",
+    "deliveryOption": "collection",
+    "address": {}
+  },
+  "status": "pending",
+  "paymentMethod": "stripe",
+  "stripeId": "pi_3TJdIqIzM8ZcbdVL12r6OrDm"
+}

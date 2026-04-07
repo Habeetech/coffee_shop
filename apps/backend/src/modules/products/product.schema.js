@@ -4,6 +4,7 @@ import AppError from "../../utils/AppError.js";
 
 const typeEnum = z.enum(["drinks", "cakes", "sandwiches", "biscuits", "crisps"]);
 
+
 export const createProductSchema = z.object({
   body: z.object({
     name: z.string({ required_error: "Name is required" })

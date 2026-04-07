@@ -5,6 +5,7 @@ import userRoutes from "./modules/users/user.routes.js";
 import optionRoutes from "./modules/drinkOptions/drinkOptions.routes.js"
 import authorize from './middleware/authorize.js';
 import paymentRoutes from "./modules/payments/payment.routes.js"
+import orderRoutes from "./modules/orders/order.route.js";
 
 const router = Router();
 
@@ -13,4 +14,5 @@ router.use('/products', productRoutes);
 router.use("/user", authorize, userRoutes);
 router.use("/options", optionRoutes );
 router.use("/create-payment-intent", paymentRoutes);
+router.use("/orders", orderRoutes)
 export default router;

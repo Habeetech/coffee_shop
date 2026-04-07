@@ -120,7 +120,7 @@ export default function CheckoutPage() {
         user
     });
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (method, paymentId) => {
         setIsSubmitting(true);
 
         const { hasAnyErrors, customerErrors } = runValidation();
@@ -134,7 +134,7 @@ export default function CheckoutPage() {
         }
         setIsSubmitting(false);
         try {
-            const result = await submitOrder();
+            const result = await submitOrder(method, paymentId);
 
 
             if (!result) {

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { CATEGORY_MAP } from "../products/product.model";
+import { CATEGORY_MAP } from "../products/product.model.js";
+
 
 export const orderSchema = new mongoose.Schema({
     items: [{
@@ -119,10 +120,11 @@ export const orderSchema = new mongoose.Schema({
                             return Boolean(this.parent().deliveryOption === "delivery")
                         }, "Postal code is required"]
                     },
-                    required: [function () {
-                        return Boolean(this.parent().deliveryOption === "delivery")
-                    }, "Address field is mandatory"]
-                }
+
+                },
+                required: [function () {
+                    return Boolean(this.parent().deliveryOption === "delivery")
+                }, "Address field is mandatory"]
             },
         },
         required: [true, "Customer information is mandatory"]
@@ -145,7 +147,11 @@ export const orderSchema = new mongoose.Schema({
     },
     stripeId: {
         type: String,
-        trim: true
+        trim: true,
+        default: "",
+        required: [function () {
+            return this.paymentMethod === "stripe";
+        }]
     }
 
 }, { timestamps: true })

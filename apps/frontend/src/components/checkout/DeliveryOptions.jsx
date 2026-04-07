@@ -13,7 +13,7 @@ export default function DeliveryOptions({
             onChange={handleCustomerChange}
             error={errors.deliveryOption}
             options={[
-                { label: "Pick Up", value: "pickup" },
+                { label: "Pick Up", value: "collection" },
                 { label: "Delivery", value: "delivery" }
             ]}
         />

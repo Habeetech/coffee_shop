@@ -6,13 +6,15 @@ import PrimaryButton from "../buttons/PrimaryButton.jsx"
 import FormSection from "../form/FormSection.jsx"
 import PaymentTileGroup from "../checkout/PaymentTileGroup.jsx"
 import StripePaymentForm from "../payment/StripePaymentForm.jsx"
+import { useNavigate } from "react-router-dom"
+
 export default function PaymentInformation({ payment,
     handleSubmit,
     isSubmitting,
     handlePayment,
     secret,
     total }) {
-
+        const navigate = useNavigate()
     const handleSelectPayment = (method) => {
         handlePayment({
             name: "method",
@@ -35,11 +37,18 @@ export default function PaymentInformation({ payment,
             handleSubmit={handleSubmit}
             isSubmitting={isSubmitting}
             total={total}
+            method={payment.method}
+            clientSecret={secret}
             />
         )}
 
         {payment.method === "collection" && (
-            <PrimaryButton onClick={handleSubmit} disabled={isSubmitting}>
+            <PrimaryButton onClick={async () => {
+                const order = await handleSubmit(payment.method)
+                if(order) {
+                    navigate("/order-success")
+                }
+            }} disabled={isSubmitting}>
                 {isSubmitting? "Processing..." : `Confirm Order (${total().toFixed(2)})`}
             </PrimaryButton>
         )}

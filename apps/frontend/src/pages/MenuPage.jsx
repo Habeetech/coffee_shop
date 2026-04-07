@@ -3,6 +3,7 @@ import "../styles/MenuPage.css"
 import { MenuSection } from "../components/menu/MenuSection";
 import useMenuData from "../hooks/useMenuData";
 import { CATEGORY_MAP } from "../config/categorymap.js"
+import TextButton from "../components/buttons/TextButton.jsx"
 import { TABS } from "../config/tabs.js"
 import Spinner from "../components/Spinner.jsx";
 
@@ -37,8 +38,9 @@ function MenuPage() {
         tabRefs.current[focusedIndex]?.focus();
     }, [focusedIndex])
     const [activeTab, setActiveTab] = useState("drinks")
-    const endpoint = `http://localhost:3000/api/products/?type=${activeTab}`
-    const { result, isLoading, errors } = useMenuData(endpoint);
+    const API_URL = import.meta.env.VITE_API_URL;
+    const endpoint = `${API_URL}/api/products/?type=${activeTab}`
+    const { result, isLoading, errors, reload } = useMenuData(endpoint);
     return (
         <section className="menu-wrapper">
             <h2>Menu</h2>
@@ -74,10 +76,13 @@ function MenuPage() {
                 aria-hidden="false"
             >
                 {
-                    isLoading ? <Spinner />
+                    isLoading || (!result.length && !errors) ? <Spinner />
                         : errors ? <div className="error">
                             <p>{`An error occured: Could not get ${activeTab} from the server`}</p>
-                            <button className="close" >X</button>
+                            <TextButton 
+                            className="retry-btn"
+                            onClick={reload}
+                             >Retry</TextButton>
                         </div> :
                             <MenuSection
                                 key={activeTab}

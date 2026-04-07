@@ -11,13 +11,16 @@ export default function useCheckout({ carts, total, customer, user }) {
         };
     };
 
-    const submitOrder = async () => {
+    const submitOrder = async (method, paymentId) => {
         const order = {
             items: carts,
-            total: Number(total().toFixed(2)),
+            total: Math.round(total() * 100) / 100,
             customer: customer,
-            status: "pending"
+            status: "pending",
+            paymentMethod: method,
+            stripeId: paymentId || ""
         };
+        console.log(order);
         const API_URL = import.meta.env.VITE_API_URL;
         const res = await fetch(`${API_URL}/api/orders`, {
             method: "POST",

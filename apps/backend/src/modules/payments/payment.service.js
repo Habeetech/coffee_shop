@@ -49,14 +49,20 @@ export async function createPaymentIntent(items, amount, currency = "gbp") {
     const intent = await stripeInstance.paymentIntents.create({
         amount: total,
         currency: currency,
-        automatic_payment_methods: { enabled: true },
-        metadata: {
-            orderId: ""
-        }
+        automatic_payment_methods: { enabled: true }
     });
     return { clientSecret: intent.client_secret };
 }
-
+export async function updatePaymentIntent({orderId, paymentId}) {
+    const update = await stripeInstance.paymentIntents.update(paymentId, {
+        metadata: {
+            orderId: orderId.toString()
+        }
+    })
+    if(!update) {
+        throw new AppError("Unable to update the payment intent", 500);
+    }
+}
 export async function verifyPayment({clientSecret}) {
     
 }
