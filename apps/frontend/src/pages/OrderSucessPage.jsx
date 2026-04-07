@@ -5,53 +5,76 @@ import Spinner from "../components/Spinner.jsx";
 import TextButton from "../components/buttons/TextButton";
 
 export default function OrderSuccessPage() {
-    const [orderDetails, setOrderDetails] = useState(null)
+    const [orderDetails, setOrderDetails] = useState(null);
     const [searchParams] = useSearchParams();
     const [status, setStatus] = useState("loading");
     const clearCart = useCartStore(state => state.clearCart);
 
-    const clientSecret = searchParams.get("payment_intent_client_secret");
+    const orderId = searchParams.get("orderId");
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
-        if (!clientSecret) {
-            setStatus("error");
-            return;
-        }
+        let pollCount = 0;
+        const maxPolls = 5; 
+        const pollInterval = 2000; 
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/verify-payment`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ clientSecret })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                setStatus("success");
-                setOrderDetails(data.order);
-                clearCart();
-            } else {
+        const fetchOrder = async () => {
+            if (!orderId) {
+                setStatus("error");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/api/orders/${orderId}`);
+                const data = await res.json();
+
+                if (data?.success) {
+                    setOrderDetails(data.order);
+                    console.log(data.order);
+
+                    if (data.order.status !== "paid" && pollCount < maxPolls) {
+                        pollCount++;
+                        setTimeout(fetchOrder, pollInterval);
+                    } else {
+                        setStatus("success");
+                        clearCart();
+                    }
+                } else {
+                    setStatus("error");
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
                 setStatus("error");
             }
-        })
-        .catch(() => setStatus("error"));
-    }, [clientSecret, clearCart]);
+        };
+
+        fetchOrder();
+    }, [orderId, clearCart, API_URL]);
 
     if (status === "loading") return <Spinner />;
 
     return (
         <main className="success-container">
             {status === "success" ? (
-                <>
+                <div className="text-center">
                     <h2>Order Confirmed! ☕</h2>
-                    <p>Your caffeine is on the way.</p>
-                    <p>Order Id: {orderDetails?._id}</p>
+                    <p>Thank you, {orderDetails?.customer.firstName || "Customer"}!</p>
+                    
+                    <div className={`status-badge ${orderDetails?.status}`}>
+                        {orderDetails?.status === "paid" 
+                            ? "Payment Verified ✅" 
+                            : "Processing Payment... ⏳"}
+                    </div>
+
+                    <p className="mt-4"><strong>Order ID:</strong> {orderDetails?._id}</p>
                     <Link to="/menu"><TextButton>Order More</TextButton></Link>
-                </>
+                </div>
             ) : (
-                <>
-                    <h2>Something went wrong</h2>
-                    <p>We couldn't verify your payment. Please contact support.</p>
-                </>
+                <div className="text-center">
+                    <h2>Oops!</h2>
+                    <p>We're having trouble verifying your order status.</p>
+                    <Link to="/menu"><TextButton>Back to Menu</TextButton></Link>
+                </div>
             )}
         </main>
     );

@@ -2,7 +2,7 @@
 import express from "express";
 import errorHandler from "./middleware/errorHandler.js"
 import router from "./router.js";
-
+import stripeWebhookController from "./modules/orders/order.webhook.js";
 import cors from "cors"
 import morgan from "morgan"
 import path from "path";
@@ -15,7 +15,7 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
+app.post("/api/webhook/stripe", express.raw({ type: "application/json"}), stripeWebhookController)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 if (process.env.FRONTEND_URL)

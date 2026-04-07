@@ -46,7 +46,7 @@ export default function PaymentInformation({ payment,
             <PrimaryButton onClick={async () => {
                 const order = await handleSubmit(payment.method)
                 if(order) {
-                    navigate("/order-success")
+                    navigate(`/order-success?orderId=${order._id}`)
                 }
             }} disabled={isSubmitting}>
                 {isSubmitting? "Processing..." : `Confirm Order (${total().toFixed(2)})`}

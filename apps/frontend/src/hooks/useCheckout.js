@@ -20,7 +20,6 @@ export default function useCheckout({ carts, total, customer, user }) {
             paymentMethod: method,
             stripeId: paymentId || ""
         };
-        console.log(order);
         const API_URL = import.meta.env.VITE_API_URL;
         const res = await fetch(`${API_URL}/api/orders`, {
             method: "POST",
@@ -29,8 +28,8 @@ export default function useCheckout({ carts, total, customer, user }) {
         });
 
         if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-
-        return await res.json();
+        const data = await res.json();
+        return data.order;
     };
 
     return { runValidation, submitOrder };

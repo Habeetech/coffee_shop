@@ -2,6 +2,7 @@ import stripe from "stripe";
 import AppError from "../../utils/AppError.js";
 import Product from "../products/product.model.js";
 import drinkOptions from "../drinkOptions/drinkOptions.model.js";
+import Order from "../orders/order.model.js"
 
 const secret_key = process.env.STRIPE_SECRET_KEY;
 const stripeInstance = new stripe(secret_key);
@@ -21,7 +22,7 @@ async function calculateTotal(items) {
     const total = items.reduce((acc, item) => {
         const itemId = item.id || item._id;
         if (!productsMap.has(itemId)) {
-                console.log(`Product ${itemId} does not exist`);
+            console.log(`Product ${itemId} does not exist`);
             throw new AppError(`Product ${itemId} does not exist`, 404);
         }
         acc += productsMap.get(itemId).price * item.quantity;
@@ -53,16 +54,13 @@ export async function createPaymentIntent(items, amount, currency = "gbp") {
     });
     return { clientSecret: intent.client_secret };
 }
-export async function updatePaymentIntent({orderId, paymentId}) {
+export async function updatePaymentIntent({ orderId, paymentId }) {
     const update = await stripeInstance.paymentIntents.update(paymentId, {
         metadata: {
             orderId: orderId.toString()
         }
     })
-    if(!update) {
+    if (!update) {
         throw new AppError("Unable to update the payment intent", 500);
     }
-}
-export async function verifyPayment({clientSecret}) {
-    
 }
