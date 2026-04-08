@@ -54,7 +54,7 @@ export async function createPaymentIntent(items, amount, currency = "gbp") {
     });
     return { clientSecret: intent.client_secret };
 }
-export async function updatePaymentIntent({ orderId, paymentId }) {
+export async function updatePaymentIntent(orderId, paymentId) {
     const update = await stripeInstance.paymentIntents.update(paymentId, {
         metadata: {
             orderId: orderId.toString()
@@ -63,4 +63,6 @@ export async function updatePaymentIntent({ orderId, paymentId }) {
     if (!update) {
         throw new AppError("Unable to update the payment intent", 500);
     }
+    console.log("Payment intent updated");
+    return true;
 }

@@ -10,7 +10,7 @@ export default function useCheckout({ carts, total, customer, user }) {
             customerErrors,
         };
     };
-
+  
     const submitOrder = async (method, paymentId) => {
         const order = {
             items: carts,

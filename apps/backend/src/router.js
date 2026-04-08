@@ -13,6 +13,6 @@ router.use('/auth', authRoutes);
 router.use('/products', productRoutes);
 router.use("/user", authorize, userRoutes);
 router.use("/options", optionRoutes );
-router.use("/create-payment-intent", paymentRoutes);
+router.use("/payment-intent", paymentRoutes);
 router.use("/orders", orderRoutes)
 export default router;

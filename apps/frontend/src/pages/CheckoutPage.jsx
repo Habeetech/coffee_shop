@@ -30,7 +30,7 @@ export default function CheckoutPage() {
     const formRef = useRef(null);
     useEffect(() => {
         if (carts.length > 0) {
-            fetch(`${API_URL}/api/create-payment-intent`, {
+            fetch(`${API_URL}/api/payment-intent/create`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ items: carts, amount: Math.round(total() * 100) })

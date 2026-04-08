@@ -4,12 +4,14 @@ const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
 
 export default async function stripeWebhookController(req, res) {
+  
     const signature = req.headers["stripe-signature"];
     const secret = process.env.STRIPE_WEBHOOK_KEY;
     let event;
 
     try {
         event = stripeInstance.webhooks.constructEvent(req.body, signature, secret);
+    
     } catch (err) {
         console.error(`Webhook Signature Verification Failed: ${err.message}`);
         return res.status(400).send(`Webhook Error: ${err.message}`);

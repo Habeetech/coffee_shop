@@ -1,3 +1,7 @@
+### Get all orders
+GET http://localhost:3000/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NTU5NTQ1NiwiZXhwIjoxNzc1NTk5MDU2fQ.e-vc7M3TUIQ_kLJ4ChW_qSEye6HtBOtO8jk_cuRI8Dg
+
 ### Pay on collection
 POST http://localhost:3000/api/orders
 Content-Type: application/json
@@ -57,4 +61,12 @@ Content-Type: application/json
   "status": "pending",
   "paymentMethod": "stripe",
   "stripeId": "pi_3TJdIqIzM8ZcbdVL12r6OrDm"
+}
+### Patch: Link Order ID to Stripe Payment Intent
+PATCH http://localhost:3000/api/payment-intent/update
+Content-Type: application/json
+
+{
+    "orderId": "69aec52dc964f514c51ebd99",
+    "paymentId": "pi_3TJdIqIzM8ZcbdVL12r6OrDm"
 }
