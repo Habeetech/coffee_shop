@@ -3,6 +3,11 @@ import { CATEGORY_MAP } from "../products/product.model.js";
 
 
 export const orderSchema = new mongoose.Schema({
+    userId: {
+        type: String,
+        default: "",
+        trim: true,
+    },
     items: [{
         _id: {
             type: String,
@@ -137,7 +142,7 @@ export const orderSchema = new mongoose.Schema({
     status: {
         type: String,
         required: [true, "Status is required"],
-        enum: ["pending", "paid", "preparing", "completed"],
+        enum: ["pending", "paid", "preparing", "completed", "cancelled"],
         default: "pending"
     },
     paymentMethod: {

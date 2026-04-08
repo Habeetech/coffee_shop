@@ -21,6 +21,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 
 export default function CheckoutPage() {
+    const isProcessingIntent = useRef(false);
     const [errorMsg, setErrorMsg] = useState("")
     const navigate = useNavigate();
     const { carts, total } = useCartStore();
@@ -29,7 +30,8 @@ export default function CheckoutPage() {
     const API_URL = import.meta.env.VITE_API_URL;
     const formRef = useRef(null);
     useEffect(() => {
-        if (carts.length > 0) {
+        if (carts.length > 0 && !clientSecret && !isProcessingIntent?.current) {
+            isProcessingIntent.current = true;
             fetch(`${API_URL}/api/payment-intent/create`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -38,9 +40,10 @@ export default function CheckoutPage() {
                 .then(res => res.json())
                 .then(data => setClientSecret(data.clientSecret))
                 .catch(err => console.error("Unable to get client secret", err))
+                .finally(() => isProcessingIntent.current = false)
         }
 
-    }, [carts]);
+    }, [carts, clientSecret, API_URL]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [payment, setPayment] = useState({
@@ -166,7 +169,7 @@ export default function CheckoutPage() {
         <>
             {errorMsg && (
                 <ModalOverlay
-                onClose={() => setErrorMsg("")}
+                    onClose={() => setErrorMsg("")}
                 >
                     <div className="error">
                         <p>{errorMsg}</p>

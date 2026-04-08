@@ -19,10 +19,11 @@ export const createProductSchema = z.object({
 
     category: z.string().optional(),
 
-    url: z.union([
-      z.string().trim().url("Invalid URL format"),
-      z.literal("")
-    ]).optional()
+    url: z.string()
+      .trim()
+      .regex(/^(\/|http|https).+\.(jpg|jpeg|png|webp|avif|gif)$/i, "Invalid image path or URL format")
+      .or(z.literal(""))
+      .optional()
   }).strict()
 })
   .superRefine((data, ctx) => {
@@ -65,10 +66,11 @@ export const updateProductSchema = z.object({
 
     category: z.string().optional(),
 
-    url: z.union([
-      z.string().trim().url("Invalid URL format"),
-      z.literal("")
-    ]).optional()
+    url: z.string()
+  .trim()
+  .regex(/^(\/|http|https).+\.(jpg|jpeg|png|webp|avif|gif)$/i, "Invalid image path or URL format")
+  .or(z.literal(""))
+  .optional()
   }).strict(),
 
   params: z.object({
@@ -103,9 +105,9 @@ export const updateProductSchema = z.object({
   });
 
 export const querySchema = z.object({
-    type: typeEnum.optional(),
-    category: z.string().optional()
-  }).strict()
+  type: typeEnum.optional(),
+  category: z.string().optional()
+}).strict()
   .superRefine((data, ctx) => {
     const { type, category } = data;
     if (!type && !category) {
@@ -115,10 +117,10 @@ export const querySchema = z.object({
       throw new AppError(`Invalid request: no type specified for ${category}`, 400)
     }
     else {
-        const allowed = CATEGORY_MAP[type];
+      const allowed = CATEGORY_MAP[type];
       if (category && type && allowed) {
-        
-          if (!allowed.includes(category)) {
+
+        if (!allowed.includes(category)) {
           ctx.addIssue({
             path: ["category"],
             message: `Invalid category ${category} for ${type}`,
@@ -126,8 +128,8 @@ export const querySchema = z.object({
           })
         }
       }
-      
 
-      }
+
     }
+  }
   );

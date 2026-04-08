@@ -4,7 +4,7 @@ GET  http://localhost:3000
 GET http://localhost:3000/api/products
 
 ### Get Products by type
-GET http://localhost:3000/api/products/?type=cakes
+GET http://localhost:3000/api/products/?type=drinks
 
 ### Get one product
 GET http://localhost:3000/api/products/69aec52dc964f514c51ebd99
@@ -31,11 +31,12 @@ Content-Type: application/json
   "category": "hot-coffee"
 }
 ### Update a product
-PUT http://localhost:3000/api/products/69aec52dc964f514c51ebd99
+PUT http://localhost:3000/api/products/69aebce1c596aec116a49566
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NTY4NDYzNCwiZXhwIjoxNzc1Njg4MjM0fQ.WphRM4gAEOJFWFoaOENk2bACm4aJQmnm3UwR5dxBx2I
 Content-Type: application/json
 
 {
-  "price": 4.99
+  "url": "/latte.webp"
 }
 
 ### Delete a product

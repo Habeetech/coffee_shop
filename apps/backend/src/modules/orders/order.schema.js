@@ -1,12 +1,13 @@
 
 import { z } from "zod";
 import { CATEGORY_MAP } from "../products/product.model.js";
-import AppError from "../../utils/AppError.js";
+
 
 const typeEnum = z.enum(["drinks", "cakes", "sandwiches", "biscuits", "crisps"]);
 
 export const createOrderSchema = z.object({
     body: z.object({
+        userId: z.string().optional(),
         items: z.array(z.object({
             _id: z.string({ required_error: "Product id is required" })
                 .trim(),
@@ -20,7 +21,11 @@ export const createOrderSchema = z.object({
                 .gt(0, "Product quantity must be greater than zero"),
             type: typeEnum,
 
-            url: z.string().trim().optional().or(z.literal("")),
+            url: z.string()
+                .trim()
+                .regex(/^(\/|http|https).+\.(jpg|jpeg|png|webp|avif|gif)$/i, "Invalid image path or URL format")
+                .or(z.literal(""))
+                .optional(),
             options: z.object(),
             category: z.string().optional()
         })),
@@ -53,7 +58,7 @@ export const createOrderSchema = z.object({
         }),
         total: z.number({ required_error: "Total amount is required" })
             .gt(0, "total must be greater than zero"),
-        status: z.enum(["pending", "paid", "preparing", "completed"]),
+        status: z.enum(["pending", "paid", "preparing", "completed", "cancelled"]),
         paymentMethod: z.enum(["stripe", "collection"]),
         stripeId: z.string()
             .trim()
@@ -110,3 +115,26 @@ export const createOrderSchema = z.object({
     }
     )
 })
+
+export const updateOrderSchema = z.object({
+    body: z.object({
+      
+        status: z.enum(["pending", "paid", "preparing", "completed", "cancelled"]).optional(),
+
+    
+        stripeId: z.string().trim().optional(),
+
+  
+        customer: z.object({
+            deliveryOption: z.enum(["delivery", "collection"]).optional(),
+        
+            address: z.object({
+                street: z.string().trim().optional(),
+                city: z.string().trim().optional(),
+                state: z.string().trim().optional(),
+                country: z.string().trim().optional(),
+                postal: z.string().trim().optional(),
+            }).optional()
+        }).optional()
+    })
+});

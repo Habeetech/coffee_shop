@@ -1,79 +1,165 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import useCartStore from "../store/useCartStore";
 import Spinner from "../components/Spinner.jsx";
 import TextButton from "../components/buttons/TextButton";
+import "../styles/OrderSuccessPage.css"
 
 export default function OrderSuccessPage() {
     const [orderDetails, setOrderDetails] = useState(null);
     const [searchParams] = useSearchParams();
-    const [status, setStatus] = useState("loading");
+    const [status, setStatus] = useState("loading"); 
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const clearCart = useCartStore(state => state.clearCart);
+    const timeoutIdRef = useRef(null);
 
     const orderId = searchParams.get("orderId");
     const API_URL = import.meta.env.VITE_API_URL;
 
+    const fetchOrder = useCallback(async (isManual = false) => {
+        if (!orderId) {
+            setStatus("error");
+            return;
+        }
+
+        if (isManual) setIsRefreshing(true);
+
+        try {
+            const res = await fetch(`${API_URL}/api/orders/${orderId}`);
+            const data = await res.json();
+
+            if (data?.success) {
+                const order = data.order;
+                setOrderDetails(order);
+
+                if (order.paymentMethod === "collection") {
+                    setStatus("complete");
+                    clearCart();
+                    return "complete";
+                }
+
+                if (order.status === "paid") {
+                    setStatus("complete");
+                    clearCart();
+                    return "paid";
+                } else {
+                    if (isManual) {
+                        setStatus("failed");
+                    } else {
+                        setStatus("pending");
+                    }
+                    return "pending";
+                }
+            } else {
+                setStatus("error");
+            }
+        } catch (err) {
+            console.error("Fetch error:", err);
+            setStatus("error");
+        } finally {
+            if (isManual) setIsRefreshing(false);
+        }
+        return null;
+    }, [orderId, API_URL, clearCart]);
+
     useEffect(() => {
         let pollCount = 0;
-        const maxPolls = 5; 
-        const pollInterval = 2000; 
+        const maxPolls = 5;
+        const pollInterval = 2000;
 
-        const fetchOrder = async () => {
-            if (!orderId) {
-                setStatus("error");
-                return;
-            }
+        const startPolling = async () => {
+            const currentStatus = await fetchOrder();
 
-            try {
-                const res = await fetch(`${API_URL}/api/orders/${orderId}`);
-                const data = await res.json();
-
-                if (data?.success) {
-                    setOrderDetails(data.order);
-                    console.log(data.order);
-
-                    if (data.order.status !== "paid" && pollCount < maxPolls) {
-                        pollCount++;
-                        setTimeout(fetchOrder, pollInterval);
-                    } else {
-                        setStatus("success");
-                        clearCart();
-                    }
-                } else {
-                    setStatus("error");
-                }
-            } catch (err) {
-                console.error("Fetch error:", err);
-                setStatus("error");
+            if (currentStatus === "pending" && pollCount < maxPolls) {
+                pollCount++;
+                timeoutIdRef.current = setTimeout(startPolling, pollInterval);
+            } else if (currentStatus === "pending" && pollCount >= maxPolls) {
+                setStatus("failed");
             }
         };
 
-        fetchOrder();
-    }, [orderId, clearCart, API_URL]);
+        startPolling();
+
+        return () => {
+            if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+        };
+    }, [fetchOrder]);
 
     if (status === "loading") return <Spinner />;
 
     return (
         <main className="success-container">
-            {status === "success" ? (
-                <div className="text-center">
-                    <h2>Order Confirmed! ☕</h2>
-                    <p>Thank you, {orderDetails?.customer.firstName || "Customer"}!</p>
-                    
-                    <div className={`status-badge ${orderDetails?.status}`}>
-                        {orderDetails?.status === "paid" 
-                            ? "Payment Verified ✅" 
-                            : "Processing Payment... ⏳"}
+            {status === "complete" && (
+                <div className="order-status-card success-view">
+                    <h2 className="status-title">Order Confirmed!</h2>
+                    <p className="customer-greeting">Thank you, {orderDetails?.customer?.firstName || "Customer"}!</p>
+
+                    <div className={`status-badge status-badge--${orderDetails?.paymentMethod}`}>
+                        {orderDetails?.paymentMethod === "collection"
+                            ? "Pay on Collection"
+                            : "Payment Verified"}
                     </div>
 
-                    <p className="mt-4"><strong>Order ID:</strong> {orderDetails?._id}</p>
-                    <Link to="/menu"><TextButton>Order More</TextButton></Link>
+                    <p className="order-reference">
+                        <strong>Order ID:</strong> <span className="id-number">{orderDetails?._id}</span>
+                    </p>
+                    
+                    <div className="navigation-actions">
+                        <Link to="/menu"><TextButton>Order More</TextButton></Link>
+                    </div>
                 </div>
-            ) : (
-                <div className="text-center">
-                    <h2>Oops!</h2>
-                    <p>We're having trouble verifying your order status.</p>
-                    <Link to="/menu"><TextButton>Back to Menu</TextButton></Link>
+            )}
+
+            {status === "pending" && (
+                <div className="order-status-card pending-view">
+                    <h2 className="status-title">Confirming Payment...</h2>
+                    <div className="spinner-wrapper">
+                        <Spinner />
+                    </div>
+                    <p className="status-message">
+                        Hang tight, we're verifying your transaction with Stripe.
+                    </p>
+                </div>
+            )}
+
+            {status === "failed" && (
+                <div className="order-status-card failed-view">
+                    <h2 className="status-title">Verification Delayed</h2>
+                    <p className="status-message">We haven't received confirmation from Stripe yet.</p>
+
+                    <div className="manual-refresh-section">
+                        <p className="refresh-status">
+                            <strong>Status:</strong> {isRefreshing ? "Checking..." : "Still Pending"}
+                        </p>
+                        <TextButton
+                            disabled={isRefreshing}
+                            onClick={() => fetchOrder(true)}
+                        >
+                            {isRefreshing ? "Verifying..." : "Check Status Again"}
+                        </TextButton>
+                    </div>
+
+                    <div className="support-info">
+                        <p>
+                            If your card was charged but this hasn't updated, please contact support with your Order ID:
+                        </p>
+                        <span className="order-id-highlight">{orderDetails?._id}</span>
+                    </div>
+
+                    <div className="navigation-actions">
+                        <Link to="/menu"><TextButton>Back to Menu</TextButton></Link>
+                    </div>
+                </div>
+            )}
+
+            {status === "error" && (
+                <div className="order-status-card error-view">
+                    <h2 className="status-title">Oops!</h2>
+                    <p className="status-message">We're having trouble retrieving your order details.</p>
+                    <div className="navigation-actions">
+                        <TextButton onClick={() => fetchOrder(true)}>Try Again</TextButton>
+                        <Link to="/menu"><TextButton>Back to Menu</TextButton></Link>
+                    </div>
                 </div>
             )}
         </main>

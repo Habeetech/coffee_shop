@@ -33,8 +33,8 @@ export async function deleteOrder(id) {
 }
 export async function updateOrder(id, updateData) {
     const updatedOrder = await Order.findByIdAndUpdate(id, updateData, {
-        new: true, 
-        runValidators: true 
+       returnDocument: "after",
+        runValidators: true
     });
 
     if (!updatedOrder) {

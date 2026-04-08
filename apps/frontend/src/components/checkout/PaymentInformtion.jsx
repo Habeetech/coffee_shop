@@ -14,7 +14,7 @@ export default function PaymentInformation({ payment,
     handlePayment,
     secret,
     total }) {
-        const navigate = useNavigate()
+    const navigate = useNavigate()
     const handleSelectPayment = (method) => {
         handlePayment({
             name: "method",
@@ -33,23 +33,23 @@ export default function PaymentInformation({ payment,
             ]}
         />
         {payment.method === "stripe" && (
-            <StripePaymentForm 
-            handleSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-            total={total}
-            method={payment.method}
-            clientSecret={secret}
+            <StripePaymentForm
+                handleSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+                total={total}
+                method={payment.method}
+                clientSecret={secret}
             />
         )}
 
         {payment.method === "collection" && (
             <PrimaryButton onClick={async () => {
                 const order = await handleSubmit(payment.method)
-                if(order) {
+                if (order) {
                     navigate(`/order-success?orderId=${order._id}`)
                 }
             }} disabled={isSubmitting}>
-                {isSubmitting? "Processing..." : `Confirm Order (${total().toFixed(2)})`}
+                {isSubmitting ? "Processing..." : `Confirm Order (£ ${total().toFixed(2)})`}
             </PrimaryButton>
         )}
     </FormSection>

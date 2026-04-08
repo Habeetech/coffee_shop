@@ -2,7 +2,6 @@ import stripe from "stripe";
 import AppError from "../../utils/AppError.js";
 import Product from "../products/product.model.js";
 import drinkOptions from "../drinkOptions/drinkOptions.model.js";
-import Order from "../orders/order.model.js"
 
 const secret_key = process.env.STRIPE_SECRET_KEY;
 const stripeInstance = new stripe(secret_key);
@@ -56,13 +55,11 @@ export async function createPaymentIntent(items, amount, currency = "gbp") {
 }
 export async function updatePaymentIntent(orderId, paymentId) {
     const update = await stripeInstance.paymentIntents.update(paymentId, {
-        metadata: {
-            orderId: orderId.toString()
-        }
-    })
-    if (!update) {
-        throw new AppError("Unable to update the payment intent", 500);
+        metadata: { orderId: orderId.toString() }
+    });
+
+    if (!update || update.metadata.orderId !== orderId.toString()) {
+        throw new AppError("Failed to verify metadata update on Stripe", 500);
     }
-    console.log("Payment intent updated");
     return true;
 }

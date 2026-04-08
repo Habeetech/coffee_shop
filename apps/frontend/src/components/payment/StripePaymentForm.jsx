@@ -58,7 +58,7 @@ export default function StripePaymentForm({ handleSubmit, isSubmitting, total, m
                 <div style={{ color: 'red', margin: '10px 0' }}>{errorMsg}</div>
             )}
             <PrimaryButton type="submit" disabled={!stripe || isSubmitting}>
-                {isSubmitting ? "Processing..." : `Confirm Payment (${total().toFixed(2)})`}
+                {isSubmitting ? "Processing..." : `Confirm Payment (£ ${total().toFixed(2)})`}
             </PrimaryButton>
         </form>
     );

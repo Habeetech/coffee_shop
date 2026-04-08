@@ -13,6 +13,7 @@ export default function useCheckout({ carts, total, customer, user }) {
   
     const submitOrder = async (method, paymentId) => {
         const order = {
+            userId: user?._id || user?.id || "",
             items: carts,
             total: Math.round(total() * 100) / 100,
             customer: customer,

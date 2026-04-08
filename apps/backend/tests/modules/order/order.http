@@ -1,6 +1,6 @@
 ### Get all orders
 GET http://localhost:3000/api/orders
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NTU5NTQ1NiwiZXhwIjoxNzc1NTk5MDU2fQ.e-vc7M3TUIQ_kLJ4ChW_qSEye6HtBOtO8jk_cuRI8Dg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NTY4NDYzNCwiZXhwIjoxNzc1Njg4MjM0fQ.WphRM4gAEOJFWFoaOENk2bACm4aJQmnm3UwR5dxBx2I
 
 ### Pay on collection
 POST http://localhost:3000/api/orders
@@ -70,3 +70,15 @@ Content-Type: application/json
     "orderId": "69aec52dc964f514c51ebd99",
     "paymentId": "pi_3TJdIqIzM8ZcbdVL12r6OrDm"
 }
+
+### Manually set order to paid to trigger React polling update
+PATCH http://localhost:3000/api/orders/69d6bbdc362d30672c8a85e1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NTY4MDc0NiwiZXhwIjoxNzc1Njg0MzQ2fQ.UhO46Vae6U0txg1VH0VcBeyZfZwTyDk7p-1kcviLlS8
+Content-Type: application/json
+
+{
+    "status": "paid"
+}
+
+###
+GET http://localhost:3000/api/orders/69d6bbdc362d30672c8a85e1
