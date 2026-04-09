@@ -4,6 +4,7 @@ export default function AddressForm({
     address,
     errors,
     disabled = false,
+    userAddress,
     onChange
 }) {
     return (<fieldset className="address-form">
@@ -12,9 +13,9 @@ export default function AddressForm({
             label="Street"
             name="street"
             error={errors?.street}
-            value={address.street}
+            value={address?.street}
             onChange={onChange}
-            disabled={disabled}
+            disabled={userAddress?.street || disabled}
             required
         />
 
@@ -22,9 +23,9 @@ export default function AddressForm({
             label="City"
             name="city"
             error={errors?.city}
-            value={address.city}
+            value={address?.city}
               onChange={onChange}
-            disabled={disabled}
+            disabled={userAddress?.city || disabled}
             required
         />
 
@@ -32,9 +33,9 @@ export default function AddressForm({
             label="State"
             name="state"
             error={errors?.state}
-            value={address.state}
+            value={address?.state}
             onChange={onChange}
-            disabled={disabled}
+            disabled={userAddress?.state || disabled}
             required
         />
 
@@ -42,9 +43,9 @@ export default function AddressForm({
             label="Country"
             name="country"
             error={errors?.country}
-            value={address.country}
+            value={address?.country}
               onChange={onChange}
-            disabled={disabled}
+            disabled={userAddress?.country || disabled}
             required
         />
 
@@ -52,9 +53,9 @@ export default function AddressForm({
             label="Postal Code"
             name="postal"
             error={errors?.postal}
-            value={address.postal}
+            value={address?.postal}
              onChange={onChange}
-            disabled={disabled}
+            disabled={userAddress?.postal || disabled}
             required
         />
     </fieldset>

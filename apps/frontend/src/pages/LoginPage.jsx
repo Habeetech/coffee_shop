@@ -53,7 +53,6 @@ export default function LoginPage() {
 
     }
 
-    // if(user) navigate("/")
 
     return (
         <div className="login-container">

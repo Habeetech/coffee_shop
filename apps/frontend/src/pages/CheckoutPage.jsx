@@ -45,7 +45,6 @@ export default function CheckoutPage() {
 
     }, [carts, clientSecret, API_URL]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
     const [payment, setPayment] = useState({
         method: "",
         stripe: {
@@ -75,10 +74,16 @@ export default function CheckoutPage() {
     useEffect(() => {
         if (user) {
             setCustomer({
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                address: user.address,
+                firstName: user.firstName || "",
+                lastName: user.lastName || "",
+                email: user.email || "",
+                address: {
+                    street: user.address?.street || "",
+                    city: user.address?.city || "",
+                    state: user.address?.state || "",
+                    country: user.address?.country || "",
+                    postal: user.address?.postal || ""
+                },
                 deliveryOption: ""
             });
         }
@@ -185,8 +190,7 @@ export default function CheckoutPage() {
 
                 <section className="checkout-welcome">
                     <p>Thanks for your order {user?.firstName || ""}</p>
-
-                    {!user?.firstName && (
+                    {!user?._id && (
                         <p>
                             Please <a href=""><TextButton>Login</TextButton></a> or
                             <a href=""><TextButton>Register</TextButton></a>
@@ -213,7 +217,8 @@ export default function CheckoutPage() {
                             address={customer.address}
                             errors={errors.address}
                             onChange={handleAddressChange}
-                            disabled={Boolean(user)}
+                            userAddress={user.address}
+                            
                         />
 
                         <DeliveryOptions

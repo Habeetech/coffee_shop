@@ -15,7 +15,7 @@ export default function CustomerDetailsForm({
                 value={customer.firstName}
                 required={true}
                 onChange={handleCustomerChange}
-                disabled={Boolean(user)}
+                disabled={Boolean(user && user.firstName)}
             />
             <InputField
                 label="Last Name"
@@ -25,7 +25,7 @@ export default function CustomerDetailsForm({
                 error={errors.lastName}
                 value={customer.lastName}
                 onChange={handleCustomerChange}
-                disabled={Boolean(user)}
+                disabled={Boolean(user && user.lastName)}
             />
             <InputField
                 label="Email"
@@ -35,7 +35,7 @@ export default function CustomerDetailsForm({
                 error={errors.email}
                 value={customer.email}
                 onChange={handleCustomerChange}
-                disabled={Boolean(user)}
+                disabled={Boolean(user && user.email)}
             />
 
         </fieldset>
