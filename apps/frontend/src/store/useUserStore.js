@@ -3,6 +3,8 @@ import { persist } from "zustand/middleware"
 
 const useUserStore = create(persist((set, get) => ({
     user: null,
+    token: null,
+    setToken: (userToken) => (set({ token: userToken})),
     setUser: (userData) => (set({ user: userData })),
     logout: () => set({ user: null }),
     updateUser: (partialData) => {

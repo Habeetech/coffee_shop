@@ -1,0 +1,83 @@
+.login-container {
+    width: 90%;
+   max-width: 500px;
+    text-align: center;
+    display: flex;
+    color: var(--coffee-darker);
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    
+}
+.login-container h2 {
+    font-size: 3rem;
+}
+.login-section {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--cream-300);
+    padding: 5rem 0;
+    gap: 3rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+}
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 3rem;
+}
+.login-form input {
+    width: 90%;
+    border: 1px solid var(--coffee-darker);
+    padding: 1.5rem 1rem;
+    font-size: 1.5rem;
+    border-radius: 15px;
+    background-color: var(--cream-200);
+}
+
+.login-btn, .register-link-btn {
+   width: 90%;
+    border-radius: 15px;
+    padding: 0.5rem 0;
+     font-size: 1.7rem;
+     cursor: pointer;
+}
+.login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+.register-link {
+    width: 100%;
+}
+.register-link-btn {
+    background: none;
+    color: var(--coffee-light);
+    border: 2px solid var(--coffee-darker);
+   
+}
+.register-link-btn:hover {
+    background: none;
+    color: var(--coffee-darker);
+}
+.password-reset-btn {
+    background: none;
+    text-decoration: underline;
+    color: var(--coffee-light);
+    cursor: pointer;
+}
+.password-reset-btn:hover {
+    background: none;
+    color: var(--coffee-darker);
+}
+.password-reset {
+    display: flex;
+    justify-content: center;
+    font-size: 1.3rem;
+    gap: 0.5rem;
+}
