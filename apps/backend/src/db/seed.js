@@ -4,6 +4,7 @@ import products from "../seeders/productSeed.js";
 import Product from "../modules/products/product.model.js";
 import optionsSeed from "../seeders/optionsSeed.js";
 import drinkOptions from "../modules/drinkOptions/drinkOptions.model.js"
+import Order from "../modules/orders/order.model.js"
 
 dotenv.config();
 
@@ -31,5 +32,17 @@ const seedData = async (model, data) => {
         await mongoose.connection.close();
     }
 }
-seedData(drinkOptions, optionsSeed);
+const deleteData = async (model) => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        await model.deleteMany({});
+        console.log(`${model.modelName} deleted successfully!`);
+    } catch (error) {
+        console.error("Deletion failed:", error);
+    } finally {
+        await mongoose.connection.close();
+    }
+}
+//deleteData(Order);
+//seedData(drinkOptions, optionsSeed);
 //seedProducts();

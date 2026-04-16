@@ -21,21 +21,36 @@ export default async function stripeWebhookController(req, res) {
 
 
         let orderId = paymentIntent.metadata?.orderId;
+        console.log("Order id in metadata", orderId);
 
         if (!orderId) {
             const order = await Order.findOne({ stripeId: paymentIntent.id });
             orderId = order?._id;
+            console.log("OrderId in DB", orderId);
         }
 
         if (orderId) {
-            const updatedOrder = await Order.findByIdAndUpdate(
-                orderId,
-                { status: "paid" },
-                { returnDocument: 'after' }
-            );
+            console.log("Got orderId, updating status");
+            const paidOrder = await Order.findOneAndUpdate(
+                {
+                    _id: orderId,
+                    status: "pending"
+                },
+                {
+                    status: "paid",
+                    $unset: { expiresAt: "" },
+                },
+                {
+                    returnDocument: "after",
+                    runValidators: true
+                });
 
-            if (updatedOrder) {
-                await sendOrderPaymentConfirmation(updatedOrder.customer.email, updatedOrder);
+            if (paidOrder) {
+                try {
+                    await sendOrderPaymentConfirmation(paidOrder.customer.email, paidOrder);
+                } catch (emailErr) {
+                    console.error("📧 Email failed to send, but payment was recorded:", emailErr.message);
+                }
             }
         } else {
             console.error("❌ Critical: Could not link this payment to any order in DB.");

@@ -157,9 +157,12 @@ export const orderSchema = new mongoose.Schema({
         required: [function () {
             return this.paymentMethod === "stripe";
         }]
+    },
+    expiresAt: {
+        type: Date
     }
 
 }, { timestamps: true })
-
+orderSchema.index({ expiresAt: 1 }, { expiresAfterSeconds: 0 })
 const Order = mongoose.model("Order", orderSchema);
 export default Order;

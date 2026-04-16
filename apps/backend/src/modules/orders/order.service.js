@@ -2,14 +2,17 @@ import Order from "./order.model.js";
 import AppError from "../../utils/AppError.js";
 
 export async function createOrder(orderData) {
-      const newOrder = await Order.create(orderData);
+    const newOrder = await Order.create({
+        ...orderData,
+        expiresAt: new Date(Date.now() + (60 * 60 * 1000))
+    });
     if (!newOrder) {
         throw new AppError("Unable to create order", 400);
     }
     return newOrder;
 }
 export async function getAllOrders() {
-  
+
     const orders = await Order.find().sort({ createdAt: -1 });
     return orders;
 }
@@ -33,7 +36,7 @@ export async function deleteOrder(id) {
 }
 export async function updateOrder(id, updateData) {
     const updatedOrder = await Order.findByIdAndUpdate(id, updateData, {
-       returnDocument: "after",
+        returnDocument: "after",
         runValidators: true
     });
 
@@ -43,7 +46,27 @@ export async function updateOrder(id, updateData) {
 
     return updatedOrder;
 }
+export async function markOrderAsPaid(id) {
+    const paidOrder = await Order.findOneAndUpdate(
+        {
+            _id: id,
+            status: "pending"
+        },
+        {
+            status: "paid",
+            $unset: { expiresAt: "" },
+        },
+        {
+            returnDocument: "after",
+            runValidators: true
+        });
 
+    if (!paidOrder) {
+        throw new AppError("Order not found or already processed", 404);
+    }
+
+    return paidOrder;
+}
 export async function getOrdersByUserId(userId) {
     return await Order.find({ userId: userId }).sort({ createdAt: -1 });
 

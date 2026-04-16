@@ -13,6 +13,7 @@ router.post("/", validate(createOrderSchema), orderController.createOrder);
 router.get("/mine", authorize, orderController.getMyOrders);
 router.get("/:id", orderController.getOrderById);
 router.get("/", authorize, allowRoles("manager", "admin"), orderController.getAllOrders);
+router.patch("/mark-paid/:id", authorize, allowRoles("manager", "admin"), orderController.markOrderAsPaid);
 router.patch("/:id", authorize, allowRoles("manager", "admin"), validate(updateOrderSchema), orderController.updateOrder);
 router.delete("/:id", authorize, allowRoles("manager", "admin"), orderController.deleteOrder);
 export default router;
