@@ -17,6 +17,9 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import Spinner from "../components/Spinner.jsx";
 import ModalOverlay from "../components/options/ModalOverlay.jsx"
+import api from "../api/api.js";
+
+
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 
@@ -27,23 +30,27 @@ export default function CheckoutPage() {
     const { carts, total } = useCartStore();
     const user = useUserStore(state => state.user);
     const [clientSecret, setClientSecret] = useState(null);
-    const API_URL = import.meta.env.VITE_API_URL;
     const formRef = useRef(null);
     useEffect(() => {
         if (carts.length > 0 && !clientSecret && !isProcessingIntent?.current) {
             isProcessingIntent.current = true;
-            fetch(`${API_URL}/api/payment-intent/create`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ items: carts, amount: Math.round(total() * 100) })
+            api.post("/api/payment-intent/create", {
+                items: carts,
+                amount: Math.round(total() * 100)
             })
-                .then(res => res.json())
-                .then(data => setClientSecret(data.clientSecret))
-                .catch(err => console.error("Unable to get client secret", err))
-                .finally(() => isProcessingIntent.current = false)
+                .then(res => {
+                    setClientSecret(res.data.clientSecret);
+                })
+                .catch(err => {
+                    console.error("Unable to get client secret", err);
+                    setErrorMsg("Failed to initialize payment. Please refresh.");
+                })
+                .finally(() => {
+                    isProcessingIntent.current = false;
+                });
         }
 
-    }, [carts, clientSecret, API_URL]);
+    }, [carts, clientSecret]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [payment, setPayment] = useState({
         method: "",
@@ -144,7 +151,6 @@ export default function CheckoutPage() {
         try {
             const result = await submitOrder(method, paymentId);
 
-
             if (!result) {
                 throw new Error("Order Creation failed on the backend");
             }
@@ -217,8 +223,8 @@ export default function CheckoutPage() {
                             address={customer.address}
                             errors={errors.address}
                             onChange={handleAddressChange}
-                            userAddress={user.address}
-                            
+                            userAddress={user?.address}
+
                         />
 
                         <DeliveryOptions

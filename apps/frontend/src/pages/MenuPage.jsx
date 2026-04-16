@@ -38,9 +38,7 @@ function MenuPage() {
         tabRefs.current[focusedIndex]?.focus();
     }, [focusedIndex])
     const [activeTab, setActiveTab] = useState("drinks")
-    const API_URL = import.meta.env.VITE_API_URL;
-    const endpoint = `${API_URL}/api/products/?type=${activeTab}`
-    const { result, isLoading, errors, reload } = useMenuData(endpoint);
+    const { result, isLoading, errors, reload } = useMenuData(`api/products/?type=${activeTab}`);
     return (
         <section className="menu-wrapper">
             <h2>Menu</h2>

@@ -6,11 +6,15 @@ import CheckoutPage from './pages/CheckoutPage.jsx';
 import MainLayout from "../src/layouts/MainLayout.jsx"
 import OrderSuccessPage from './pages/OrderSucessPage.jsx';
 import UnAuthenticatedLayout from './layouts/UnauthenticatedLayout.jsx';
+import ProtectedGuard from './guards/ProtectedGuard.jsx';
+import GuestGuard from './guards/GuestGuard.jsx';
 import LoginPage from "./pages/LoginPage.jsx";
 import { Routes, Route } from "react-router-dom";
+import useIdleTimer from './hooks/useIdleTimer.js';
 
 
 function App() {
+  useIdleTimer();
   return (
     <Routes>
       <Route element={<MainLayout />}>
@@ -20,9 +24,12 @@ function App() {
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/order-success" element={<OrderSuccessPage />} />
       </Route>
-
-      <Route element={<UnAuthenticatedLayout />}>
-        <Route path="/login" element={<LoginPage />} />
+      <Route element={<GuestGuard />} >
+        <Route element={<UnAuthenticatedLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+      </Route>
+      <Route element={<ProtectedGuard />}>
       </Route>
     </Routes>
   )

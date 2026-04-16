@@ -10,10 +10,20 @@ import contactIcon from "../assets/icons/contact.png"
 import { getDescription } from "../utils/getDescription.js"
 import "./Navbar.css"
 import { useState } from "react";
+import useUserStore from "../store/useUserStore.js"
+import { performLogout } from "../service/authService.js"
+import { useNavigate } from "react-router-dom"
 
 function Navbar() {
     const [showMenu, setShowMenu] = useState(false);
-    const [isLogin, setIsLogin] = useState(false);
+    const user = useUserStore(state => state.user);
+    const navigate = useNavigate();
+
+const handleLogoutClick = () => {
+        performLogout(navigate, "/");
+        setShowMenu(false);
+    };
+
     return (
         <div className="header-wrapper">
             <header className="header">
@@ -42,9 +52,11 @@ function Navbar() {
             <nav className={`navbar ${showMenu == false ? "hidden" : ""}`}>
                 <Link to="/"><img className="navbar-icon" src={homeIcon} alt={getDescription(homeIcon)} /></Link>
                 <Link to="/menu"><img className="navbar-icon" src={menuIcon} alt={getDescription(menuIcon)} /></Link>
-                {isLogin && <Link to="/profile"><img className="navbar-icon" src={profileIcon} alt={getDescription(profileIcon)} /></Link>}
-                {!isLogin && <Link to="/login"><img className="navbar-icon" src={loginIcon} alt={getDescription(loginIcon)} /></Link>}
-                {isLogin && <Link to="/logout"><img className="navbar-icon" src={logoutIcon} alt={getDescription(logoutIcon)} /></Link>}
+                {user && <Link to="/profile"><img className="navbar-icon" src={profileIcon} alt={getDescription(profileIcon)} /></Link>}
+                {!user && <Link to="/login"><img className="navbar-icon" src={loginIcon} alt={getDescription(loginIcon)} /></Link>}
+                {user && <button
+                 onClick={handleLogoutClick}>
+                    <img className="navbar-icon" src={logoutIcon} alt={getDescription(logoutIcon)} /></button>}
                 <a href="#contact"><img className="navbar-icon" src={contactIcon} alt={getDescription(contactIcon)} /></a>
             </nav>
         </div>

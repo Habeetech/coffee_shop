@@ -1,4 +1,4 @@
-POST http://localhost:3000/api/create-payment-intent
+POST http://localhost:3000/api/payment-intent/create
 Content-Type: application/json
 
 {

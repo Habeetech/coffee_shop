@@ -1,13 +1,14 @@
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import PrimaryButton from "../buttons/PrimaryButton";
 import { useState } from "react";
+import api from "../../api/api.js";
+
 
 export default function StripePaymentForm({ handleSubmit, isSubmitting, total, method, clientSecret }) {
     const stripe = useStripe();
     const elements = useElements();
     const paymentIntentId = clientSecret.split("_secret_")[0];
     const [errorMsg, setErrorMsg] = useState(null);
-    const API_URL = import.meta.env.VITE_API_URL;
 
     const handleStripeSubmit = async (event) => {
         event.preventDefault();
@@ -16,23 +17,17 @@ export default function StripePaymentForm({ handleSubmit, isSubmitting, total, m
         setErrorMsg(null);
 
         try {
+   
             const order = await handleSubmit(method, paymentIntentId);
-            if (!order || !order._id) {
+            console.log(order);
+            if (!order._id) {
                 throw new Error("Order creation failed.");
             }
 
-           const updateRes = await fetch(`${API_URL}/api/payment-intent/update`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    orderId: order._id,
-                    paymentId: paymentIntentId
-                })
+            await api.patch("/api/payment-intent/update", {
+                orderId: order._id,
+                paymentId: paymentIntentId
             });
-
-            if (!updateRes.ok) {
-                throw new Error("Failed to link payment to order.");
-            }
 
             const { error } = await stripe.confirmPayment({
                 elements,
@@ -46,8 +41,10 @@ export default function StripePaymentForm({ handleSubmit, isSubmitting, total, m
             }
 
         } catch (err) {
-            console.error("Checkout Error:", err.message);
-            setErrorMsg(err.message);
+          
+            const backendMsg = err.response?.data?.message || err.message;
+            console.error("Checkout Error:", backendMsg);
+            setErrorMsg(backendMsg);
         }
     };
 

@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation, useSearchParams } from "react-router-dom"
 import useUserStore from "../store/useUserStore";
 import Spinner from "../components/Spinner.jsx"
+import api from "../api/api.js";
 
 export default function LoginPage() {
+    const [searchParams] = useSearchParams();
     const { user, setUser, token, setToken } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("")
@@ -11,54 +13,47 @@ export default function LoginPage() {
         username: "",
         password: ""
     })
-    const API_URL = import.meta.env.VITE_API_URL;
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+    const reason = searchParams.get("reason");
+
+    useEffect(() => {
+        if (reason === "expired")
+            setError("Your session has timed out. Please log in again.")
+    }, [reason])
+
     const handleLogin = async (e) => {
-        e.preventDefault();
-        if (!userDetails.username || !userDetails.password) return;
-        setIsLoading(true);
-        setError("")
-       /*  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-        await sleep(5000); */
+    e.preventDefault();
+    if (!userDetails.username || !userDetails.password) return;
 
+    setIsLoading(true);
+    setError("");
 
-        await fetch(`${API_URL}/api/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                usernameOrEmail: userDetails.username,
-                password: userDetails.password
-            })
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-                else if (res.status === 500) {
-                    throw new Error("Login Failed: Please try again")
-                }
-                else if(res.status === 400) {
-                    throw new Error("Login failed: Invalid login credentials")
-                }
-                throw new Error("Login Failed: Unable to login")
-            })
-            .then(data => {
-                setUser(data?.user)
-                setToken(data?.token)
-                if (data.user)
-                    navigate("/")
-            })
-            .catch(e => setError(e.message))
-            .finally(() => setIsLoading(false));
-
-    }
-
-
+    api.post("/api/auth/login", {
+        usernameOrEmail: userDetails.username,
+        password: userDetails.password
+    })
+    .then(res => {
+        const data = res.data; 
+        setUser(data?.user);
+        setToken(data?.token);
+        
+        if (data.user) {
+            navigate(from, { replace: true });
+        }
+    })
+    .catch(err => {
+        const message = err.response?.data?.message || "Login Failed: Unable to login";
+        setError(message);
+    })
+    .finally(() => setIsLoading(false));
+};
     return (
         <div className="login-container">
             <div className="login-section">
                 {error && <div className="error"
-                role="alert"
+                    role="alert"
                 >{error}</div>}
                 <form className="login-form"
                     onSubmit={(e) => handleLogin(e)}

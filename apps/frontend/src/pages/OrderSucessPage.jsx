@@ -3,6 +3,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import useCartStore from "../store/useCartStore";
 import Spinner from "../components/Spinner.jsx";
 import TextButton from "../components/buttons/TextButton";
+import api from "../api/api.js";
 import "../styles/OrderSuccessPage.css"
 
 export default function OrderSuccessPage() {
@@ -14,7 +15,6 @@ export default function OrderSuccessPage() {
     const timeoutIdRef = useRef(null);
 
     const orderId = searchParams.get("orderId");
-    const API_URL = import.meta.env.VITE_API_URL;
 
     const fetchOrder = useCallback(async (isManual = false) => {
         if (!orderId) {
@@ -25,42 +25,38 @@ export default function OrderSuccessPage() {
         if (isManual) setIsRefreshing(true);
 
         try {
-            const res = await fetch(`${API_URL}/api/orders/${orderId}`);
-            const data = await res.json();
+          
+            const res = await api.get(`/api/orders/${orderId}`);
+            const data = res.data;
 
             if (data?.success) {
                 const order = data.order;
                 setOrderDetails(order);
 
-                if (order.paymentMethod === "collection") {
+                if (order.paymentMethod === "collection" || order.status === "paid") {
                     setStatus("complete");
                     clearCart();
                     return "complete";
                 }
 
-                if (order.status === "paid") {
-                    setStatus("complete");
-                    clearCart();
-                    return "paid";
+           
+                if (isManual) {
+                    setStatus("failed");
                 } else {
-                    if (isManual) {
-                        setStatus("failed");
-                    } else {
-                        setStatus("pending");
-                    }
-                    return "pending";
+                    setStatus("pending");
                 }
+                return "pending";
             } else {
                 setStatus("error");
             }
         } catch (err) {
-            console.error("Fetch error:", err);
+            console.error("Fetch error:", err.response?.data?.message || err.message);
             setStatus("error");
         } finally {
             if (isManual) setIsRefreshing(false);
         }
         return null;
-    }, [orderId, API_URL, clearCart]);
+    }, [orderId, clearCart]);
 
     useEffect(() => {
         let pollCount = 0;
@@ -131,12 +127,13 @@ export default function OrderSuccessPage() {
                         <p className="refresh-status">
                             <strong>Status:</strong> {isRefreshing ? "Checking..." : "Still Pending"}
                         </p>
-                        <TextButton
+                        <button 
+                            className="text-button"
                             disabled={isRefreshing}
                             onClick={() => fetchOrder(true)}
                         >
                             {isRefreshing ? "Verifying..." : "Check Status Again"}
-                        </TextButton>
+                        </button>
                     </div>
 
                     <div className="support-info">

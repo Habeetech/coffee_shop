@@ -1,31 +1,22 @@
 import { useEffect, useState, useCallback } from "react";
+import api from "../api/api.js";
 
 export default function useMenuData(endpoint) {
     const [result, setResult] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [errors, setErrors] = useState(null);
 
-      const fetchData = useCallback(async (signal) => {
+    const fetchData = useCallback(async (signal = null) => {
         setIsLoading(true);
-        setErrors(null);
-        
+
         try {
-            const response = await fetch(endpoint, { signal });
-            
-            if (response.status === 304) {
-                setIsLoading(false);
-                return;
-            }
-            
-            if (!response.ok) {
-                throw new Error("Could not get the data from the server");
-            }
-            
-            const data = await response.json();
-            setResult(data);
+            const response = await api.get(endpoint, { signal });
+            setResult(response.data);
+            setErrors(null);
         } catch (e) {
-            if (e.name === "AbortError") return;
-            setErrors(e);
+            if (e.name === "CanceledError" || e.name === "AbortError") return;
+            const msg = e.response?.data?.message || "Could not get data";
+            setErrors(msg);
         } finally {
             setIsLoading(false);
         }
@@ -35,12 +26,12 @@ export default function useMenuData(endpoint) {
     useEffect(() => {
         const controller = new AbortController();
         fetchData(controller.signal);
-        
+
         return () => controller.abort();
     }, [fetchData]);
 
     const reload = () => {
-        fetchData(); 
+        fetchData();
     };
 
     return { result, isLoading, errors, reload };

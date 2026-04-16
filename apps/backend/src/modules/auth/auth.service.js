@@ -3,6 +3,7 @@ import User from "../users/user.model.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import RefreshToken from "./auth.token.model.js";
 
 export const registerAccount = async (userRequest) => {
     const { username, email, password: plainPassword, phone } = userRequest;
@@ -52,49 +53,83 @@ export const loginRequest = async (userRequest) => {
             role: user.role
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "30m" }
     );
+    const refreshToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(refreshToken).digest("hex");
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 7);
 
     const { passwordHash, ...safeUser } = user.toObject();
-
-    return { token, user: safeUser };
+    await RefreshToken.create({ userId: user._id, token: hashedToken, expiresAt: expiryDate });
+    return { token, refreshToken, user: safeUser };
 
 }
 export async function forgotPassword(emailOrPhone) {
-  const user = await User.findOne({
-    $or: [{ email: emailOrPhone }, { phone: emailOrPhone }]
-  });
+    const user = await User.findOne({
+        $or: [{ email: emailOrPhone }, { phone: emailOrPhone }]
+    });
 
-  if (!user) {
-    return;
-  }
+    if (!user) {
+        return;
+    }
 
-  const rawToken = crypto.randomBytes(32).toString("hex");
-  const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
 
-  user.resetPasswordToken = hashedToken;
-  user.resetPasswordExpires = Date.now() + 1000 * 60 * 10;
-  await user.save();
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = Date.now() + 1000 * 60 * 10;
+    await user.save();
 
-  return {rawToken, user};
+    return { rawToken, user };
 }
 export async function resetPassword(token, newPassword) {
-  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-  const user = await User.findOne({
-    resetPasswordToken: hashedToken,
-    resetPasswordExpires: { $gt: Date.now() }
-  });
+    const user = await User.findOne({
+        resetPasswordToken: hashedToken,
+        resetPasswordExpires: { $gt: Date.now() }
+    });
 
-  if (!user) {
-    throw new AppError("Invalid or expired reset token", 400);
-  }
+    if (!user) {
+        throw new AppError("Invalid or expired reset token", 400);
+    }
 
-  user.passwordHash = await bcrypt.hash(newPassword, 10);
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpires = undefined;
+    user.passwordHash = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
 
-  await user.save();
+    await user.save();
 
-  return user;
+    return user;
+}
+export async function logoutRequest(refreshToken) {
+    if (refreshToken) {
+        const hashedToken = crypto.createHash("sha256").update(refreshToken).digest("hex");
+        await RefreshToken.deleteOne({ token: hashedToken });
+    }
+}
+export async function refreshAccessToken(refreshToken) {
+    const hashedToken = crypto.createHash("sha256").update(refreshToken).digest("hex");
+    const user = await RefreshToken.findOne({ token: hashedToken })
+    .populate("userId");
+    if (!user) throw new AppError("No user found with the refreshToken", 404);
+    const { userId: userData } = user;
+    const token = jwt.sign(
+        {
+            userId: userData._id.toString(),
+            username: userData.username,
+            role: userData.role
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "30m" }
+    );
+    const newRefreshToken = crypto.randomBytes(32).toString("hex");
+    const newHashedToken = crypto.createHash("sha256").update(newRefreshToken).digest("hex");
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 7);
+
+    await RefreshToken.create({ userId: user._id, token: newHashedToken, expiresAt: expiryDate });
+    await RefreshToken.deleteOne({ token: hashedToken })
+    return ({token, newRefreshToken});
 }

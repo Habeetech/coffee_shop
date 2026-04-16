@@ -7,6 +7,7 @@ import cors from "cors"
 import morgan from "morgan"
 import path from "path";
 import { fileURLToPath } from "url";
+import cookieParser from "cookie-parser";
 
 
 
@@ -20,12 +21,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 if (process.env.FRONTEND_URL)
 {
-    app.use(cors({origin: process.env.FRONTEND_URL}))
+    app.use(cors({origin: process.env.FRONTEND_URL, credentials: true }))
 }
 else {
     app.use(cors())
 }
 app.use(morgan('dev'))
+app.use(cookieParser());
 app.use("/api", router);
 app.use("/images", express.static(path.join(__dirname, "public/products")))
 app.get("/", (req, res) => res.send("Hello, you've hit the server root"));

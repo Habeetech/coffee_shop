@@ -1,4 +1,5 @@
-import  validateCustomer  from "../validators/customerValidator";
+import validateCustomer from "../validators/customerValidator";
+import api from "../api/api.js";
 
 export default function useCheckout({ carts, total, customer, user }) {
     const runValidation = () => {
@@ -10,9 +11,9 @@ export default function useCheckout({ carts, total, customer, user }) {
             customerErrors,
         };
     };
-  
+
     const submitOrder = async (method, paymentId) => {
-        const order = {
+        const orderData = {
             userId: user?._id || user?.id || "",
             items: carts,
             total: Math.round(total() * 100) / 100,
@@ -21,17 +22,14 @@ export default function useCheckout({ carts, total, customer, user }) {
             paymentMethod: method,
             stripeId: paymentId || ""
         };
-        const API_URL = import.meta.env.VITE_API_URL;
-        const res = await fetch(`${API_URL}/api/orders`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(order)
-        });
-
-        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-        const data = await res.json();
-        return data.order;
-    };
-
+        try {
+            const res = await api.post("/api/orders", orderData);
+            return res.data.order;
+        } catch (e) {
+            const errorMsg = e.response?.data?.message || "Order submission failed";
+            console.error(errorMsg);
+            throw new Error(errorMsg);
+        }
+    }
     return { runValidation, submitOrder };
 }
