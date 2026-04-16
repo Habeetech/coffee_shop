@@ -4,6 +4,7 @@ import useUserStore from "../store/useUserStore";
 import Spinner from "../components/Spinner.jsx"
 import api from "../api/api.js";
 
+
 export default function LoginPage() {
     const [searchParams] = useSearchParams();
     const { user, setUser, token, setToken } = useUserStore();
@@ -50,7 +51,7 @@ export default function LoginPage() {
     .finally(() => setIsLoading(false));
 };
     return (
-        <div className="login-container">
+        <main className="login-container">
             <div className="login-section">
                 {error && <div className="error"
                     role="alert"
@@ -91,6 +92,6 @@ export default function LoginPage() {
                     >Create new account</button>
                 </Link>
             </div>
-        </div>
+        </main>
     )
 } 

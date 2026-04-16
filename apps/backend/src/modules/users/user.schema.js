@@ -47,7 +47,7 @@ export const registerSchema = z.object({
     firstName: z.string().trim().min(1).max(50).optional(),
     lastName: z.string().trim().min(1).max(50).optional(),
 
-    dateOfBirth: z.date().optional(),
+    dateOfBirth: z.coerce.date().optional(),
 
     phone: z.string().trim().min(8).max(20).optional(),
 
@@ -105,7 +105,7 @@ export const updateUserSchema = z.object({
     firstName: z.string().trim().min(1).max(50).optional(),
     lastName: z.string().trim().min(1).max(50).optional(),
 
-    dateOfBirth: z.date().optional(),
+    dateOfBirth: z.coerce.date().optional(),
 
     phone: z.string().trim().min(8).max(20).optional(),
 

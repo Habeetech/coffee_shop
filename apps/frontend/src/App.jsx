@@ -9,6 +9,7 @@ import UnAuthenticatedLayout from './layouts/UnauthenticatedLayout.jsx';
 import ProtectedGuard from './guards/ProtectedGuard.jsx';
 import GuestGuard from './guards/GuestGuard.jsx';
 import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from './pages/RegisterPage.jsx';
 import { Routes, Route } from "react-router-dom";
 import useIdleTimer from './hooks/useIdleTimer.js';
 
@@ -27,6 +28,7 @@ function App() {
       <Route element={<GuestGuard />} >
         <Route element={<UnAuthenticatedLayout />}>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Route>
       </Route>
       <Route element={<ProtectedGuard />}>

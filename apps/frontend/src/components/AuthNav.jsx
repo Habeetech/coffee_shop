@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import logo from "../assets/brand/CoffeeShop.png"
+import "../styles/UnauthenticatedLayout.css"
 export default function AuthNav() {
     return (
         <div className="header-wrapper">

@@ -7,6 +7,7 @@ import { forgotPasswordSchema } from "../users/user.schema.js";
 import { resetPasswordSchema } from "../users/user.schema.js";
 const router = Router()
 
+router.post("/logout", authController.logoutRequest);
 router.post("/login", validate(loginSchema), authController.loginRequest)
 router.post("/register", validate(registerSchema), authController.registerRequest)
 router.post("/forgot-password", validate(forgotPasswordSchema), authController.forgotPassword);

@@ -7,7 +7,10 @@
   display: block;
 }
 
-.btn-primary:disabled {
+.btn-primary:disabled, 
+.btn-danger:disabled, 
+.btn-secondary:disabled, 
+.btn-text:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -42,9 +45,4 @@ color: var(--cream-100);
 
 .btn-danger:hover {
   background: #d9363e;
-}
-
-.btn-danger:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }

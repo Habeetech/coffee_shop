@@ -3,6 +3,7 @@ import { Address } from "../components/Address.jsx";
 import facebookIcon from "../assets/icons/facebook.png";
 import instagramIcon from "../assets/icons/instagram.png";
 import tiktokIcon from "../assets/icons/tiktok.png";
+import "../styles/UnauthenticatedLayout.css"
 function Footer() {
   return (
     <footer className="footer">
