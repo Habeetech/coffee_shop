@@ -50,6 +50,7 @@ button {
 button:hover {
     background: var(--coffee-dark);
 }
+
 .error {
     border: 2px solid var(--coffee-light);
     padding: 2rem;
@@ -64,15 +65,18 @@ button:hover {
     font-size: 1.2rem;
     text-align: center;
 }
+
 .error-close-btn {
     background-color: transparent;
     color: var(--coffee-darker);
     transition: transform 0.2s ease-in-out;
 }
+
 .error-close-btn:hover {
     transform: scale(1.2);
     background: none;
 }
+
 .modal-close {
     position: absolute;
     left: 15px;
@@ -88,10 +92,12 @@ button:hover {
     justify-content: center;
     transition: transform 0.2s ease;
 }
+
 .modal-close:hover {
     transform: scale(1.1);
     color: var(--coffee-light);
 }
+
 .unauthenticated-layout {
     display: flex;
     flex-direction: column;
@@ -100,14 +106,25 @@ button:hover {
     justify-content: center;
     align-items: center;
 }
+
+.sidebar-backdrop {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    --bg-opacity: 0%;
+    background-color: color-mix(in srgb, var(--coffee-darker) var(--bg-opacity), transparent);
+    backdrop-filter: blur(4px);
+}
+
 @media screen and (min-width: 768px) {
-  body {
-    font-size: 1.7rem;
-  }
+    body {
+        font-size: 1.7rem;
+    }
 }
 
 @media screen and (min-width: 1280px) {
- body {
-    font-size: 2.2rem;
- }
+    body {
+        font-size: 2.2rem;
+    }
 }

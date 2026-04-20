@@ -19,8 +19,8 @@ export async function getOrderById(req, res) {
 
 
 export async function getMyOrders(req, res) {
-  
-    const orders = await orderService.getOrdersByUserId(req.user._id);
+
+    const orders = await orderService.getOrdersByUserId(req.user.userId);
     res.status(200).json({ success: true, count: orders.length, orders });
 }
 

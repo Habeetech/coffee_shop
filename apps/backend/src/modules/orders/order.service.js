@@ -68,6 +68,36 @@ export async function markOrderAsPaid(id) {
     return paidOrder;
 }
 export async function getOrdersByUserId(userId) {
-    return await Order.find({ userId: userId }).sort({ createdAt: -1 });
-
+   
+    const all = await Order.find({ userId })
+        .sort({ createdAt: -1 });
+    const recent = await Order.find({
+        userId,
+        status: "completed"
+    })
+        .sort({ createdAt: -1 })
+        .limit(3)
+    const active = await Order.find({
+        userId,
+        status: { $nin: ["completed", "cancellled"] }
+    })
+        .sort({ createdAt: -1 })
+    const frequent = await Order.aggregate([
+        { $match: { userId } },
+        { $unwind: "$items" },
+        {
+            $group: {
+                _id: "$items._id",
+                count: { $sum: "$items.quantity" },
+                name: { $first: "$items.name" },
+                price: { $first: "$items.price" },
+                type: {$first: "$items.type"},
+                category: {$first: "$items.category"},
+                url: { $first: "$items.url" }
+            }
+        },
+        { $sort: { count: -1 } },
+        { $limit: 5 }
+    ]);
+    return { all, recent, frequent, active }
 }

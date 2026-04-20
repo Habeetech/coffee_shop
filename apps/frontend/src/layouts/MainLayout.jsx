@@ -3,20 +3,23 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import CartDrawer from "../components/cart/CartDrawer.jsx"
 import OptionsModal from "../components/options/OptionsModal.jsx";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useOptionsStore from "../store/useOptionsStore.js";
 import useIdleTimer from "../hooks/useIdleTimer.js";
+import useUserStore from "../store/useUserStore.js";
+import SideBar from "../components/profile/SideBar.jsx";
 
 
 
 function MainLayout() {
+    const [openSidebar, setOpenSidebar] = useState(false);
     useIdleTimer();
-
-const { fetchOptions, hasHydrated, isLoading, options } = useOptionsStore();
+    const user = useUserStore(state => state.user)
+    const { fetchOptions, hasHydrated, isLoading, options } = useOptionsStore();
 
     useEffect(() => {
         const noOptions = Object.keys(options || {}).length === 0;
-        if (noOptions && !isLoading && hasHydrated){
+        if (noOptions && !isLoading && hasHydrated) {
             fetchOptions();
         }
     }, [fetchOptions, isLoading, hasHydrated, options]);
@@ -24,7 +27,16 @@ const { fetchOptions, hasHydrated, isLoading, options } = useOptionsStore();
         <div className="main-layout">
             <CartDrawer />
             <OptionsModal />
-            <Navbar />
+
+            <SideBar
+                user={user}
+                openSidebar={openSidebar}
+                setOpenSidebar={setOpenSidebar}
+            />
+            <Navbar
+                openSidebar={openSidebar}
+                setOpenSidebar={setOpenSidebar}
+            />
             <Outlet />
             <Footer />
         </div>
