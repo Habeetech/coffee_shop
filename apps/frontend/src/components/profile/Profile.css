@@ -55,7 +55,37 @@
     flex-direction: column;
     gap: 1.5rem;
 }
-
+.dashboard-wrapper {
+    padding: 1.5rem;
+    background-color: var(--cream-300);
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+}
+.dashboard-title {
+    font-size: 2rem;
+}
+.db-section-container {
+    background-color: var(--cream-200);
+    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+    border: 2px solid var(--coffee-darker);
+    border-radius: 15px;
+    position: relative;
+}
+.db-section-title {
+    font-size: 1.6rem;
+    position: absolute;
+    top: 0;
+    transform: translate(15%, -50%);
+    background-color: var(--cream-300);
+    padding: 0.5rem 1.5rem;
+    border-radius: 15px;
+}
+.db-section-content {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
 @media screen and (min-width: 480px) {}
 .profile-sidebar {
     width: 60%;

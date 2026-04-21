@@ -5,11 +5,14 @@ import { MenuItem } from "../menu/MenuItem.jsx"
 
 export default function Dashboard() {
     const nav = useNavigate()
+   
     const { activeOrders, recentOrders, frequentOrders, orders } = useOrdersStore();
-    return (<main>
-        <div className="track-order-container">
-            <h2 className="track-order-title">Track Order</h2>
-            <div className="track-orders">
+     console.log("orders", orders)
+    return (<main className="dashboard-wrapper">
+        <h1 className="dashboard-title">Dashboard</h1>
+        <section className="db-section-container">
+            <h2 className="db-section-title">Track Order</h2>
+            <div className="db-section-content">
                 {(activeOrders && activeOrders.length > 0) ? activeOrders.map(order => <div
                 key={order._id}
                 >
@@ -19,39 +22,40 @@ export default function Dashboard() {
                     onClick={() => nav("/menu")}
                 >Go to menu</TextButton></p>}
             </div>
-        </div>
-        <div className="frequent-orders-container">
-            <h2 className="frequent-orders-title">Frequently ordered</h2>
-            <div className="frequent-orders">
+        </section>
+        <section className="db-section-container">
+            <h2 className="db-section-title">Frequently ordered</h2>
+            <div className="db-section-content">
                 {(frequentOrders && frequentOrders.length > 0) ?
                     frequentOrders.map(item => 
-                      /*    <MenuItem 
+                        <MenuItem 
+                        key={item._id}
                         imageUrl={item.url}
                         value={item}
-                        /> */""
+                        />
                     ) : <p>You have not placed any order
                         <TextButton
                             onClick={() => nav("/menu")}
                         >Go to menu</TextButton></p>}
             </div>
-        </div>
-        <div className="recent-order-container">
-            <h2 className="recent-order-title">Order again</h2>
-            <div className="recent-order">
+        </section>
+        <section className="db-section-container">
+            <h2 className="db-section-title">Order again</h2>
+            <div className="db-section-content">
 
             </div>
-        </div>
-        <div className="favorite-products-container">
-            <h2 className="favorite-product-title">Favorites</h2>
-            <div className="favourite-products">
+        </section>
+        <section className="db-section-container">
+            <h2 className="db-section-title">Favorites</h2>
+            <div className="db-section-content">
 
             </div>
-        </div>
-        <div className="loyalty-container">
-            <h2 className="loyalty-title">Rewards</h2>
-            <div className="loyalty-progress">
+        </section>
+        <section className="db-section-container">
+            <h2 className="db-section-title">Rewards</h2>
+            <div className="db-section-content">
 
             </div>
-        </div>
+        </section>
     </main>)
 }

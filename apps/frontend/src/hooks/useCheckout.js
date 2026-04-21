@@ -2,6 +2,7 @@ import validateCustomer from "../validators/customerValidator";
 import api from "../api/api.js";
 
 export default function useCheckout({ carts, total, customer, user }) {
+    
     const runValidation = () => {
         const customerErrors = validateCustomer(customer, user);
         const hasAnyErrors = Boolean(customerErrors);

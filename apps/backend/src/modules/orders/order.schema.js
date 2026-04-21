@@ -26,7 +26,11 @@ export const createOrderSchema = z.object({
                 .regex(/^(\/|http|https).+\.(jpg|jpeg|png|webp|avif|gif)$/i, "Invalid image path or URL format")
                 .or(z.literal(""))
                 .optional(),
-            options: z.object(),
+            options: z.record(z.string(), z.object({
+                label: z.string(),
+                _id: z.string()
+            })).optional(),
+
             category: z.string().optional()
         })),
         customer: z.object({
@@ -118,16 +122,16 @@ export const createOrderSchema = z.object({
 
 export const updateOrderSchema = z.object({
     body: z.object({
-      
+
         status: z.enum(["pending", "paid", "preparing", "completed", "cancelled"]).optional(),
 
-    
+
         stripeId: z.string().trim().optional(),
 
-  
+
         customer: z.object({
             deliveryOption: z.enum(["delivery", "collection"]).optional(),
-        
+
             address: z.object({
                 street: z.string().trim().optional(),
                 city: z.string().trim().optional(),
