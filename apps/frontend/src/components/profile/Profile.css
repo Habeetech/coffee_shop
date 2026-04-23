@@ -55,25 +55,31 @@
     flex-direction: column;
     gap: 1.5rem;
 }
+
 .dashboard-wrapper {
-    padding: 1.5rem;
+    padding: 1.5em;
     background-color: var(--cream-300);
     display: flex;
     flex-direction: column;
-    gap: 5rem;
+    gap: 5em;
 }
+
 .dashboard-title {
-    font-size: 2rem;
+    font-size: 2em;
+    font-weight: 700;
 }
+
 .db-section-container {
     background-color: var(--cream-200);
-    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+    padding: 2.5em 1.5em 1.5em 1.5em;
     border: 2px solid var(--coffee-darker);
     border-radius: 15px;
     position: relative;
 }
+
 .db-section-title {
-    font-size: 1.6rem;
+    font-size: 1.6em;
+    font-weight: 600;
     position: absolute;
     top: 0;
     transform: translate(15%, -50%);
@@ -81,23 +87,123 @@
     padding: 0.5rem 1.5rem;
     border-radius: 15px;
 }
+
 .db-section-content {
     display: flex;
-    gap: 1rem;
+    gap: 1em;
     flex-wrap: wrap;
 }
+
+.rewards {
+    display: flex;
+}
+
+.beans {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 5;
+}
+
+.free-drink-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+.free-drink, .no-free-drink {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.no-of-drinks {
+    font-weight: 600;
+}
+.orders {
+    border: 1px solid var(--coffee-darker);
+    padding: 1.5em 1em;
+    border-radius: 15px;
+    background-color: var(--cream-100);
+    box-shadow: 0 0 5px 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+.order-id {
+    font-weight: 700;
+    font-size: 1.2em;
+}
+.order-timeline {
+    display: flex;
+}
+.order-progress-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--coffee-light);
+    opacity: 0.5;
+     font-weight: 500;
+     transition: color 0.5s ease-in, opacity 0.3s ease-in;
+}
+.order-progress-wrapper.completed
+{
+    opacity: 1;
+}
+.order-progress-wrapper.active {
+    opacity: 1;
+    color: var(--coffee-dark);
+    font-weight: 600;
+}
+@keyframes pulse {
+    50% {
+        transform: translateY(-5px) scale(1.1);
+    }
+}
+.order-progress-wrapper.active .order-progress-icon {
+    animation: pulse 2s ease-in-out infinite;
+}
+.order-progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.order-progress-track {
+    background: none;
+    width: 5em;
+    height: 0.5em;
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid var(--coffee-light);
+}
+.order-progress-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    background-color: var(--coffee-light);
+    transition: width 0.6s ease-in-out;
+}
+.order-progress-wrapper.active .order-progress-fill {
+    width: 100%;
+}
+.order-progress-wrapper.completed .order-progress-fill {
+    width: 100%;
+}
 @media screen and (min-width: 480px) {}
+
 .profile-sidebar {
     width: 60%;
 }
+
 @media screen and (min-width: 768px) {
- .profile-sidebar {
-    width: 50%;
-}
+    .profile-sidebar {
+        width: 50%;
+    }
 }
 
 @media screen and (min-width: 1280px) {
     .profile-sidebar {
-    width: 40%;
-}
+        width: 40%;
+    }
 }

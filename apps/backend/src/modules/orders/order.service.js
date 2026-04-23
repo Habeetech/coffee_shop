@@ -2,6 +2,7 @@ import Order from "./order.model.js";
 import AppError from "../../utils/AppError.js";
 
 export async function createOrder(orderData) {
+    console.log("Order recieved", orderData);
     const newOrder = await Order.create({
         ...orderData,
         expiresAt: new Date(Date.now() + (60 * 60 * 1000))
@@ -83,7 +84,7 @@ export async function getOrdersByUserId(userId) {
     })
         .sort({ createdAt: -1 })
     const frequent = await Order.aggregate([
-        { $match: { userId } },
+        { $match: { userId, status: "completed" } },
         { $unwind: "$items" },
         {
             $group: {

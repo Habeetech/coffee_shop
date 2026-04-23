@@ -1,9 +1,7 @@
-import "./OptionItem.css"
-import toSentence from "../../utils/toSentence";
+
 export default function OptionsItem({ optionKey, values, onSelect, selectedValue }) {
     return (
         <div className="option-group">
-            <label>{toSentence(optionKey)}:</label>
             <select
                 value={selectedValue || ""}
                 onChange={(e) => {
@@ -11,7 +9,7 @@ export default function OptionsItem({ optionKey, values, onSelect, selectedValue
                     onSelect(optionKey, e.target.value, selectedOption?.priceModifier || 0, selectedOption?._id);
                 }}
             >
-                <option value="">{`Choose ${optionKey}`}</option>
+                <option value="">{`Choose your ${optionKey}`}</option>
                 {values.map((option) => (
                     <option key={option._id} value={option.label}>
                         {option.label} {option.priceModifier > 0 ? `(+£${option.priceModifier})` : ""}

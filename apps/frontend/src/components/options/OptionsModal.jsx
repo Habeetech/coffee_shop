@@ -13,43 +13,69 @@ export default function OptionsModal() {
     const openCart = useCartStore(state => state.openCart)
     const [selections, setSelections] = useState({});
 
-    const { size: sizeList, ...extrasList } = masterOptions?.options || {};
+    const { size: sizeList, extras: extrasList, ...others } = masterOptions?.options || {};
 
     const handleClose = (e) => {
         e.stopPropagation()
-            closeModal();
+        closeModal();
     }
-    const handleSelect = (key, label, modifier = 0, id) => {
-        setSelections(prev => ({
-            ...prev,
-            [key]: { label, modifier: Number(modifier) || 0, id }
-        }));
+    const handleSelect = (key, label, modifier = 0, id, isExtra = false) => {
+        if (!isExtra) {
+            setSelections(prev => ({
+                ...prev,
+                [key]: { label, modifier: Number(modifier) || 0, id }
+            }));
+            return;
+        }
+        setSelections(prev => {
+            const existing = prev.extras || [];
+            const alreadySelected = existing.some(e => e.id === id)
+            let updatedExtras;
+            if (alreadySelected) {
+                updatedExtras = existing.filter(e => e.id !== id)
+            } else {
+                updatedExtras = [...existing, { label, modifier: Number(modifier), id }];
+            }
+            return {
+                ...prev,
+                extras: updatedExtras
+            }
+        })
     };
 
     const handleConfirm = () => {
-        const totalExtra = Object.values(selections).reduce((acc, curr) => {
-            return acc + (Number(curr.modifier) || 0);
-        }, 0);
-
+        const totalWithExtras = Number(calculateCurrentTotal());
         const base = Number(selectedItem?.price) || 0;
 
         const finalProduct = {
             ...selectedItem,
-            url: selectedItem.url,
             basePrice: base,
-            price: base + totalExtra,
-            options: Object.fromEntries(
-                Object.entries(selections).map(([k, v]) => [k,
-                    { label: v.label, _id: v.id }
-                ])
-            ),
+            price: totalWithExtras,
+            options: {
+                ...Object.entries(selections)
+                    .filter(([key]) => key !== 'extras')
+                    .reduce((obj, [key, val]) => {
+                        obj[key] = {
+                            label: val.label,
+                            _id: val.id,
+                            priceModifier: val.modifier
+                        };
+                        return obj;
+                    }, {}),
+
+
+                extras: (selections.extras || []).map(e => ({
+                    label: e.label,
+                    _id: e.id,
+                    priceModifier: e.modifier
+                }))
+            }
         };
 
         addItem(finalProduct);
         closeModal();
         openCart();
     };
-
     useEffect(() => {
         if (selectedItem && sizeList) {
             const defaultSize = sizeList.find(s => s.label === "Small") || sizeList[0];
@@ -65,7 +91,17 @@ export default function OptionsModal() {
 
 
     const isReady = !!selections?.size?.label;
+    const calculateCurrentTotal = () => {
+        const base = Number(selectedItem?.price) || 0;
+        const extraCharges = Object.entries(selections).reduce((acc, [key, value]) => {
+            if (key === 'extras' && Array.isArray(value)) {
+                return acc + value.reduce((sum, e) => sum + (Number(e.modifier) || 0), 0);
+            }
+            return acc + (Number(value.modifier) || 0);
+        }, 0);
 
+        return (base + extraCharges).toFixed(2);
+    };
     return (
         <AnimatePresence>
             {isOptionsOpen && selectedItem && (
@@ -77,9 +113,10 @@ export default function OptionsModal() {
                         exit={{ scale: 0.8, opacity: 0 }}
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
                     >
-                     <CloseModal 
-                     onClose={handleClose}
-                     />
+                        <CloseModal
+                            className="close-modal"
+                            onClose={handleClose}
+                        />
                         <h3 className="modal-header">Customize {selectedItem?.name}</h3>
 
                         <div className="size-selector">
@@ -97,8 +134,8 @@ export default function OptionsModal() {
                             </div>
                         </div>
 
-                        <div className="extras-selector">
-                            {Object.entries(extrasList).map(([key, values]) => (
+                        <div className="others-selector">
+                            {Object.entries(others).map(([key, values]) => (
                                 <OptionsItem
                                     key={key}
                                     optionKey={key}
@@ -108,14 +145,37 @@ export default function OptionsModal() {
                                 />
                             ))}
                         </div>
+                        <div className="extras-selector">
+                            <h4>Extras: </h4>
+                            <div className="extras">
+                                {Object.entries(extrasList).map(([key, value]) =>
+
+                                    <label className="extras-item"
+                                        key={key}
+                                    ><input
+                                            type="checkbox"
+                                            checked={selections.extras?.some(e => e.id === value._id) || false}
+                                            onChange={() =>
+                                                handleSelect(
+                                                    "extras",
+                                                    value.label,
+                                                    value.priceModifier,
+                                                    value._id,
+                                                    true
+                                                )
+                                            }
+                                        />
+
+                                        {value.label}
+                                    </label>
+
+                                )}
+                            </div>
+                        </div>
 
                         <div className="modal-footer">
-                            <button
-                                className="confirm-btn"
-                                onClick={handleConfirm}
-                                disabled={!isReady}
-                            >
-                                Confirm (£{(Number(selectedItem.price) + Object.values(selections).reduce((a, c) => a + (c.modifier || 0), 0)).toFixed(2)})
+                            <button className="confirm-btn" onClick={handleConfirm} disabled={!isReady}>
+                                Confirm (£{calculateCurrentTotal()})
                             </button>
                             <button className="cancel-btn" onClick={closeModal}>
                                 Cancel

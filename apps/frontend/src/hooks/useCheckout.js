@@ -23,6 +23,7 @@ export default function useCheckout({ carts, total, customer, user }) {
             paymentMethod: method,
             stripeId: paymentId || ""
         };
+       console.log("order to submit", orderData);
         try {
             const res = await api.post("/api/orders", orderData);
             return res.data.order;
