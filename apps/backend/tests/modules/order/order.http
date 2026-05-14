@@ -74,13 +74,16 @@ Content-Type: application/json
 }
 
 ### Manually set order to paid to trigger React polling update
-PATCH http://localhost:3000/api/orders/69e7d4876d9aac7a2b2e85f1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3Njg0MTc3NSwiZXhwIjoxNzc2ODQzNTc1fQ.XDHq_dktiZOmtbyzra_o91hrnnnpQG7vLEXJUnQs9HA
+PATCH http://localhost:3000/api/orders/6a061cf6ed8ccef17c627f47
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3ODc4NDU3MCwiZXhwIjoxNzc4Nzg2MzcwfQ.o1IMYpSsALv0VeTOJ-lQBNLeLaTYN8heaxg-7nJtTkY
 Content-Type: application/json
 
 {
-    "status": "completed"
+    "status": "paid"
 }
 
 ###
-GET http://localhost:3000/api/orders/69e7e7182a3d7ef9da12e8a8
+GET http://localhost:3000/api/orders/69ea3365d56ba9db7570d997
+###
+DELETE http://localhost:3000/api/orders/6a0613a7ed8ccef17c627eb5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3ODc4MjYxNSwiZXhwIjoxNzc4Nzg0NDE1fQ.IEJbNhxERMtTMpXspF0kSxoODGRjcNSUaT95i8KZXmg

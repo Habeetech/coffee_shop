@@ -6,7 +6,7 @@ import useUserStore from "../../store/useUserStore.js"
 import { Heart, Coffee, CupSoda } from "lucide-react";
 import TakeAwayCup from "../icons/TakeAwayCup.jsx"
 import { useState } from "react"
-import OrderTimeline from "./OrderTimeline.jsx"
+import ActiveOrder from "./ActiveOrder.jsx"
 import useOptionsStore from "../../store/useOptionsStore.js"
 export default function Dashboard() {
     const nav = useNavigate()
@@ -24,38 +24,9 @@ export default function Dashboard() {
         <h1 className="dashboard-title">Dashboard</h1>
         <section className="db-section-container">
             <h2 className="db-section-title">Track Order</h2>
-            <div className="db-section-content">
-                {(activeOrders && activeOrders.length > 0) ? activeOrders.map(order => <div
-                    key={order._id}
-                    className="orders"
-                >
-                    <OrderTimeline 
-                    status={order?.status}
-                    />
-                    <div className="order-items-summary">
-                        <h3>Order Summary</h3>
-                        <p>Order Id: {order?._id}</p>
-                        {order?.items.map(
-                            item => <div className="order-item-details"
-                            key={item?._id}
-                            >
-                                <p>Name: {`${item.name} (x ${item.quantity})`}</p>
-                                <p>Price: {`£ ${item.price.toFixed(2)}`}</p>
-                                <div>Extras: {
-                                (item?.options) ?
-                                item?.options?.extras.map(eachExtra =>
-                                <p
-                                key={eachExtra._id}
-                                >{eachExtra.label}</p>
-                                ) : "None"
-                            }</div>
-                            </div>
-                        )}
-                        </div>
-                </div>) : <p>You have no active order(s) <TextButton
-                    onClick={() => nav("/menu")}
-                >Go to menu</TextButton></p>}
-            </div>
+            <ActiveOrder 
+            activeOrders={activeOrders}
+            />
         </section>
         <section className="db-section-container">
             <h2 className="db-section-title">Frequently Ordered</h2>
@@ -143,5 +114,5 @@ export default function Dashboard() {
                 </div>
             </div>
         </section>
-    </main>)
-}
+    </main>
+    )}

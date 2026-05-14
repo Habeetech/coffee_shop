@@ -15,12 +15,10 @@ export function MenuItem({ imageUrl, value }) {
     const handleQuickAdd = () => {
         const base = Number(price) || 0;
         let defaultOptions = {};
-
         if (type === "drinks" && allOptions?.options?.size) {
             const smallOption = allOptions.options.size.find(
-                opt => opt.name === "Small" || opt.value === "Small"
+                opt => opt.label === "Small"
             );
-
             if (smallOption) {
                 defaultOptions = { size: smallOption };
             }

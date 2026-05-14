@@ -190,6 +190,14 @@
 .order-progress-wrapper.completed .order-progress-fill {
     width: 100%;
 }
+.order-item-details {
+margin-left: 1em;
+}
+.order-item-extras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
 @media screen and (min-width: 480px) {}
 
 .profile-sidebar {

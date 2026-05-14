@@ -2,6 +2,9 @@ import { useState } from "react"
 import { SquareArrowRightEnter, Coffee, MapPinCheck, SquareCheckBig } from "lucide-react"
 
 export default function OrderTimeline({status}) {
+    if (status === "out for delivery" || status === "ready for collection") {
+        status = "ready";
+    }
     const order = ["paid", "preparing", "ready", "completed"];
     const currentIndex = order.indexOf(status);
     return (

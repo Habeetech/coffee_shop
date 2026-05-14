@@ -80,7 +80,7 @@ export async function getOrdersByUserId(userId) {
         .limit(3)
     const active = await Order.find({
         userId,
-        status: { $nin: ["completed", "cancellled"] }
+        status: { $nin: ["completed", "cancelled", "pending"] }
     })
         .sort({ createdAt: -1 })
     const frequent = await Order.aggregate([
