@@ -16,7 +16,7 @@ export default function OrderTimeline({status}) {
             <span className="order-progress">
                 <span className="order-progress-icon">
                    <SquareArrowRightEnter
-                size="3em"
+                size="1.5em"
             />
                 </span>
             <p className="order-progress-text">Received</p></span>
@@ -31,7 +31,7 @@ export default function OrderTimeline({status}) {
             <span className="order-progress">
               <span className="order-progress-icon">
                    <Coffee
-                size="3em"
+                size="1.5em"
             />
                 </span>
              <p className="order-progress-text">Preparing</p></span>
@@ -46,7 +46,7 @@ export default function OrderTimeline({status}) {
             <span className="order-progress">
              <span className="order-progress-icon">
                    <MapPinCheck
-                size="3em"
+                size="1.5em"
             />
                 </span>
             <p className="order-progress-text">Ready</p></span>
@@ -63,7 +63,7 @@ export default function OrderTimeline({status}) {
             <span className="order-progress">
               <span className="order-progress-icon">
                    <SquareCheckBig
-                size="3em"
+                size="1.5em"
             />
                 </span>
             <p className="order-progress-text">Completed</p>

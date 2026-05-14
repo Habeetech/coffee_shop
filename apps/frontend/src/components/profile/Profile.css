@@ -92,6 +92,7 @@
     display: flex;
     gap: 1em;
     flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .rewards {
@@ -120,22 +121,23 @@
 .no-of-drinks {
     font-weight: 600;
 }
-.orders {
+.active-orders {
     border: 1px solid var(--coffee-darker);
-    padding: 1.5em 1em;
+    padding: 1.5em 0;
     border-radius: 15px;
     background-color: var(--cream-100);
     box-shadow: 0 0 5px 2px;
     display: flex;
     flex-direction: column;
     gap: 1em;
+    width: 100%;
+    max-width: 650px;
 }
-.order-id {
-    font-weight: 700;
-    font-size: 1.2em;
-}
+
 .order-timeline {
     display: flex;
+    margin: 0 auto;
+    padding: 0 1em;
 }
 .order-progress-wrapper {
     display: flex;
@@ -143,8 +145,8 @@
     align-items: center;
     color: var(--coffee-light);
     opacity: 0.5;
-     font-weight: 500;
-     transition: color 0.5s ease-in, opacity 0.3s ease-in;
+    font-size: 0.9em;
+    transition: color 0.5s ease-in, opacity 0.3s ease-in;
 }
 .order-progress-wrapper.completed
 {
@@ -171,7 +173,7 @@
 }
 .order-progress-track {
     background: none;
-    width: 5em;
+    width: 2em;
     height: 0.5em;
     border-radius: 2px;
     overflow: hidden;
@@ -190,8 +192,21 @@
 .order-progress-wrapper.completed .order-progress-fill {
     width: 100%;
 }
+.order-items-summary {
+display: flex;
+gap: 1em;
+ padding: 0 1em;
+}
+.active-orders > h3, .active-orders > p {
+    font-weight: 700;
+    font-size: 1.2em;
+    padding: 0.3em;
+    background-color: var(--cream-300);
+    width: 100%;
+    text-align: center;
+}
 .order-item-details {
-margin-left: 1em;
+
 }
 .order-item-extras {
     display: flex;
