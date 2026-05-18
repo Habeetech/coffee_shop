@@ -29,7 +29,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
         <div className="header-wrapper">
             <header className="header">
                 <div className="logo-container">
-                    {!openSidebar ? <button className="hamburger" onClick={() => setOpenSidebar(prev => !prev)}>
+                    {user && (!openSidebar ? <button className="hamburger" onClick={() => setOpenSidebar(prev => !prev)}>
                         <svg
                             width="4rem"
                             height="4rem"
@@ -47,7 +47,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
                             <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="2" />
                             <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" strokeWidth="2" />
                         </svg>
-                    </button>
+                    </button>)
                     }
                     <Link to="/">
                         <img id="logo" src={logo} alt="coffee shop logo" />

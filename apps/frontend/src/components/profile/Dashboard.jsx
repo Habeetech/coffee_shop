@@ -7,6 +7,7 @@ import { Heart, Coffee, CupSoda } from "lucide-react";
 import TakeAwayCup from "../icons/TakeAwayCup.jsx"
 import { useState } from "react"
 import ActiveOrder from "./ActiveOrder.jsx"
+import OrderAgain from "./OrderAgain.jsx"
 import useOptionsStore from "../../store/useOptionsStore.js"
 export default function Dashboard() {
     const nav = useNavigate()
@@ -18,8 +19,7 @@ export default function Dashboard() {
     const beans = points % 10;
     const rewards = Array.from({ length: 10 })
     const options = useOptionsStore(state => state.options)
-    //console.log("recent", recentOrders)
-    console.log("active", activeOrders)
+    console.log("recent", recentOrders)
     return (<main className="dashboard-wrapper">
         <h1 className="dashboard-title">Dashboard</h1>
         <section className="db-section-container">
@@ -47,10 +47,10 @@ export default function Dashboard() {
             <h2 className="db-section-title">Order Again</h2>
             <div className="db-section-content">
                 {(recentOrders && recentOrders.length > 0) ?
-                    recentOrders.map(order => <div key={order._id}>
-                        <p>Order Id: {order._id}</p>
-                        <p>Status: {order.status}</p>
-                    </div>) :
+                   <OrderAgain
+                   recentOrders={recentOrders}
+                   />
+                   :
                     <p>You have not placed any order <TextButton
                             onClick={() => nav("/menu")}
                         >Go to menu</TextButton></p>}

@@ -121,7 +121,7 @@
 .no-of-drinks {
     font-weight: 600;
 }
-.active-orders {
+.active-orders, .recent-orders {
     border: 1px solid var(--coffee-darker);
     padding: 1.5em 0;
     border-radius: 15px;
@@ -197,7 +197,11 @@ display: flex;
 gap: 1em;
  padding: 0 1em;
 }
-.active-orders > h3, .active-orders > p {
+.active-orders > h3, 
+.active-orders > p, 
+.recent-orders > h3, 
+.recent-orders > p
+ {
     font-weight: 700;
     font-size: 1.2em;
     padding: 0.3em;

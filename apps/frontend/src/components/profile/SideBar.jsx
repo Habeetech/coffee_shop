@@ -75,11 +75,11 @@ export default function SideBar({ user, openSidebar, setOpenSidebar }) {
                                     className={current.includes("your-orders") ? "active" : ""}
                                     onClick={() => handleNav("your-orders")}
                                 >Your orders</li>
-                                {(user.role === "manager" || user.role === "admin") && <li
+                                {(user?.role === "manager" || user?.role === "admin") && <li
                                     className={current.includes("manage-menu") ? "active" : ""}
                                     onClick={() => handleNav("manage-menu")}
                                 >Manage menu</li>}
-                                {(user.role === "manager" || user.role === "admin") && <li
+                                {(user?.role === "manager" || user?.role === "admin") && <li
                                     className={current.includes("manage-order") ? "active" : ""}
                                     onClick={() => handleNav("manage-order")}
                                 >Manage order</li>}
