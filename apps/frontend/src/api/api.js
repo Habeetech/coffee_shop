@@ -1,7 +1,6 @@
 import axios from "axios";
 import useUserStore from "../store/useUserStore.js"
 
-
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -65,7 +64,12 @@ api.interceptors.response.use(
                     }
                 } catch (err) {
                     processQueue(err);
-                    useUserStore.getState().logout()
+                    const { logout, navigateToLogin } = useUserStore.getState();
+                    logout();
+                    if (navigateToLogin) {
+                        navigateToLogin();
+                    }
+                   
                 } finally {
                     isRefreshing = false;
                 }

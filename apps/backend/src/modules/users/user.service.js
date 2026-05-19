@@ -20,7 +20,7 @@ export async function getAUser(id) {
     return sanitizeUser(user);
 }
 export async function getMyProfile(id) {
-    const user = await User.findById(id)
+    const user = await User.findById(id);
     if (!user) {
         throw new AppError("Error: Profile not found", 404)
     }
@@ -50,7 +50,41 @@ export async function updateMyProfile(id, data) {
 
   return sanitizeUser(userUpdate);
 }
+export async function getFavorites (id) {
+    const user = await User.findById(id)
+    .populate("favorites");
+    if (!user) {
+        throw new AppError(`No user found for Id ${id}`, 404)
+    }
+    return user.favorites;
+}
+export async function toFavorite(id, itemId) {
+    const user = await User.findById(id);
+    if (!user) {
+        throw new AppError(`No user found for Id ${id}`, 404)
+    }
+    if (user.favorites.includes(itemId)) {
+        const favorites = user.favorites.filter(favId => favId != itemId)
+        user.favorites = favorites;
+    }
+    else {
+        user.favorites.push(itemId);
+    }
+    await user.save();
 
+     const populatedUser = await User.findById(id).populate("favorites");
+    return populatedUser.favorites;
+    return user.favorites;
+}
+export async function clearFavorites (id) {
+    const user = await User.findById(id);
+    if (!user) {
+        throw new AppError(`No user found for Id ${id}`, 404)
+    }
+    user.favorites = [];
+    await user.save()
+    return;
+}
 export async function deleteAUser(id) {
     const userToDelete = await User.findByIdAndDelete(id)
     if (!userToDelete) {

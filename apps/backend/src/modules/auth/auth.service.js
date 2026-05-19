@@ -37,7 +37,7 @@ export const registerAccount = async (userRequest) => {
 }
 export const loginRequest = async (userRequest) => {
     const { usernameOrEmail, password } = userRequest;
-    const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] });
+    const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] })
     if (!user) {
         throw new AppError("Could not find a user with the username or email", 400);
     }

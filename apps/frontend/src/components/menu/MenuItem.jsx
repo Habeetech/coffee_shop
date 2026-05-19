@@ -3,13 +3,17 @@ import "./MenuItem.css";
 import placeholder from "../../assets/placeholders/no-photo.png";
 import useCartStore from "../../store/useCartStore.js";
 import useOptionsStore from "../../store/useOptionsStore.js";
+import useFavoritesStore from "../../store/useFavoritesStore.js";
+import { Heart } from "lucide-react";
+import api from "../../api/api.js"
 
 export function MenuItem({ imageUrl, value }) {
     const openCart = useCartStore(state => state.openCart);
     const addItem = useCartStore(state => state.addItem);
     const openModal = useOptionsStore(state => state.openModal);
     const allOptions = useOptionsStore(state => state.options);
-
+    const toggleFavorite = useFavoritesStore(state => state.toggleFavorite);
+    const favorites = useFavoritesStore(state => state.favorites);
     const { name, price, type } = value;
 
     const handleQuickAdd = () => {
@@ -42,6 +46,19 @@ export function MenuItem({ imageUrl, value }) {
 
     return (
         <div className="menuitem-wrapper">
+            <button
+                className="add-to-favorite"
+                onClick={() => toggleFavorite(value._id)}
+            >{(favorites?.some(item => item._id === value._id))
+                ?
+                <Heart
+                    size="2em"
+                    fill="var(--coffee-darker)"
+                /> :
+                <Heart
+                    size="2em"
+                />}
+            </button>
             <figure className="menuitem-image">
                 <img
                     src={imageUrl}

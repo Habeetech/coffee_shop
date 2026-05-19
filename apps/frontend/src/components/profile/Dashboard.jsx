@@ -9,17 +9,20 @@ import { useState } from "react"
 import ActiveOrder from "./ActiveOrder.jsx"
 import OrderAgain from "./OrderAgain.jsx"
 import useOptionsStore from "../../store/useOptionsStore.js"
+import useFavoritesStore from "../../store/useFavoritesStore.js"
+
 export default function Dashboard() {
+    const favorites = useFavoritesStore(s => s.favorites);
     const nav = useNavigate()
     const user = useUserStore(state => state.user);
     const { activeOrders, recentOrders, frequentOrders, orders } = useOrdersStore();
-    const favorites = user.favorites;
+    console.log("favorites", favorites)
     const points = user.loyaltyPoints;
     const freeDrink = Math.floor(points / 10);
     const beans = points % 10;
     const rewards = Array.from({ length: 10 })
     const options = useOptionsStore(state => state.options)
-    console.log("recent", recentOrders)
+    
     return (<main className="dashboard-wrapper">
         <h1 className="dashboard-title">Dashboard</h1>
         <section className="db-section-container">

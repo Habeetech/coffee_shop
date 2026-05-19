@@ -39,3 +39,15 @@ export async function changeUserRole(req, res) {
     const user = await userService.changeUserRole(req.params.id, req.body)
     res.status(200).json(user);
 }
+export async function getFavorites (req, res) {
+    const favorites = await userService.getFavorites(req.user.userId);
+    res.status(200).json(favorites);
+}
+export async function toFavorite (req, res) {
+    const favorites = await userService.toFavorite(req.user.userId, req.params.id)
+    res.status(200).json(favorites);
+}
+export async function clearFavorites (req, res) {
+    const favorites = await userService.clearFavorites(req.user.userId);
+    res.sendStatus(204);
+}
