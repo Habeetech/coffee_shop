@@ -16,19 +16,18 @@ export default function Dashboard() {
     const nav = useNavigate()
     const user = useUserStore(state => state.user);
     const { activeOrders, recentOrders, frequentOrders, orders } = useOrdersStore();
-    console.log("favorites", favorites)
     const points = user.loyaltyPoints;
     const freeDrink = Math.floor(points / 10);
     const beans = points % 10;
     const rewards = Array.from({ length: 10 })
     const options = useOptionsStore(state => state.options)
-    
+
     return (<main className="dashboard-wrapper">
         <h1 className="dashboard-title">Dashboard</h1>
         <section className="db-section-container">
             <h2 className="db-section-title">Track Order</h2>
-            <ActiveOrder 
-            activeOrders={activeOrders}
+            <ActiveOrder
+                activeOrders={activeOrders}
             />
         </section>
         <section className="db-section-container">
@@ -38,25 +37,24 @@ export default function Dashboard() {
                     frequentOrders.map(item =>
                         <MenuItem
                             key={item._id}
-                            imageUrl={item.url}
                             value={item}
                         />
                     ) : <p>You have not placed any order <TextButton
-                            onClick={() => nav("/menu")}
-                        >Go to menu</TextButton></p>}
+                        onClick={() => nav("/menu")}
+                    >Go to menu</TextButton></p>}
             </div>
         </section>
         <section className="db-section-container">
             <h2 className="db-section-title">Order Again</h2>
             <div className="db-section-content">
                 {(recentOrders && recentOrders.length > 0) ?
-                   <OrderAgain
-                   recentOrders={recentOrders}
-                   />
-                   :
+                    <OrderAgain
+                        recentOrders={recentOrders}
+                    />
+                    :
                     <p>You have not placed any order <TextButton
-                            onClick={() => nav("/menu")}
-                        >Go to menu</TextButton></p>}
+                        onClick={() => nav("/menu")}
+                    >Go to menu</TextButton></p>}
             </div>
         </section>
         <section className="db-section-container">
@@ -66,13 +64,12 @@ export default function Dashboard() {
                     favorites.map(item =>
                         <MenuItem
                             key={item._id}
-                            imageUrl={item.url}
                             value={item}
                         />
                     ) :
                     <p>You have not favorited any item <TextButton
-                            onClick={() => nav("/menu")}
-                        >Go to menu</TextButton></p>
+                        onClick={() => nav("/menu")}
+                    >Go to menu</TextButton></p>
                 }
             </div>
         </section>
@@ -118,4 +115,5 @@ export default function Dashboard() {
             </div>
         </section>
     </main>
-    )}
+    )
+}

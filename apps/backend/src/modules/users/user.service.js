@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 
 export function sanitizeUser(user) {
     const obj = user.toObject();
-    const { passwordHash, ...safe } = obj;
+    const { passwordHash, resetPasswordExpires, resetPasswordToken, ...safe } = obj;
     return safe;
 }
 

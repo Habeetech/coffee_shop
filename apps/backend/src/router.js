@@ -6,6 +6,7 @@ import optionRoutes from "./modules/drinkOptions/drinkOptions.routes.js"
 import authorize from './middleware/authorize.js';
 import paymentRoutes from "./modules/payments/payment.routes.js"
 import orderRoutes from "./modules/orders/order.route.js";
+import imagekitRoutes from "./modules/imagekit/imagekit.route.js"
 
 const router = Router();
 
@@ -15,4 +16,5 @@ router.use("/user", authorize, userRoutes);
 router.use("/options", optionRoutes );
 router.use("/payment-intent", paymentRoutes);
 router.use("/orders", orderRoutes)
+router.use("/upload", imagekitRoutes)
 export default router;

@@ -7,15 +7,16 @@ import useFavoritesStore from "../../store/useFavoritesStore.js";
 import { Heart } from "lucide-react";
 import api from "../../api/api.js"
 
-export function MenuItem({ imageUrl, value }) {
+export function MenuItem({ value }) {
+    const API_URL = import.meta.env.VITE_API_URL;
     const openCart = useCartStore(state => state.openCart);
     const addItem = useCartStore(state => state.addItem);
     const openModal = useOptionsStore(state => state.openModal);
     const allOptions = useOptionsStore(state => state.options);
     const toggleFavorite = useFavoritesStore(state => state.toggleFavorite);
     const favorites = useFavoritesStore(state => state.favorites);
-    const { name, price, type } = value;
-
+    const { name, price, type, url } = value;
+    const imageUrl= !url ? placeholder : `${API_URL}/images${url}`;
     const handleQuickAdd = () => {
         const base = Number(price) || 0;
         let defaultOptions = {};
@@ -30,7 +31,6 @@ export function MenuItem({ imageUrl, value }) {
 
         const itemToCart = {
             ...value,
-            url: imageUrl,
             basePrice: base,
             price: base,
             options: defaultOptions
@@ -41,7 +41,7 @@ export function MenuItem({ imageUrl, value }) {
     };
 
     const handleCustomise = () => {
-        openModal({ ...value, url: imageUrl });
+        openModal(value);
     };
 
     return (

@@ -1,8 +1,8 @@
 import { MenuItem } from "./MenuItem.jsx";
-import placholder from "../../assets/placeholders/no-photo.png"
+
 import "./MenuList.css"
 export function MenuList({ noResults, filtered, searchTerm, items }) {
-  const API_URL = import.meta.env.VITE_API_URL;
+  
   return (
     <div className="menu-items">
       {noResults ? (
@@ -17,7 +17,6 @@ export function MenuList({ noResults, filtered, searchTerm, items }) {
         items.map((item) => (
           <MenuItem
             key={item._id}
-            imageUrl={!item.url ? placholder : `${API_URL}/images${item.url}`}
             value={item}
           />
         ))

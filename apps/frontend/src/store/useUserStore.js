@@ -15,6 +15,12 @@ const useUserStore = create(persist((set, get) => ({
     },
     updateUser: (partialData) => {
         const currentUser = get().user || {}
+        if (partialData.address) {
+            const address = {...currentUser.address, ...partialData.address}
+            const newUser = {...currentUser, address};
+            set({user: newUser})
+            return;
+        }
         const newUser = { ...currentUser, ...partialData }
         set({ user: newUser })
     },

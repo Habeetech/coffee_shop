@@ -90,7 +90,12 @@ export default function SideBar({ user, openSidebar, setOpenSidebar }) {
                             </ul>
                         </nav>
 
-                        <PrimaryButton>Log out</PrimaryButton>
+                        <PrimaryButton
+                        onClick={() => {performLogout(navigate)
+                            setOpenSidebar(false);
+                        }
+                        }
+                        >Log out</PrimaryButton>
                     </aside>
                 </motion.div>
 

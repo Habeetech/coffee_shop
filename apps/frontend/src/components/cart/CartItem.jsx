@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { getDescription } from "../../utils/getDescription";
+import placeholder from "../../assets/placeholders/no-photo.png";
 import useCartStore from "../../store/useCartStore";
 import useOptionsStore from "../../store/useOptionsStore";
 import OptionsItem from "../options/OptionsItem";
 import "./CartItem.css";
 const EMPTY_OPTIONS = {};
 export default function CartItem({ item, isExpanded, onToggle }) {
+    const API_URL = import.meta.env.VITE_API_URL;
     const { name, price, quantity, url, options: selectedOptions, notes, identityKey } = item;
-
+     const imageUrl= !url ? placeholder : `${API_URL}/images${url}`;
     const availableOptions = useOptionsStore(state => state.options?.options || EMPTY_OPTIONS);
     const { size: availableSizes, ...extras } = availableOptions;
 
@@ -53,7 +55,7 @@ export default function CartItem({ item, isExpanded, onToggle }) {
         <div className="cartItem-container">
             <div className="cartItem-wrapper">
                 <figure className="item-image-wrapper">
-                    <img src={url} alt={getDescription(url)} />
+                    <img src={imageUrl} alt={getDescription(imageUrl)} />
                 </figure>
                 <div className="item-info">
                     <p className="item-name">{name}</p>
