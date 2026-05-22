@@ -21,16 +21,13 @@ export default async function stripeWebhookController(req, res) {
 
 
         let orderId = paymentIntent.metadata?.orderId;
-        console.log("Order id in metadata", orderId);
 
         if (!orderId) {
             const order = await Order.findOne({ stripeId: paymentIntent.id });
             orderId = order?._id;
-            console.log("OrderId in DB", orderId);
         }
 
         if (orderId) {
-            console.log("Got orderId, updating status");
             const paidOrder = await Order.findOneAndUpdate(
                 {
                     _id: orderId,
