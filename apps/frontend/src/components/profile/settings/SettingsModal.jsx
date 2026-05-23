@@ -2,10 +2,6 @@ import { AnimatePresence, motion } from "framer-motion"
 import ModalOverlay from "../../options/ModalOverlay.jsx"
 import CloseModal from "../../buttons/CloseModal.jsx"
 
-<<<<<<< HEAD
-=======
-
->>>>>>> feat/userProfile
 export default function SettingsModal({ children, onClose }) {
     return (
         <ModalOverlay
