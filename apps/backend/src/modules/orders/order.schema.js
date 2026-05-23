@@ -4,7 +4,18 @@ import { CATEGORY_MAP } from "../products/product.model.js";
 
 
 const typeEnum = z.enum(["drinks", "cakes", "sandwiches", "biscuits", "crisps"]);
-
+const optionItemSchema = z.object({
+  label: z.string(),
+  _id: z.string(),
+  priceModifier: z.number()
+});
+const optionsSchema = z.record(
+  z.string(),
+  z.union([
+    optionItemSchema, 
+    z.array(optionItemSchema)    
+  ])
+);
 export const createOrderSchema = z.object({
     body: z.object({
         userId: z.string().optional(),
@@ -26,7 +37,8 @@ export const createOrderSchema = z.object({
                 .regex(/^(\/|http|https).+\.(jpg|jpeg|png|webp|avif|gif)$/i, "Invalid image path or URL format")
                 .or(z.literal(""))
                 .optional(),
-            options: z.object(),
+           options: optionsSchema.optional(),
+
             category: z.string().optional()
         })),
         customer: z.object({
@@ -58,7 +70,7 @@ export const createOrderSchema = z.object({
         }),
         total: z.number({ required_error: "Total amount is required" })
             .gt(0, "total must be greater than zero"),
-        status: z.enum(["pending", "paid", "preparing", "completed", "cancelled"]),
+        status: z.enum(["pending", "paid", "preparing", "out for delivery", "ready for collection", "completed", "cancelled"]),
         paymentMethod: z.enum(["stripe", "collection"]),
         stripeId: z.string()
             .trim()
@@ -98,7 +110,7 @@ export const createOrderSchema = z.object({
 
         if (!category) {
             ctx.addIssue({
-                path: ["body", "item", index, "category"],
+                path: ["body", "items", index, "category"],
                 message: "Category is required for this product type",
                 code: z.ZodIssueCode.custom
             });
@@ -107,7 +119,7 @@ export const createOrderSchema = z.object({
 
         if (!allowed.includes(category)) {
             ctx.addIssue({
-                path: ["body", "item", index, "category"],
+                path: ["body", "items", index, "category"],
                 message: `Invalid category for type ${type}`,
                 code: z.ZodIssueCode.custom
             });
@@ -118,16 +130,16 @@ export const createOrderSchema = z.object({
 
 export const updateOrderSchema = z.object({
     body: z.object({
-      
-        status: z.enum(["pending", "paid", "preparing", "completed", "cancelled"]).optional(),
 
-    
+        status: z.enum(["pending", "paid", "preparing", "out for delivery", "ready for collection", "completed", "cancelled"]).optional(),
+
+
         stripeId: z.string().trim().optional(),
 
-  
+
         customer: z.object({
             deliveryOption: z.enum(["delivery", "collection"]).optional(),
-        
+
             address: z.object({
                 street: z.string().trim().optional(),
                 city: z.string().trim().optional(),

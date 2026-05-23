@@ -58,3 +58,7 @@ Content-Type: application/json
   "password": "new-password",
   "confirmPassword": "new-password"
 }
+
+### 
+DELETE http://localhost:3000/api/user/clear-favorites
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3OTIyNTg0MSwiZXhwIjoxNzc5MjI3NjQxfQ.lFVsUsHZR1MpXorPSaAW833vkwYzjriT6Ms_z9o8dfo

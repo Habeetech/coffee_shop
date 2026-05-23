@@ -6,22 +6,12 @@
     font-size: 1rem;
     text-align: center;
 }
-.payment-info {
-    
-}
+
 .checkout-welcome {
     padding: 1rem;
 }
 .checkout-header {
     font-size: 2rem;
-    background-color: var(--choco-300);
-    color: var(--cream-100);
-    padding: 0.5rem 0;
-    margin-bottom: 0.5rem;
-}
-.checkout-wrapper h3 {
-    font-size: 1.5rem;
-    text-align: center;
     background-color: var(--choco-300);
     color: var(--cream-100);
     padding: 0.5rem 0;

@@ -7,6 +7,10 @@ export default function InputField({
     value,
     onChange,
     error,
+    onFocus,
+    onBlur,
+    min,
+    max,
     placeholder = "",
     disabled = false,
     required = false }) {
@@ -23,6 +27,10 @@ export default function InputField({
             required={required}
             disabled={disabled}
             placeholder={placeholder}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            min={min}
+            max={max}
         />
         {error && <div className="input-error">
             {error}

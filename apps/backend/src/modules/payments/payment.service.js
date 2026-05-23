@@ -27,13 +27,23 @@ async function calculateTotal(items) {
         acc += productsMap.get(itemId).price * item.quantity;
         if (item.options) {
             Object.values(item.options).forEach(option => {
-                const optionId = option.id || option._id
-                if (!optionsMap.has(optionId)) {
-                    console.log(`Option ${optionId} does not exist`)
-                    throw new AppError(`Option ${optionId} does not exist`, 404);
+                if (Array.isArray(option)) {
+                    option.forEach(extra => {
+                        const optionId = extra.id || extra._id;
+                        if (!optionsMap.has(optionId)) {
+                            throw new AppError(`Option ${optionId} does not exist`, 404);
+                        }
+                        acc += optionsMap.get(optionId).priceModifier;
+                    });
+                } else {
+                    const optionId = option.id || option._id;
+                    if (!optionsMap.has(optionId)) {
+                        throw new AppError(`Option ${optionId} does not exist`, 404);
+                    }
+                    acc += optionsMap.get(optionId).priceModifier;
                 }
-                acc += optionsMap.get(optionId).priceModifier
-            })
+            });
+
         }
         return acc;
     }, 0)

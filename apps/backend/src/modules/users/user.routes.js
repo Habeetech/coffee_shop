@@ -17,6 +17,9 @@ router.put("/mine/changepassword", validate(changePasswordSchema), userControlle
 router.put("/mine", validate(updateUserSchema), asyncHandler(userController.updateMyProfile))
 router.delete("/mine", userController.deleteMyProfile)
 
+router.get("/favorites", userController.getFavorites);
+router.patch("/favorites/:id", userController.toFavorite);
+router.delete("/clear-favorites", userController.clearFavorites);
 router.get("/:id", allowRoles("admin"), userController.getAUser)
 router.patch("/:id/role", allowRoles("admin"), validate(changeUserRoleSchema), userController.changeUserRole)
 router.delete("/:id", allowRoles("admin"), validate(deleteUserSchema), userController.deleteAUser)

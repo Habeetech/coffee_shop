@@ -1,4 +1,5 @@
-import toSnakeCase from "../utils/toSnakeCase";
+import toSnakeCase from "../../utils/toSnakeCase.js"
+import toSentence from "../../utils/toSentence.js"
 
 export default function SelectField({
   name: providedName,
@@ -8,15 +9,14 @@ export default function SelectField({
   options = [],
   error,
   disabled = false,
-  required = false
+  required = false,
 }) {
   const name = providedName || toSnakeCase(label);
   const id = name;
 
   return (
     <div className="input-field">
-      <label htmlFor={id}>{label}</label>
-
+      <label htmlFor={id}>{label}{required ? "*" : ""} : </label>
       <select
         id={id}
         name={name}
@@ -26,6 +26,8 @@ export default function SelectField({
         required={required}
       >
         <option value="">Select {label}</option>
+
+
         {options.map(opt => (
           <option key={opt.value} value={opt.value}>
             {opt.label}

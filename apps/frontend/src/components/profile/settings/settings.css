@@ -1,0 +1,59 @@
+.settings-modal {
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--cream-100);
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 5em 2em 2em 2em;
+    align-items: center;
+    font-size: 1.5rem;
+    position: relative;
+}
+.settings-modal form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    gap: 1em;
+}
+.settings-modal input {
+    border: 2px solid var(--coffee-dark);
+    width: 100%;
+    border-radius: 10px;
+    padding: 1em;
+}
+.settings-modal > .close {
+    background: none;
+    color: var(--coffee-dark);
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    cursor: pointer;
+    padding: 0.5em;
+    border-radius: 10px;
+    transition: background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
+}
+.settings-modal > .close:hover {
+    background-color: var(--coffee-dark);
+    color: var(--cream-100);
+    transform: scale(1.1);
+}
+.confirm-password-change {
+    color: var(--coffee-darker);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.confirm-password-change h3 {
+    font-size: 2em;
+    font-weight: 700;
+}

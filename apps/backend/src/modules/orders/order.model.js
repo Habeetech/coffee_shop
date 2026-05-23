@@ -142,7 +142,7 @@ export const orderSchema = new mongoose.Schema({
     status: {
         type: String,
         required: [true, "Status is required"],
-        enum: ["pending", "paid", "preparing", "completed", "cancelled"],
+        enum: ["pending", "paid", "preparing", "completed", "out for delivery", "ready for collection", "cancelled"],
         default: "pending"
     },
     paymentMethod: {

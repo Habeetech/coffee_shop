@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware"
+import useFavoritesStore from "./useFavoritesStore";
 
 const useUserStore = create(persist((set, get) => ({
     user: null,
@@ -8,12 +9,23 @@ const useUserStore = create(persist((set, get) => ({
     setToken: (userToken) => (set({ token: userToken })),
     setUser: (userData) => (set({ user: userData })),
     setHasHydrated: (state) => (set({ hasHydrated: state })),
-    logout: () => set({ user: null, token: null }),
+    logout: () => {
+        set({ user: null, token: null })
+        useFavoritesStore.getState().setFavorites([]);
+    },
     updateUser: (partialData) => {
         const currentUser = get().user || {}
+        if (partialData.address) {
+            const address = {...currentUser.address, ...partialData.address}
+            const newUser = {...currentUser, address};
+            set({user: newUser})
+            return;
+        }
         const newUser = { ...currentUser, ...partialData }
         set({ user: newUser })
-    }
+    },
+    navigateToLogin: null,
+    setNavigateToLogin: (fn) => set({ navigateToLogin: fn })
 
 }),
     {

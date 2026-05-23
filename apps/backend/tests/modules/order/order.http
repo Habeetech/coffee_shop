@@ -1,7 +1,9 @@
 ### Get all orders
 GET http://localhost:3000/api/orders
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NjMzMTAxNCwiZXhwIjoxNzc2MzMyODE0fQ.cFeF-nAL4icJVbZYgkDaoECONw-Gywvm2R0FxB3t0f4
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NjgwMTI3MywiZXhwIjoxNzc2ODAzMDczfQ.4PlZKiZUpl_Ip9cofKeFFosaingEWog4EV4jBDA2vjg
+### "69e63a13b18a9f179521bab5"
+GET http://localhost:3000/api/orders/mine
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NjY5ODQxMywiZXhwIjoxNzc2NzAwMjEzfQ.jV_3LWEWl_twIcAP5Qzlnsl_uWFRs7JDTt_wja-RV4A
 ### Pay on collection
 POST http://localhost:3000/api/orders
 Content-Type: application/json
@@ -72,8 +74,8 @@ Content-Type: application/json
 }
 
 ### Manually set order to paid to trigger React polling update
-PATCH http://localhost:3000/api/orders/69d6bbdc362d30672c8a85e1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NTY4MDc0NiwiZXhwIjoxNzc1Njg0MzQ2fQ.UhO46Vae6U0txg1VH0VcBeyZfZwTyDk7p-1kcviLlS8
+PATCH http://localhost:3000/api/orders/6a061cf6ed8ccef17c627f47
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3ODc4NDU3MCwiZXhwIjoxNzc4Nzg2MzcwfQ.o1IMYpSsALv0VeTOJ-lQBNLeLaTYN8heaxg-7nJtTkY
 Content-Type: application/json
 
 {
@@ -81,4 +83,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/api/orders/69d6bbdc362d30672c8a85e1
+GET http://localhost:3000/api/orders/69ea3365d56ba9db7570d997
+###
+DELETE http://localhost:3000/api/orders/6a0613a7ed8ccef17c627eb5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3ODc4MjYxNSwiZXhwIjoxNzc4Nzg0NDE1fQ.IEJbNhxERMtTMpXspF0kSxoODGRjcNSUaT95i8KZXmg

@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    gender: {
+        type: String,
+        enum: ["male", "female", "other"]
+    },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     role: {
@@ -71,6 +75,11 @@ const userSchema = new mongoose.Schema({
     defaultStore: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Store",
+    },
+    url: {
+        type: String,
+        default: "",
+        trim: true
     }
 }, { timestamps: true })
 const User = mongoose.model("User", userSchema)

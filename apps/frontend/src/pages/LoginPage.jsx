@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation, useSearchParams } from "react-router-do
 import useUserStore from "../store/useUserStore";
 import Spinner from "../components/Spinner.jsx"
 import api from "../api/api.js";
+import useFavoritesStore from "../store/useFavoritesStore.js";
 
 
 export default function LoginPage() {
@@ -39,7 +40,7 @@ export default function LoginPage() {
         const data = res.data; 
         setUser(data?.user);
         setToken(data?.token);
-        
+        useFavoritesStore.getState().syncFavorites();
         if (data.user) {
             navigate(from, { replace: true });
         }

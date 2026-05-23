@@ -51,7 +51,14 @@
     cursor: pointer;
     border-radius: 10px;
 }
-
+.add-to-favorite {
+    margin-left: auto;
+    cursor: pointer;
+    color: var(--coffee-darker);
+}
+.add-to-favorite, .add-to-favorite:hover, .add-to-favorite:focus {
+    background: none;
+}
 @media screen and (min-width: 480px) {
     .menuitem-wrapper {
         min-width: 20rem;

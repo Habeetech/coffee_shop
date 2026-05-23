@@ -1,0 +1,421 @@
+.profile-sidebar {
+    background-color: var(--cream-300);
+    width: 70%;
+    height: 100vh;
+    border-radius: 0 15px 15px 0;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+    overflow-y: auto;
+}
+
+.profile-details-container {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+}
+
+.sidebar-profileImg-wrapper {
+    width: 50%;
+    aspect-ratio: 1/1;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sidebar-profileImg-wrapper img {
+    border-radius: 15px;
+    width: 100%;
+}
+
+.sidebar-nav ul li {
+    border-bottom: 2px solid var(--coffee-darker);
+    border-radius: 15px;
+    padding: 0.5rem 1.5rem;
+}
+
+.sidebar-nav ul li:hover {
+    background-color: var(--coffee-darker);
+    color: var(--cream-100);
+}
+
+.sidebar-nav ul li.active {
+    background-color: var(--coffee-darker);
+    color: var(--cream-100);
+}
+
+.sidebar-nav ul {
+    padding: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.dashboard-wrapper {
+    padding: 1.5em;
+    background-color: var(--cream-300);
+    display: flex;
+    flex-direction: column;
+    gap: 5em;
+}
+
+.dashboard-title {
+    font-size: 2em;
+    font-weight: 700;
+}
+
+.db-section-container {
+    background-color: var(--cream-200);
+    padding: 2.5em 1.5em 1.5em 1.5em;
+    border: 2px solid var(--coffee-darker);
+    border-radius: 15px;
+    position: relative;
+}
+
+.db-section-title {
+    font-size: 1.6em;
+    font-weight: 600;
+    position: absolute;
+    top: 0;
+    transform: translate(15%, -50%);
+    background-color: var(--cream-300);
+    padding: 0.5rem 1.5rem;
+    border-radius: 15px;
+}
+
+.db-section-content {
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.rewards {
+    display: flex;
+}
+
+.beans {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 5;
+}
+
+.free-drink-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.free-drink,
+.no-free-drink {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-of-drinks {
+    font-weight: 600;
+}
+
+.active-orders,
+.recent-orders {
+    border: 1px solid var(--coffee-darker);
+    padding: 1.5em 0;
+    border-radius: 15px;
+    background-color: var(--cream-100);
+    box-shadow: 0 0 5px 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    max-width: 650px;
+}
+
+.order-timeline {
+    display: flex;
+    margin: 0 auto;
+    padding: 0 1em;
+}
+
+.order-progress-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--coffee-light);
+    opacity: 0.5;
+    font-size: 0.9em;
+    transition: color 0.5s ease-in, opacity 0.3s ease-in;
+}
+
+.order-progress-wrapper.completed {
+    opacity: 1;
+}
+
+.order-progress-wrapper.active {
+    opacity: 1;
+    color: var(--coffee-dark);
+    font-weight: 600;
+}
+
+@keyframes pulse {
+    50% {
+        transform: translateY(-5px) scale(1.1);
+    }
+}
+
+.order-progress-wrapper.active .order-progress-icon {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.order-progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.order-progress-track {
+    background: none;
+    width: 2em;
+    height: 0.5em;
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid var(--coffee-light);
+}
+
+.order-progress-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    background-color: var(--coffee-light);
+    transition: width 0.6s ease-in-out;
+}
+
+.order-progress-wrapper.active .order-progress-fill {
+    width: 100%;
+}
+
+.order-progress-wrapper.completed .order-progress-fill {
+    width: 100%;
+}
+
+.order-items-summary {
+    display: flex;
+    gap: 1em;
+    padding: 0 1em;
+}
+
+.active-orders>h3,
+.active-orders>p,
+.recent-orders>h3,
+.recent-orders>p {
+    font-weight: 700;
+    font-size: 1.2em;
+    padding: 0.3em;
+    background-color: var(--cream-300);
+    width: 100%;
+    text-align: center;
+}
+
+.order-item-extras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.edit-profile-wrapper {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 1em;
+}
+.edit-profile-wrapper form {
+    width: 100%;
+}
+.profile-image-wrapper {
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 1/1;
+    width: 100%;
+    gap: 1em;
+}
+
+.upload-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    width: 100%;
+}
+.upload-picture input[type="file"] {
+    border: 2px solid var(--coffee-darker);
+    border-radius: 10px;
+    padding: 0.5em 0.3em;
+    background: var(--cream-100);
+    color: var(--coffee-light);
+    width: 100%;
+    cursor: pointer;
+}
+.profile-image-wrapper img {
+    object-fit: cover;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: 0.7em 0;
+    background: var(--cream-300);
+    border-radius: 10px;
+    border: 1px solid var(--cream-100);
+    box-shadow: 0 1px 2px var(--coffee-darker);
+    padding: 0.7em 0.5em;
+}
+
+.other-profile-details p {
+    font-weight: 700;
+    font-size: 1.2em;
+}
+
+.profile-information {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.btns-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5em;
+}
+.orders-active-container, .orders-completed-container {
+    width: 100%;
+    padding: 1.5em;
+    border: 2px solid var(--coffee-darker);
+    margin: 1em;
+    border-radius: 10px;
+    background-color: var(--cream-300);
+    
+}
+.orders-active-container > h3, .orders-completed-container > h3 {
+    text-align: center;
+    font-size: 2em;
+    font-weight: 800;
+    color: var(--coffee-darker);
+    margin-bottom: 1em;
+}
+.user-orders-container {
+    background-color: var(--cream-100);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+.user-settings {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    background-color: var(--cream-300);
+    color: var(--coffee-dark);
+    font-size: 1em;
+}
+.settings-section {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--cream-100);
+    border-radius: 10px;
+    margin: 1em;
+    padding: 1em;
+    border: 2px solid var(--coffee-dark);
+}
+.setting-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    padding: 0.5em;
+    border-radius: 10px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    color: var(--coffee-dark);
+}
+.setting-wrapper.clickable {
+cursor: pointer;
+}
+.setting-wrapper.clickable:hover {
+    background-color: var(--coffee-dark);
+    color: var(--cream-100);
+}
+.settings-section > h3 {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: var(--coffee-darker);
+    border-bottom: 2px solid var(--coffee-darker);
+    margin-bottom: 0.5em;
+}
+.setting-sub {
+    font-weight: 600;
+    font-size: 1.2em;
+}
+
+@media screen and (min-width: 480px) {
+    .profile-details {
+        flex-direction: row;
+    }
+
+    .profile-image-wrapper {
+        flex: 1;
+    }
+
+    .other-profile-details {
+        flex: 1;
+    }
+
+    .btns-wrapper {
+        flex-direction: row;
+    }
+
+    .profile-sidebar {
+        width: 60%;
+    }
+
+}
+
+
+@media screen and (min-width: 768px) {
+    .profile-sidebar {
+        width: 50%;
+    }
+
+    .profile-information {
+        flex-direction: row;
+        gap: 1em;
+    }
+
+}
+
+@media screen and (min-width: 1280px) {
+    .profile-sidebar {
+        width: 40%;
+    }
+}
