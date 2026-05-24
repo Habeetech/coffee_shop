@@ -21,4 +21,4 @@ app.listen(PORT, () => {
 
 
 console.log(greet("Backend"));
-console.log("Loaded FRONTEND_URL:", process.env.FRONTEND_URL);
+console.log("Loaded FRONTEND_URLS:", process.env.FRONTEND_URLS);
