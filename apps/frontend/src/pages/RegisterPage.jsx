@@ -4,6 +4,7 @@ import PrimaryButton from "../components/buttons/PrimaryButton.jsx";
 import api from "../api/api.js"
 import { useNavigate, useLocation } from "react-router-dom";
 import useUserStore from "../store/useUserStore";
+import Spinner from "../components/Spinner.jsx"
 export default function RegisterPage() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -27,6 +28,8 @@ export default function RegisterPage() {
         }
     })
     const [step, setStep] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
     const [formError, setFormError] = useState(null);
     const handleNext = () => {
         const errors = {};
@@ -64,6 +67,8 @@ export default function RegisterPage() {
     }
     const handleRegister = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError("");
         const payload = {
             username: registerRequest.username,
             email: registerRequest.email,
@@ -83,11 +88,9 @@ export default function RegisterPage() {
 
         if(Object.keys(address).length > 0) payload.address = address;
         try {
-            console.log(payload);
             const res = await api.post("/api/auth/register", payload);
             const user = res.data.user
             if (user) {
-                console.log(user)
                 const loginRes = await api.post("/api/auth/login", {
                     usernameOrEmail: registerRequest.username,
                     password: registerRequest.password
@@ -102,9 +105,10 @@ export default function RegisterPage() {
         } catch (err) {
             const msg = err?.response?.data?.message || "Unable to create account";
             setFormError({ general: msg });
+            setError(msg);
             console.error("Failed to create account", msg);
         } finally {
-
+            setIsLoading(false);
         }
         return;
     }
@@ -128,7 +132,7 @@ export default function RegisterPage() {
                         />
                         {formError?.username && <p className="inline-error">{formError.username}</p>}
                         <input
-                            type="text"
+                            type="email"
                             name="email"
                             value={registerRequest.email}
                             placeholder="Please provide an email"
@@ -208,6 +212,7 @@ export default function RegisterPage() {
                 }
                 {
                     step === 3 && <>
+                    {error && <div className="error">{error}</div>}
                         <h2>Address Information</h2>
                         <input
                             type="text"
@@ -255,9 +260,11 @@ export default function RegisterPage() {
                             >{"next >>"}</TextButton>
 
                         </div>
-                        <PrimaryButton
+                        <button
+                        className="register-btn"
                             type="submit"
-                        >Register</PrimaryButton>
+                            disabled={isLoading}
+                        ><span>Register</span>{isLoading ? <Spinner size="1rem" /> : ""}</button>
 
                     </>
                 }

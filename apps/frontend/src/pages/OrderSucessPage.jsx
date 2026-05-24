@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import useCartStore from "../store/useCartStore";
+import SpinnerWrapper from "../components/SpinnerWrapper.jsx";
 import Spinner from "../components/Spinner.jsx";
 import TextButton from "../components/buttons/TextButton";
 import api from "../api/api.js";
@@ -81,7 +82,9 @@ export default function OrderSuccessPage() {
         };
     }, [fetchOrder]);
 
-    if (status === "loading") return <Spinner />;
+    if (status === "loading") return <SpinnerWrapper
+    spinner={<Spinner />}
+    />;
 
     return (
         <main className="success-container">
@@ -110,7 +113,9 @@ export default function OrderSuccessPage() {
                 <div className="order-status-card pending-view">
                     <h2 className="status-title">Confirming Payment...</h2>
                     <div className="spinner-wrapper">
-                        <Spinner />
+                        <SpinnerWrapper
+                        spinner={<Spinner />}
+                        />
                     </div>
                     <p className="status-message">
                         Hang tight, we're verifying your transaction with Stripe.

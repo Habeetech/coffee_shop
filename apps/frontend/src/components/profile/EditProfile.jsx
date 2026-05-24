@@ -225,7 +225,9 @@ export default function EditProfile() {
                             type="text"
                             max={maxDate}
                             min={minDate}
-                            value={userUpdate?.dateOfBirth ?? new Date(userProfile?.dateOfBirth).toISOString().split("T")[0]}
+                            value={userUpdate?.dateOfBirth ?? 
+                                userProfile?.dateOfBirth ?
+                                new Date(userProfile?.dateOfBirth).toISOString().split("T")[0] : ""}
                             onFocus={(e) => (e.target.type = "date")}
                             onBlur={(e) => {
                                 if (!e.target.value) e.target.type = "text"

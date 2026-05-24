@@ -6,6 +6,7 @@ import { CATEGORY_MAP } from "../config/categorymap.js"
 import TextButton from "../components/buttons/TextButton.jsx"
 import { TABS } from "../config/tabs.js"
 import Spinner from "../components/Spinner.jsx";
+import SpinnerWrapper from "../components/SpinnerWrapper.jsx";
 
 function MenuPage() {
     const tabRefs = useRef([]);
@@ -74,7 +75,10 @@ function MenuPage() {
                 aria-hidden="false"
             >
                 {
-                    isLoading || (!result.length && !errors) ? <Spinner />
+                    isLoading || (!result.length && !errors) ? 
+                    <SpinnerWrapper 
+                    spinner={<Spinner />}
+                    />
                         : errors ? <div className="error">
                             <p>{`An error occured: Could not get ${activeTab} from the server`}</p>
                             <TextButton 

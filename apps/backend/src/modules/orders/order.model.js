@@ -42,7 +42,6 @@ export const orderSchema = new mongoose.Schema({
         url: {
             type: String,
             default: "",
-            required: [true, "Product url is required"],
             trim: true
         },
         options: {

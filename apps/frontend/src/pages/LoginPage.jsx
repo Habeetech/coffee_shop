@@ -78,7 +78,7 @@ export default function LoginPage() {
                         className="login-btn"
                         type="submit"
                         disabled={isLoading}
-                    ><span>Log in </span>{isLoading ? <Spinner size="1rem" /> : ""}</button>
+                    >Log in {isLoading ? <Spinner size="1rem" /> : ""}</button>
                 </form>
                 <p className="password-reset">Forgot your password?
                     <Link to="/reset-password">

@@ -1,12 +1,30 @@
-.cart-header {
-    text-align: center;
-    font-size: 2rem;
-    background-color: var(--coffee-darker);
-    color: var(--earth-100);
-    padding: 0.8rem 0;
+.cart-header-wrapper {
+    display: flex;
     position: sticky;
     top: 0;
     width: 100%;
+    background-color: var(--coffee-darker);
+    padding: 1em;
+}
+.cart-header {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--earth-100);
+    width: 100%;
+}
+.cart-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5em;
+    z-index: 100;
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+.cart-close:hover {
+    background: none;
+    transform: scale(1.2);
+
 }
 .cart-totals {
     font-size: 1.5rem;

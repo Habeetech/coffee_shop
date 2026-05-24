@@ -1,8 +1,8 @@
 import Order from "./order.model.js";
 import AppError from "../../utils/AppError.js";
+import User from "../users/user.model.js";
 
 export async function createOrder(orderData) {
-    console.log("Order recieved", orderData);
     const newOrder = await Order.create({
         ...orderData,
         expiresAt: new Date(Date.now() + (60 * 60 * 1000))
@@ -48,28 +48,40 @@ export async function updateOrder(id, updateData) {
     return updatedOrder;
 }
 export async function markOrderAsPaid(id) {
-    const paidOrder = await Order.findOneAndUpdate(
-        {
-            _id: id,
-            status: "pending"
-        },
-        {
-            status: "paid",
-            $unset: { expiresAt: "" },
-        },
-        {
-            returnDocument: "after",
-            runValidators: true
-        });
-
-    if (!paidOrder) {
-        throw new AppError("Order not found or already processed", 404);
+    const order = await Order.findById(id);
+    if (!order) {
+        throw new AppError(`Order with Id - ${id} not found`, 404)
+    } else if (order.status === "paid") {
+        return order;
+    } else if (order.status === "pending") {
+        const paidOrder = await Order.findByIdAndUpdate(
+            id,
+            {
+                status: "paid",
+                $unset: { expiresAt: "" },
+            },
+            {
+                returnDocument: "after",
+                runValidators: true
+            })
+        const points = paidOrder.items.
+            filter((item) => item.type === "drinks")
+            .reduce((acc, item) => acc + item.quantity, 0);
+        if (paidOrder.userId) {
+            const custormer = await User.findByIdAndUpdate(
+                paidOrder.userId,
+                { $inc: { loyaltyPoints: points } }
+            );
+            if (!custormer) {
+                throw new AppError(`No user found for Id - ${paidOrder.userId}`, 404);
+            }
+        }
+        return paidOrder;
     }
 
-    return paidOrder;
 }
 export async function getOrdersByUserId(userId) {
-   
+
     const all = await Order.find({ userId })
         .sort({ createdAt: -1 });
     const recent = await Order.find({
@@ -92,8 +104,8 @@ export async function getOrdersByUserId(userId) {
                 count: { $sum: "$items.quantity" },
                 name: { $first: "$items.name" },
                 price: { $first: "$items.price" },
-                type: {$first: "$items.type"},
-                category: {$first: "$items.category"},
+                type: { $first: "$items.type" },
+                category: { $first: "$items.category" },
                 url: { $first: "$items.url" }
             }
         },

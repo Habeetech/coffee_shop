@@ -16,6 +16,7 @@ import AddressForm from "../components/form/AddressForm.jsx";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import Spinner from "../components/Spinner.jsx";
+import SpinnerWrapper from "../components/SpinnerWrapper.jsx";
 import ModalOverlay from "../components/options/ModalOverlay.jsx"
 import api from "../api/api.js";
 
@@ -249,7 +250,10 @@ export default function CheckoutPage() {
                             />
                         </Elements>
                     ) : (
-                        <Spinner />
+                        <SpinnerWrapper 
+                        spinner={<Spinner />}
+                        />
+                        
                     )}
                 </section>
                 <section className="checkout-btns">

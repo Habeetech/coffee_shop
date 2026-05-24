@@ -23,17 +23,6 @@
     overflow-y: auto;
 }
 
-.cart-close {
-    position: absolute;
-    right: 80%;
-    top: 10px;
-    margin-right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    z-index: 100;
-}
 @media screen and (min-width: 480px) {
     .drawer-panel {
         width: 80%;

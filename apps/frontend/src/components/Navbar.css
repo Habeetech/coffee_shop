@@ -135,7 +135,11 @@
 .navbar button:hover {
   background: none;
 }
-
+@media screen and (max-width: 480px) {
+  .title {
+    display: none;
+  }
+}
 @media screen and (min-width: 1280px) {
   .navbar {
     gap: 1.5rem;

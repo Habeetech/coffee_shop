@@ -18,8 +18,23 @@ export default function CartPanel() {
 
   return (
     <div className="cart-panel-content">
-      <h3 className="cart-header">Your Cart</h3>
+      <div className="cart-header-wrapper">
+        <h3 className="cart-header">Your Cart</h3>
+        <button
+          className="cart-close"
+          onClick={(e) => {
+            e.stopPropagation()
+            closeCart();
+            cartIconRef?.current?.focus();
+          }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24">
+            <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="2" />
+            <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" strokeWidth="2" />
+          </svg>
+        </button>
 
+      </div>
       <div className="cart-items">
         {carts.map(item => (
           <CartItem
@@ -34,9 +49,9 @@ export default function CartPanel() {
       <div className="cart-footer">
         <p className="cart-totals">Total: £{Number(total).toFixed(2)}</p>
         <div className="cart-btns-wrapper">
-          <Link to="/checkout"><button 
-          className="cart-checkout"
-          onClick={closeCart}
+          <Link to="/checkout"><button
+            className="cart-checkout"
+            onClick={closeCart}
           >Checkout</button></Link>
           <button className="clear-cart" onClick={clearCart}>Clear Cart</button>
         </div>

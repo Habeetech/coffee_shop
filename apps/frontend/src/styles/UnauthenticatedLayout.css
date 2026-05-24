@@ -53,18 +53,28 @@
     background-color: var(--cream-200);
 }
 
-.login-btn, .register-link-btn {
+.login-btn, .register-link-btn, .register-btn {
    width: 90%;
     border-radius: 15px;
     padding: 0.5rem 0;
      font-size: 1.7rem;
+     font-weight: 600;
      cursor: pointer;
+     text-align: center;
+     align-items: center;
+     justify-content: center;
 }
-.login-btn {
+.login-btn, .register-btn {
     display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 1rem;
+}
+.login-btn:disabled, .register-btn:disabled {
+    opacity: 50%;
+}
+.login-btn:disabled:hover, .register-btn:disabled:hover {
+    opacity: 50%;
+    cursor:not-allowed;
+    background-color: var(--coffee-light);
 }
 .register-link {
     width: 100%;

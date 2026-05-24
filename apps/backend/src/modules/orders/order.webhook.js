@@ -1,5 +1,6 @@
 import stripe from "stripe";
 import Order from "./order.model.js";
+import { markOrderAsPaid } from "./order.service.js";
 import { sendOrderPaymentConfirmation } from "../../utils/email.js";
 const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -28,20 +29,8 @@ export default async function stripeWebhookController(req, res) {
         }
 
         if (orderId) {
-            const paidOrder = await Order.findOneAndUpdate(
-                {
-                    _id: orderId,
-                    status: "pending"
-                },
-                {
-                    status: "paid",
-                    $unset: { expiresAt: "" },
-                },
-                {
-                    returnDocument: "after",
-                    runValidators: true
-                });
-
+            
+            const paidOrder = await markOrderAsPaid(orderId);
             if (paidOrder) {
                 try {
                     await sendOrderPaymentConfirmation(paidOrder.customer.email, paidOrder);

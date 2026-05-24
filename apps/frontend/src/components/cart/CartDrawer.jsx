@@ -4,6 +4,7 @@ import useCartStore from "../../store/useCartStore.js";
 import useFocusTrap from "../../hooks/useFocusTrap.js";
 import CartPanel from "./CartPanel.jsx";
 import "./CartDrawer.css"
+import CloseModal from "../buttons/CloseModal.jsx"
 
 export default function CartDrawer() {
   const isCartOpen = useCartStore(state => state.isCartOpen);
@@ -32,19 +33,7 @@ export default function CartDrawer() {
             onClick={closeCart}
             aria-hidden="true"
           >
-            <button
-              className="cart-close"
-              onClick={(e) => {
-                e.stopPropagation()
-                closeCart();
-                cartIconRef?.current?.focus();
-              }}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24">
-                <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="2" />
-                <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" strokeWidth="2" />
-              </svg>
-            </button>
+
           </motion.div>
           <motion.div
             className="drawer-panel"
@@ -58,6 +47,7 @@ export default function CartDrawer() {
             aria-modal="true"
             aria-labelledby="cart-title"
           >
+       
             <CartPanel />
           </motion.div>
 

@@ -33,11 +33,12 @@ const errorHandler = (err, req, res, next) => {
       message: `Invalid ${err.path}`
     });
   }
+console.error(err.message)
+ return res.status(err.statusCode || 500).json({
+  success: false,
+  message: "Something went wrong. Please try again later."
+});
 
-  return res.status(err.statusCode || 500).json({
-    success: false,
-    message: err.message || "Something went wrong"
-  });
 };
 
 export default errorHandler;

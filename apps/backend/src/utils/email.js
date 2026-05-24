@@ -10,9 +10,8 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendPasswordResetEmail(to, token) {
-
-  //const resetUrl = `http://localhost:3000/api/auth/reset-password/${token}`;
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
   try {
     await transporter.sendMail({
       from: `"Coffee Shop" <${process.env.EMAIL_USER}>`,
@@ -30,26 +29,52 @@ export async function sendPasswordResetEmail(to, token) {
     throw err;
   }
 }
+
 export async function sendOrderPaymentConfirmation(to, order) {
   try {
+   
     const itemsHtml = order.items.map(item => {
-      const optionsHtml = item.options && Object.keys(item.options).length > 0
-        ? Object.values(item.options).map(opt => 
-            `<li>${opt.label}: +£${opt.priceModifier.toFixed(2)}</li>`
-          ).join("")
-        : "None";
+      const optionLines = [];
+
+     
+      if (item.options?.size) {
+        optionLines.push(
+          `<li><strong>Size:</strong> ${item.options.size.label}</li>`
+        );
+      }
+
+     
+      if (item.options?.syrup) {
+        optionLines.push(
+          `<li><strong>Syrup:</strong> ${item.options.syrup.label}</li>`
+        );
+      }
+
+      if (Array.isArray(item.options?.extras) && item.options.extras.length > 0) {
+        const extrasList = item.options.extras
+          .map(extra => extra.label)
+          .join(", ");
+        optionLines.push(
+          `<li><strong>Extras:</strong> ${extrasList}</li>`
+        );
+      }
+
+      const optionsHtml = optionLines.length
+        ? `<ul style="margin: 0; padding-left: 18px;">${optionLines.join("")}</ul>`
+        : `<p style="margin: 0; color: #777;">No customisations</p>`;
 
       return `
         <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
-          <p><strong>Product:</strong> ${item.name} (x${item.quantity})</p>
-          <p><strong>Price:</strong> £${item.price.toFixed(2)}</p>
-          <p><strong>Extras:</strong></p>
-          <ul>${optionsHtml}</ul>
+          <p style="margin: 0; font-size: 16px;">
+            <strong>${item.name}</strong> (x${item.quantity})
+          </p>
+          <p style="margin: 4px 0 0;">£${(item.price ?? item.basePrice ?? 0).toFixed(2)}</p>
+          ${optionsHtml}
         </div>
       `;
     }).join("");
 
-    await transporter.sendMail({
+        await transporter.sendMail({
       from: `"Coffee Shop" <${process.env.EMAIL_USER}>`,
       to,
       subject: `Order Confirmed - #${order._id.toString().slice(-6)}`,
@@ -70,11 +95,16 @@ export async function sendOrderPaymentConfirmation(to, order) {
           <h2 style="text-align: right;">Total: £${order.total.toFixed(2)}</h2>
           
           <hr />
-          <p>We will notify you as soon as your order is <strong>${order.customer.deliveryOption === 'delivery' ? 'out for delivery' : 'ready for collection'}</strong>.</p>
+          <p>We will notify you as soon as your order is <strong>${
+            order.customer.deliveryOption === "delivery"
+              ? "out for delivery"
+              : "ready for collection"
+          }</strong>.</p>
           <p>Thank you for choosing Coffee Shop!</p>
         </div>
       `
     });
+
     console.log("Confirmation email sent to:", to);
   } catch (err) {
     console.error("EMAIL ERROR:", err);
