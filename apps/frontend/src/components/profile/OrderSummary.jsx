@@ -8,7 +8,7 @@ export default function ({order}) {
                     >
                         <p>Name: {`${item.name} (${item?.options?.size?.label} x ${item.quantity})`}</p>
                         <div className="order-item-extras">Extras: {
-                            (item?.options.extras) ?
+                            (item?.options?.extras) ?
                                 item?.options?.extras.map((e, i) =>
                                     <p
                                         key={e._id}
