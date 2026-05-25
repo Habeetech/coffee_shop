@@ -13,15 +13,15 @@ function Footer() {
       <p>© 2026 Coffee Shop</p>
 
       <div className="socials">
-        <a href="https://facebook.com/coffeeshop">
+        <a href="https://facebook.com/habeetech">
           <img src={facebookIcon} alt="Facebook" />
         </a>
 
-        <a href="https://instagram.com/coffeeshop">
+        <a href="https://instagram.com/habeetech">
           <img src={instagramIcon} alt="Instagram" />
         </a>
 
-        <a href="https://tiktok.com/coffeeshop">
+        <a href="https://tiktok.com/@nairalord1?_r=1&_t=ZS-96ePuxuXT4H">
           <img src={tiktokIcon} alt="TikTok" />
         </a>
       </div>

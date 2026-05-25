@@ -26,60 +26,81 @@ export default function LoginPage() {
     }, [reason])
 
     const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!userDetails.username || !userDetails.password) return;
+        e.preventDefault();
+        if (!userDetails.username || !userDetails.password) return;
 
-    setIsLoading(true);
-    setError("");
+        setIsLoading(true);
+        setError("");
 
-    api.post("/api/auth/login", {
-        usernameOrEmail: userDetails.username,
-        password: userDetails.password
-    })
-    .then(res => {
-        const data = res.data; 
-        setUser(data?.user);
-        setToken(data?.token);
-        useFavoritesStore.getState().syncFavorites();
-        if (data.user) {
-            navigate(from, { replace: true });
-        }
-    })
-    .catch(err => {
-        const message = err.response?.data?.message || "Login Failed: Unable to login";
-        setError(message);
-    })
-    .finally(() => setIsLoading(false));
-};
+        api.post("/api/auth/login", {
+            usernameOrEmail: userDetails.username,
+            password: userDetails.password
+        })
+            .then(res => {
+                const data = res.data;
+                setUser(data?.user);
+                setToken(data?.token);
+                useFavoritesStore.getState().syncFavorites();
+                if (data.user) {
+                    navigate(from, { replace: true });
+                }
+            })
+            .catch(err => {
+                const message = err.response?.data?.message || "Login Failed: Unable to login";
+                setError(message);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
     return (
         <main className="login-container">
             <div className="login-section">
                 {error && <div className="error"
                     role="alert"
                 >{error}</div>}
-                <form className="login-form"
-                    onSubmit={(e) => handleLogin(e)}
+                <form
+                    className="login-form"
+                    onSubmit={handleLogin}
+                    autoComplete="off"
                 >
                     <input
                         type="text"
-                        name="username"
+                        name="loginIdentifier"
                         placeholder="Enter your username or email"
+                        autoComplete="off"
                         value={userDetails.username}
-                        onChange={(e) => setUserDetails(prev => ({ ...prev, [e.target.name]: e.target.value }))}
+                        onChange={(e) =>
+                            setUserDetails(prev => ({
+                                ...prev,
+                                username: e.target.value
+                            }))
+                        }
                     />
+
                     <input
                         type="password"
-                        name="password"
+                        name="loginSecret"
                         placeholder="Enter your password"
+                        autoComplete="new-password"
                         value={userDetails.password}
-                        onChange={(e) => setUserDetails(prev => ({ ...prev, [e.target.name]: e.target.value }))}
+                        onChange={(e) =>
+                            setUserDetails(prev => ({
+                                ...prev,
+                                password: e.target.value
+                            }))
+                        }
                     />
+
                     <button
                         className="login-btn"
                         type="submit"
                         disabled={isLoading}
-                    >Log in {isLoading ? <Spinner size="1rem" /> : ""}</button>
+                    >
+                        Log in {isLoading ? <Spinner size="1rem" /> : ""}
+                    </button>
                 </form>
+
                 <p className="password-reset">Forgot your password?
                     <Link to="/reset-password">
                         <button

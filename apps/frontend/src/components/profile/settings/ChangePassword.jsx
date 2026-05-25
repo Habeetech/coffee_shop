@@ -8,6 +8,7 @@ import api from "../../../api/api.js";
 export default function ChangePassword() {
     const [step, setStep] = useState(1);
     const [result, setResult] = useState("")
+    const [error, setError] = useState("")
     const [passwordForm, setPasswordForm] = useState({
         password: "",
         updatePassword: "",
@@ -23,30 +24,60 @@ export default function ChangePassword() {
         setValidationError((prev) => ({ ...prev, [name]: "" }))
         return
     }
-    const handleValidation = (e) => {
+    const handleValidation = async (e) => {
         e.preventDefault();
         if (!passwordForm.password) {
             setValidationError((prev) => ({ ...prev, password: "Please enter your password" }))
-             return;
+            return;
         }
         else if (!passwordForm.updatePassword) {
             setValidationError((prev) => ({ ...prev, updatePassword: "Please enter a new password" }))
-             return;
+            return;
         }
         else if (!passwordForm.confirmPassword) {
             setValidationError((prev) => ({ ...prev, confirmPassword: "Please enter the new password again" }))
-             return;
+            return;
         }
         else if (passwordForm.updatePassword != passwordForm.confirmPassword) {
             setValidationError((prev) => ({ ...prev, confirmPassword: "Password mismatch. Ensure the new password matches" }))
-             return;
+            return;
         }
-        setStep(2)
+        try {
+            const res = await api.post("/api/auth/confirm-password",
+                {
+                    password: passwordForm.password
+                }
+            )
+            setStep(2);
+        } catch (e) {
+            const msg = e.response.data.message || "Unable to confirm your password. Please try again later";
+            console.error(msg);
+            setValidationError((prev) => ({ ...prev, password: msg }))
+        }
+
         return;
     }
 
     const confirmPasswordChange = async (e) => {
         e.preventDefault()
+        setError("");
+        setResult("")
+        try {
+            const res = await api.put("/api/auth/change-password",
+                {
+                    password: passwordForm.password,
+                    newPassword: passwordForm.updatePassword
+                }
+            )
+            setResult(res.data.message);
+        } catch (e) {
+            const msg = e.response.data.message || "Password update failed. Please try again later";
+            console.error(msg);
+            setError(msg);
+        } finally {
+            setStep(3);
+        }
+        return;
     }
 
     return (
@@ -99,7 +130,7 @@ export default function ChangePassword() {
                 <h3>Confirm Changes</h3>
                 <p>Are you sure you want to change your password?</p>
                 <PrimaryButton
-                onClick={(e) => confirmPasswordChange(e)}
+                    onClick={(e) => confirmPasswordChange(e)}
                 >Proceed</PrimaryButton>
                 <DangerButton
                     onClick={() => setStep(1)}
@@ -108,10 +139,10 @@ export default function ChangePassword() {
             </div>}
 
             {
-                step === 3 && <div className="password-change-result">
+                step === 3 && (result ? <div className="password-change-result">
                     {result}
-                </div>
-            }
+                </div> : <div className="error">{error}</div>)
+            } 
         </>
     )
 }

@@ -59,3 +59,11 @@ export async function refreshAccessToken(req, res) {
   })
   res.status(200).json({ token });
 }
+export async function confirmPassword(req, res) {
+  const user = await authService.confirmPassword(req.user.userId, req.body.password);
+  res.status(200).json(user);
+}
+export async function changePassword(req, res) {
+  const user = await authService.changePassword(req.user.userId, req.body.password, req.body.newPassword);
+  res.status(200).json({message: "Password updated sucessfully", user})
+}

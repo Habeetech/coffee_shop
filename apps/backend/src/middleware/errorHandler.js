@@ -34,6 +34,12 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 console.error(err.message)
+if (err.statusCode === 400) {
+  return res.status(err.statusCode).json({
+    success: false,
+    message: err.message
+  })
+}
  return res.status(err.statusCode || 500).json({
   success: false,
   message: "Something went wrong. Please try again later."

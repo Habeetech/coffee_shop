@@ -80,8 +80,9 @@ export async function forgotPassword(emailOrPhone) {
     user.resetPasswordToken = hashedToken;
     user.resetPasswordExpires = Date.now() + 1000 * 60 * 10;
     await user.save();
+    const { passwordHash, ...safeUser } = user.toObject();
 
-    return { rawToken, user };
+    return { rawToken, user: safeUser };
 }
 export async function resetPassword(token, newPassword) {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
@@ -100,8 +101,9 @@ export async function resetPassword(token, newPassword) {
     user.resetPasswordExpires = undefined;
 
     await user.save();
+    const { passwordHash, ...safeUser } = user.toObject();
 
-    return user;
+    return safeUser;
 }
 export async function logoutRequest(refreshToken) {
     if (refreshToken) {
@@ -112,7 +114,7 @@ export async function logoutRequest(refreshToken) {
 export async function refreshAccessToken(refreshToken) {
     const hashedToken = crypto.createHash("sha256").update(refreshToken).digest("hex");
     const user = await RefreshToken.findOne({ token: hashedToken })
-    .populate("userId");
+        .populate("userId");
     if (!user) throw new AppError("No user found with the refreshToken", 404);
     const { userId: userData } = user;
     const token = jwt.sign(
@@ -131,5 +133,43 @@ export async function refreshAccessToken(refreshToken) {
 
     await RefreshToken.create({ userId: user._id, token: newHashedToken, expiresAt: expiryDate });
     await RefreshToken.deleteOne({ token: hashedToken })
-    return ({token, newRefreshToken});
+    return ({ token, newRefreshToken });
+}
+
+export async function changePassword(id, password, newPassword) {
+    const user = await User.findById(id);
+    if (!user) {
+        throw new AppError(`No user found for Id - ${id}`, 404);
+    }
+    console.log("Incoming password:", password);
+console.log("Incoming newPassword:", newPassword);
+console.log("Stored hash BEFORE:", user.passwordHash);
+
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+
+    if (!isMatch) {
+        throw new AppError("You have entered an invalid password", 400);
+    }
+    const hashNewPassword = await bcrypt.hash(newPassword, 10);
+    user.passwordHash = hashNewPassword;
+    await user.save();
+    const { passwordHash, ...safeUser } = user.toObject();
+console.log("Stored hash AFTER:", user.passwordHash);
+
+    return safeUser;
+}
+export async function confirmPassword(id, password) {
+    const user = await User.findById(id);
+    if (!user) {
+        throw new AppError(`No user found for Id - ${id}`, 404);
+    }
+
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+
+    if (!isMatch) {
+        throw new AppError("You have entered an invalid password", 400);
+    }
+
+    const { passwordHash, ...safeUser } = user.toObject();
+    return safeUser;
 }

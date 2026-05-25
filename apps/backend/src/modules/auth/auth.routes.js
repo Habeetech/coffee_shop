@@ -5,6 +5,7 @@ import { loginSchema } from "../users/user.schema.js";
 import { registerSchema } from "../users/user.schema.js";
 import { forgotPasswordSchema } from "../users/user.schema.js";
 import { resetPasswordSchema } from "../users/user.schema.js";
+import authorize from "../../middleware/authorize.js"
 const router = Router()
 
 router.post("/logout", authController.logoutRequest);
@@ -13,4 +14,6 @@ router.post("/register", validate(registerSchema), authController.registerReques
 router.post("/forgot-password", validate(forgotPasswordSchema), authController.forgotPassword);
 router.post("/reset-password/:token", validate(resetPasswordSchema), authController.resetPassword);
 router.post("/refresh", authController.refreshAccessToken);
+router.post("/confirm-password", authorize, authController.confirmPassword);
+router.put("/change-password", authorize, authController.changePassword);
 export default router;
