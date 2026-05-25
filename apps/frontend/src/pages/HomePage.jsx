@@ -5,6 +5,7 @@ import  MenuPage  from "./MenuPage.jsx";
 import { useLocation, useSearchParams } from "react-router-dom";
 import MsgModal from "../components/MsgModal.jsx";
 
+
 function HomePage() {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
@@ -23,6 +24,7 @@ function HomePage() {
                     children={<span className="msg">{msg}</span>}
                     onClose={() => setMsg("")}
                 />}
+                
                 <div className="welcome-text">
                     <p>Start your day with an excellent cup of coffee expertly crafted by our highly skilled Barista.
                         Have it hot, cold, swap the milk, add syrups or sauces to suite your pallete.
@@ -30,6 +32,7 @@ function HomePage() {
                         We've got you covered from every end.
                     </p>
                 </div>
+             
                 <div className="promotion">
                     <Carousel />
                 </div>

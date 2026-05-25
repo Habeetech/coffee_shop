@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import useOptionsStore from "../store/useOptionsStore.js";
 import useUserStore from "../store/useUserStore.js";
 import SideBar from "../components/profile/SideBar.jsx";
+import TextButton from "../components/buttons/TextButton.jsx";
+import { Link } from "react-router-dom"
 
 
 
@@ -35,6 +37,13 @@ function MainLayout() {
                 openSidebar={openSidebar}
                 setOpenSidebar={setOpenSidebar}
             />
+               {!user && <div className="login-text">
+                    <p>
+                        You are not logged in. Please <Link to="/login">
+                        <TextButton>login</TextButton>
+                        </Link> or <Link to="/register"><TextButton>register</TextButton></Link> for seamless experience
+                    </p>
+                </div>}
             <Outlet />
             <Footer />
         </div>

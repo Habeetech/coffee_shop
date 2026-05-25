@@ -77,12 +77,12 @@ function Navbar({ openSidebar, setOpenSidebar }) {
                     <div className="cart-icon-container">
                         <CartIcon />
                     </div>
-                    <div className="bell-iconwrapper">
+                   {user && <div className="bell-iconwrapper">
                         <button
                             className="bell-btn"
                         >
                             <img className="bell-icon" src={bellIcon} alt={getDescription(bellIcon)} /></button>
-                    </div>
+                    </div>}
                 </div>
             </header>
             <AnimatePresence>
