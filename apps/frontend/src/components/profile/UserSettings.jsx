@@ -1,10 +1,11 @@
 import useUserStore from "../../store/useUserStore.js"
 import ModalOverlay from "../../components/options/ModalOverlay.jsx"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SettingsModal from "./settings/SettingsModal.jsx";
 import ChangePassword from "./settings/ChangePassword.jsx";
 import DeleteAccount from "./settings/DeleteAccount.jsx";
-
+import AccountUpdate from "./settings/AccountUpdate.jsx";
+import { useSearchParams } from "react-router-dom"
 
 export default function UserSettings() {
     const { user } = useUserStore();
@@ -14,19 +15,40 @@ export default function UserSettings() {
     const [updatePhone, setUpdatePhone] = useState(false);
     const [changePassword, setChangePassword] = useState(false);
     const [deleteAccount, setDeleteAccount] = useState(false);
+    const [searchParams] = useSearchParams();
+    const reason = searchParams.get("reason");
+
+    useEffect(() => {
+        if (reason === "update-email") {
+            setUpdateEmail(true);
+        } else if (reason === "update-phone") {
+            setUpdatePhone(true)
+        } else if (reason === "update-username") {
+            setUpdateUsername(true);
+        }
+    }, [reason])
 
     return (<main className="user-settings">
 
-        {updateUsername && <ModalOverlay
-            children={<p>This is update username</p>}
+        {updateUsername && <SettingsModal
+            children={<AccountUpdate
+                field={"username"}
+                onClose={() => setUpdateUsername(false)}
+            />}
             onClose={() => setUpdateUsername(false)}
         />}
-        {updateEmail && <ModalOverlay
-            children={<p>This is update Email</p>}
+        {updateEmail && <SettingsModal
+            children={<AccountUpdate
+                field={"email"}
+                onClose={() => setUpdateEmail(false)}
+            />}
             onClose={() => setUpdateEmail(false)}
         />}
-        {updatePhone && <ModalOverlay
-            children={<p>This is update Phone</p>}
+        {updatePhone && <SettingsModal
+            children={<AccountUpdate
+                field={"phone"}
+                onClose={() => setUpdatePhone(false)}
+            />}
             onClose={() => setUpdatePhone(false)}
         />}
         {changePassword &&
@@ -34,12 +56,12 @@ export default function UserSettings() {
                 children={<ChangePassword />}
                 onClose={() => setChangePassword(false)}
             />}
-        {deleteAccount &&  <SettingsModal
-                children={<DeleteAccount
+        {deleteAccount && <SettingsModal
+            children={<DeleteAccount
                 close={() => setDeleteAccount(false)}
-                />}
-                onClose={() => setDeleteAccount(false)}
             />}
+            onClose={() => setDeleteAccount(false)}
+        />}
         <section className="settings-section">
             <h3>Account Settings</h3>
             <button className="setting-wrapper clickable"

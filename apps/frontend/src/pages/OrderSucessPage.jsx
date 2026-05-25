@@ -6,6 +6,7 @@ import Spinner from "../components/Spinner.jsx";
 import TextButton from "../components/buttons/TextButton";
 import api from "../api/api.js";
 import "../styles/OrderSuccessPage.css"
+import useUserStore from "../store/useUserStore.js";
 
 export default function OrderSuccessPage() {
     const [orderDetails, setOrderDetails] = useState(null);
@@ -14,6 +15,7 @@ export default function OrderSuccessPage() {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const clearCart = useCartStore(state => state.clearCart);
     const timeoutIdRef = useRef(null);
+   const refreshUser = useUserStore((state) => state.refreshUser);
 
     const orderId = searchParams.get("orderId");
 
@@ -34,9 +36,11 @@ export default function OrderSuccessPage() {
                 const order = data.order;
                 setOrderDetails(order);
 
+
                 if (order.paymentMethod === "collection" || order.status === "paid") {
                     setStatus("complete");
                     clearCart();
+                     refreshUser()
                     return "complete";
                 }
 
@@ -145,7 +149,7 @@ export default function OrderSuccessPage() {
                         <p>
                             If your card was charged but this hasn't updated, please contact support with your Order ID:
                         </p>
-                        <span className="order-id-highlight">{orderDetails?._id}</span>
+                        <span className="order-id-highlight">{orderDetails?._id || orderId}</span>
                     </div>
 
                     <div className="navigation-actions">

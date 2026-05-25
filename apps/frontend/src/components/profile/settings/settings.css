@@ -68,9 +68,18 @@
 .delete-account-container p {
     padding: 0.5em;
 }
-.delete-account-btn-wrapper {
+.delete-account-btn-wrapper, .confirm-btn-wrapper {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
     margin: 1em 0;
+}
+.account-update-wrapper{
+    width: 100%;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+.account-update-wrapper form {
+    width: 80%;
 }

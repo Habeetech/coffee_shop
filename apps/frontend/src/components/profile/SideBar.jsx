@@ -32,7 +32,7 @@ export default function SideBar({ user, openSidebar, setOpenSidebar }) {
             : user?.gender === "female"
                 ? femaleIcon
                 : noPhoto;
-
+ 
 
 
     return (

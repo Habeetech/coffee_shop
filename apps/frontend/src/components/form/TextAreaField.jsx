@@ -17,7 +17,7 @@ export default function TextAreaField({
 
   return (
     <div className="input-field">
-      <label htmlFor={id}>{label}{required? "*": ""} : </label>
+     {label && <label htmlFor={id}>{label}{required? "*": ""} : </label>}
 
       <textarea
         id={id}

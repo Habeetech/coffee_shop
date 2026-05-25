@@ -17,7 +17,7 @@ export default function InputField({
     const name = providedName || toSnakeCase(label)
     const id = name;
     return (<div className="input-field">
-        <label htmlFor={id}>{label}{required? "*": ""} : </label>
+        {label && <label htmlFor={id}>{label}{required? "*": ""} : </label>}
         <input
             id={id}
             name={name}

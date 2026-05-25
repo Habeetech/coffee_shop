@@ -13,9 +13,10 @@ import DangerButton from "../buttons/DangerButton.jsx"
 import api from "../../api/api.js"
 import { subYears } from "date-fns"
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function EditProfile() {
-
+    const navigate = useNavigate();
     const { user, updateUser } = useUserStore();
     const today = new Date();
     const maxDate = subYears(today, 15).toISOString().split("T")[0]
@@ -38,7 +39,7 @@ export default function EditProfile() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null)
     const [error, setError] = useState("");
-
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -96,6 +97,7 @@ export default function EditProfile() {
 
         try {
             setError(null);
+            setIsLoading(true);
 
             const res = await api.post("/api/upload/profile-image", formData, {
                 headers: {
@@ -123,6 +125,8 @@ export default function EditProfile() {
         } catch (e) {
             console.error("Failed to upload picture", e);
             setError("Unable to upload profile picture. Please try again later.");
+        } finally {
+            setIsLoading(false);
         }
     };
     const handleSubmit = async (e) => {
@@ -131,6 +135,7 @@ export default function EditProfile() {
         // return;
 
         try {
+            setIsLoading(true);
             const res = await api.put("api/user/mine", userUpdate);
             if (res.status === 200) {
                 updateUser(userUpdate);
@@ -139,7 +144,9 @@ export default function EditProfile() {
         } catch (e) {
             console.error("Failed to update user profile", e);
         }
-
+        finally {
+            setIsLoading(false);
+        }
     }
     const handleChange = (name, value) => {
         if (name === "city" || name === "state"
@@ -175,15 +182,22 @@ export default function EditProfile() {
                         ></input>
                         <PrimaryButton
                             onClick={handleImageUpload}
+                            disabled={isLoading}
                         >Upload Picture</PrimaryButton>
                     </div>
                 </figure>
                 <div className="other-profile-details">
-                    <p>{user.role !== "user" ? `${user.username} (${user.role})` : user.username} <TextButton>Update username</TextButton>
+                    <p>{user.role !== "user" ? `${user.username} (${user.role})` : user.username} <TextButton
+                    onClick={() => navigate("/profile/settings?reason=update-username")}
+                    >Update username</TextButton>
                     </p>
-                    <p>{user.loyaltyPoints}</p>
-                    <p>{user.email} <TextButton>Update email</TextButton></p>
-                    {user.phone && <p>{user.phone} <TextButton>Update phone</TextButton></p>}
+                    <p>Club Points: {user.loyaltyPoints}</p>
+                    <p>{user.email} <TextButton
+                    onClick={() => navigate("/profile/settings?reason=update-email")}
+                    >Update email</TextButton></p>
+                    {user.phone && <p>{user.phone} <TextButton
+                    onClick={() => navigate("/profile/settings?reason=update-phone")}
+                    >Update phone</TextButton></p>}
                 </div>
             </section>
             <form
@@ -226,8 +240,8 @@ export default function EditProfile() {
                             max={maxDate}
                             min={minDate}
                             value={userUpdate?.dateOfBirth ?? 
-                                userProfile?.dateOfBirth ?
-                                new Date(userProfile?.dateOfBirth).toISOString().split("T")[0] : ""}
+                                (userProfile?.dateOfBirth ?
+                                new Date(userProfile?.dateOfBirth).toISOString().split("T")[0] : "")}
                             onFocus={(e) => (e.target.type = "date")}
                             onBlur={(e) => {
                                 if (!e.target.value) e.target.type = "text"
@@ -279,6 +293,7 @@ export default function EditProfile() {
                 <div className="btns-wrapper">
                     <PrimaryButton
                         type="submit"
+                        disabled={isLoading}
                     >Save Changes</PrimaryButton>
                     <DangerButton
                         onClick={() => setUserUpdate({})}

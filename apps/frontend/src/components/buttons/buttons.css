@@ -22,6 +22,9 @@
   border: 1px solid #ccc;
   cursor: pointer;
 }
+.btn-secondary:hover {
+  background: var(--cream-200);
+}
 .btn-text {
   background: none;
   color: var(--gold-300);
