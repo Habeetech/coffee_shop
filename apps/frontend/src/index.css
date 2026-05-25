@@ -43,12 +43,12 @@ body {
 }
 
 button {
-    background: var(--gold-300);
+    background: var(--gold-200);
     color: var(--white);
 }
 
 button:hover {
-    background: var(--coffee-dark);
+    background: var(--gold-300);
 }
 
 .error {
@@ -116,7 +116,36 @@ button:hover {
     background-color: color-mix(in srgb, var(--coffee-darker) var(--bg-opacity), transparent);
     backdrop-filter: blur(4px);
 }
-
+.message-panel {
+    width: 90%;
+    max-width: 600px;
+    background-color: var(--cream-100);
+    min-height: 200px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    color: var(--coffee-dark);
+    font-size: 1.2em;
+}
+.close-msg {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: none;
+    color: var(--coffee-dark);
+    padding: 0.5em;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out,
+    background-color 0.3s ease-in-out,
+    color 0.3s ease-in-out;
+}
+.close-msg:hover {
+    background-color: var(--coffee-dark);
+    color: var(--cream-100);
+    transform: scale(1.1);
+}
 @media screen and (min-width: 768px) {
     body {
         font-size: 1.7rem;

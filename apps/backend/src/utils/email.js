@@ -9,6 +9,22 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+export async function sendUserFeedbackEmail(contactForm) {
+  try {
+    await transporter.sendMail({
+      from: `"Coffee Shop" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      replyTo: contactForm?.email,
+      subject: "Customer Feedback Form",
+      html: `
+      <p>Message from ${contactForm?.username}</p>
+      <p>${contactForm?.message}</p>`
+    })
+  } catch (e) {
+    console.error("EMAIL ERROR:", e);
+    throw e;
+  }
+}
 export async function sendPasswordResetEmail(to, token) {
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 
@@ -32,18 +48,18 @@ export async function sendPasswordResetEmail(to, token) {
 
 export async function sendOrderPaymentConfirmation(to, order) {
   try {
-   
+
     const itemsHtml = order.items.map(item => {
       const optionLines = [];
 
-     
+
       if (item.options?.size) {
         optionLines.push(
           `<li><strong>Size:</strong> ${item.options.size.label}</li>`
         );
       }
 
-     
+
       if (item.options?.syrup) {
         optionLines.push(
           `<li><strong>Syrup:</strong> ${item.options.syrup.label}</li>`
@@ -74,7 +90,7 @@ export async function sendOrderPaymentConfirmation(to, order) {
       `;
     }).join("");
 
-        await transporter.sendMail({
+    await transporter.sendMail({
       from: `"Coffee Shop" <${process.env.EMAIL_USER}>`,
       to,
       subject: `Order Confirmed - #${order._id.toString().slice(-6)}`,
@@ -95,11 +111,10 @@ export async function sendOrderPaymentConfirmation(to, order) {
           <h2 style="text-align: right;">Total: £${order.total.toFixed(2)}</h2>
           
           <hr />
-          <p>We will notify you as soon as your order is <strong>${
-            order.customer.deliveryOption === "delivery"
-              ? "out for delivery"
-              : "ready for collection"
-          }</strong>.</p>
+          <p>We will notify you as soon as your order is <strong>${order.customer.deliveryOption === "delivery"
+          ? "out for delivery"
+          : "ready for collection"
+        }</strong>.</p>
           <p>Thank you for choosing Coffee Shop!</p>
         </div>
       `

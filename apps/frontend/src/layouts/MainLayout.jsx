@@ -5,7 +5,6 @@ import CartDrawer from "../components/cart/CartDrawer.jsx"
 import OptionsModal from "../components/options/OptionsModal.jsx";
 import { useEffect, useState } from "react";
 import useOptionsStore from "../store/useOptionsStore.js";
-import useIdleTimer from "../hooks/useIdleTimer.js";
 import useUserStore from "../store/useUserStore.js";
 import SideBar from "../components/profile/SideBar.jsx";
 
@@ -13,7 +12,6 @@ import SideBar from "../components/profile/SideBar.jsx";
 
 function MainLayout() {
     const [openSidebar, setOpenSidebar] = useState(false);
-    useIdleTimer();
     const user = useUserStore(state => state.user)
     const { fetchOptions, hasHydrated, isLoading, options } = useOptionsStore();
 

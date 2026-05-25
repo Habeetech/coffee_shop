@@ -7,12 +7,12 @@
 .address-form {
     width: 100%;
 }
-.input-field input, .input-field select {
+.input-field input, .input-field select, .input-field textarea {
     border: 2px solid var(--coffee-darker);
     color: var(--coffee-darker);
     border-radius: 5px;
-    width: 80%;
-    padding: 0.2rem;
+    width: 100%;
+    padding: 0.2em;
 }
 .input-field select:invalid {
     opacity: 50%;

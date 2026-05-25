@@ -1,4 +1,4 @@
-import toSnakeCase from "../utils/toSnakeCase";
+import toSnakeCase from "../../utils/toSnakeCase.js";
 
 export default function TextAreaField({
   name: providedName,
@@ -9,14 +9,15 @@ export default function TextAreaField({
   placeholder = "",
   disabled = false,
   required = false,
-  rows = 4
+  rows = 4,
+  min = 0
 }) {
   const name = providedName || toSnakeCase(label);
   const id = name;
 
   return (
     <div className="input-field">
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id}>{label}{required? "*": ""} : </label>
 
       <textarea
         id={id}
@@ -27,6 +28,7 @@ export default function TextAreaField({
         disabled={disabled}
         required={required}
         rows={rows}
+        minLength={min}
       />
 
       {error && <div className="input-error">{error}</div>}

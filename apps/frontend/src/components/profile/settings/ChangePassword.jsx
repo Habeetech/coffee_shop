@@ -69,9 +69,9 @@ export default function ChangePassword() {
                     newPassword: passwordForm.updatePassword
                 }
             )
-            setResult(res.data.message);
+            setResult(res?.data?.message);
         } catch (e) {
-            const msg = e.response.data.message || "Password update failed. Please try again later";
+            const msg = e?.response?.data?.message || "Password update failed. Please try again later";
             console.error(msg);
             setError(msg);
         } finally {
@@ -129,12 +129,12 @@ export default function ChangePassword() {
             {step === 2 && <div className="confirm-password-change">
                 <h3>Confirm Changes</h3>
                 <p>Are you sure you want to change your password?</p>
-                <PrimaryButton
-                    onClick={(e) => confirmPasswordChange(e)}
-                >Proceed</PrimaryButton>
                 <DangerButton
+                    onClick={(e) => confirmPasswordChange(e)}
+                >Proceed</DangerButton>
+                <PrimaryButton
                     onClick={() => setStep(1)}
-                >Cancel</DangerButton>
+                >Cancel</PrimaryButton>
 
             </div>}
 

@@ -57,3 +57,20 @@
     font-size: 2em;
     font-weight: 700;
 }
+.delete-account-container {
+    text-align: center;
+}
+.delete-account-container h3 {
+    font-size: 1.5em;
+    font-weight: 700;
+    padding: 0.5em;
+}
+.delete-account-container p {
+    padding: 0.5em;
+}
+.delete-account-btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    margin: 1em 0;
+}

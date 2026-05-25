@@ -3,6 +3,7 @@ import ModalOverlay from "../../components/options/ModalOverlay.jsx"
 import { useState } from "react";
 import SettingsModal from "./settings/SettingsModal.jsx";
 import ChangePassword from "./settings/ChangePassword.jsx";
+import DeleteAccount from "./settings/DeleteAccount.jsx";
 
 
 export default function UserSettings() {
@@ -33,10 +34,12 @@ export default function UserSettings() {
                 children={<ChangePassword />}
                 onClose={() => setChangePassword(false)}
             />}
-        {deleteAccount && <ModalOverlay
-            children={<p>This is delete account</p>}
-            onClose={() => setDeleteAccount(false)}
-        />}
+        {deleteAccount &&  <SettingsModal
+                children={<DeleteAccount
+                close={() => setDeleteAccount(false)}
+                />}
+                onClose={() => setDeleteAccount(false)}
+            />}
         <section className="settings-section">
             <h3>Account Settings</h3>
             <button className="setting-wrapper clickable"

@@ -48,8 +48,6 @@ function App() {
         </Route>
       </Route>
       <Route element={<ProtectedGuard />}>
-
-
         <Route element={<MainLayout />}>
           <Route path="/profile" element={<ProfileLayout />}>
             <Route index element={<Dashboard />} />

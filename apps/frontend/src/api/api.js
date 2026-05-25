@@ -1,5 +1,6 @@
 import axios from "axios";
 import useUserStore from "../store/useUserStore.js"
+import { performLogout } from "../service/authService.js";
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -64,11 +65,7 @@ api.interceptors.response.use(
                     }
                 } catch (err) {
                     processQueue(err);
-                    const { logout, navigateToLogin } = useUserStore.getState();
-                    logout();
-                    if (navigateToLogin) {
-                        navigateToLogin();
-                    }
+                    await performLogout(null, "/login?reason=expired");
                    
                 } finally {
                     isRefreshing = false;
