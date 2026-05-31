@@ -14,6 +14,8 @@ export default function OptionsModal() {
     const [selections, setSelections] = useState({});
 
     const { size: sizeList, extras: extrasList, ...others } = masterOptions?.options || {};
+    console.log("extras", extrasList);
+    console.log("others", others);
 
     const handleClose = (e) => {
         e.stopPropagation()
@@ -135,7 +137,7 @@ export default function OptionsModal() {
                         </div>
 
                         <div className="others-selector">
-                            {Object.entries(others).map(([key, values]) => (
+                            {Object.entries(others || {}).map(([key, values]) => (
                                 <OptionsItem
                                     key={key}
                                     optionKey={key}
@@ -145,14 +147,13 @@ export default function OptionsModal() {
                                 />
                             ))}
                         </div>
+
                         <div className="extras-selector">
                             <h4>Extras: </h4>
                             <div className="extras">
-                                {Object.entries(extrasList).map(([key, value]) =>
-
-                                    <label className="extras-item"
-                                        key={key}
-                                    ><input
+                                {Array.isArray(extrasList) && extrasList.map((value) => (
+                                    <label className="extras-item" key={value._id}>
+                                        <input
                                             type="checkbox"
                                             checked={selections.extras?.some(e => e.id === value._id) || false}
                                             onChange={() =>
@@ -165,13 +166,12 @@ export default function OptionsModal() {
                                                 )
                                             }
                                         />
-
                                         {value.label}
                                     </label>
-
-                                )}
+                                ))}
                             </div>
                         </div>
+
 
                         <div className="modal-footer">
                             <button className="confirm-btn" onClick={handleConfirm} disabled={!isReady}>
