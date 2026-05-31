@@ -1,18 +1,122 @@
-# React + Vite
+# ☕ Coffee Shop Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React/Vite frontend for the Coffee Shop ordering experience.
 
-Currently, two official plugins are available:
+Browse products, build orders, checkout with Stripe, and track orders in real time.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Quick Start
 
-## React Compiler
+### Prerequisites
+- Node.js v18+
+- pnpm package manager
+- Backend API running locally or deployed
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Install dependencies
+```bash
+cd apps/frontend
+pnpm install
+```
 
-Note: This will impact Vite dev & build performances.
+### Environment
+Create `apps/frontend/.env.local` with:
 
-## Expanding the ESLint configuration
+```env
+VITE_API_URL=http://localhost:3000
+VITE_IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_id
+VITE_IMAGEKIT_PUBLIC_KEY=your_public_key
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Start development server
+```bash
+pnpm dev
+```
+
+The frontend runs on `http://localhost:5173` by default.
+
+## 📁 Project Structure
+
+```
+apps/frontend/
+├── src/
+│   ├── App.jsx
+│   ├── main.jsx
+│   ├── api/api.js
+│   ├── components/
+│   ├── config/
+│   ├── context/
+│   ├── guards/
+│   ├── hooks/
+│   ├── layouts/
+│   ├── pages/
+│   ├── service/
+│   ├── store/
+│   ├── styles/
+│   ├── utils/
+│   └── validators/
+├── package.json
+└── vite.config.js
+```
+
+## 🧩 Features
+
+- User registration and login
+- Guest checkout support
+- Product browsing with filtering and search
+- Custom drink options and add-ons
+- Shopping cart with quantity management
+- Stripe payment processing
+- Order history and order tracking
+- Real-time notifications with Socket.IO
+- Profile management and favorites
+
+## 🛠️ Scripts
+
+```bash
+pnpm dev      # start frontend
+pnpm build    # production build
+pnpm preview  # preview production build
+pnpm lint     # run ESLint
+```
+
+## 🔌 Environment Variables
+
+| Variable | Purpose |
+|---------|---------|
+| `VITE_API_URL` | Backend API endpoint |
+| `VITE_IMAGEKIT_URL_ENDPOINT` | ImageKit URL endpoint |
+| `VITE_IMAGEKIT_PUBLIC_KEY` | ImageKit public key |
+
+## 📦 Key Frontend Modules
+
+- `src/api/api.js` — API request layer
+- `src/components/` — reusable UI components
+- `src/guards/` — route protection logic
+- `src/hooks/` — custom hooks for API, checkout, and UI behavior
+- `src/store/` — Zustand state stores
+- `src/context/SocketContext.jsx` — Socket.IO connection provider
+
+## 🛡️ Route Guards
+
+- `GuestGuard` for unauthenticated routes
+- `ProtectedGuard` for authenticated routes
+- `RoleGuard` for role-based access control
+
+## 🚀 Deployment
+
+Build the app with:
+```bash
+pnpm build
+```
+
+Preview the build locally:
+```bash
+pnpm preview
+```
+
+For production, deploy with Vercel or another static hosting provider.
+
+## 💡 Notes
+
+- The frontend expects the backend API at `VITE_API_URL`
+- Ensure the backend is running before testing checkout
+- Use Stripe test keys during development
