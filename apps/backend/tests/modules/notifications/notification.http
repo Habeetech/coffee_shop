@@ -1,0 +1,3 @@
+GET http://localhost:3000/api/notifications
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3OTk3MTAyMywiZXhwIjoxNzc5OTcyODIzfQ.6rE8nFhYIF4LUK65r4AaZCBq28ZJGuS9OxeWvGjjdjE
+### "69e63a13b18a9f179521bab5"

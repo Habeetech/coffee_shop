@@ -1,6 +1,6 @@
 ### Get all orders
 GET http://localhost:3000/api/orders
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NjgwMTI3MywiZXhwIjoxNzc2ODAzMDczfQ.4PlZKiZUpl_Ip9cofKeFFosaingEWog4EV4jBDA2vjg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3OTk2OTg2MCwiZXhwIjoxNzc5OTcxNjYwfQ.ItpWk348JKMD7NQUIfj2sAYtra4AfQ8RGFIirTIb-zs
 ### "69e63a13b18a9f179521bab5"
 GET http://localhost:3000/api/orders/mine
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NjY5ODQxMywiZXhwIjoxNzc2NzAwMjEzfQ.jV_3LWEWl_twIcAP5Qzlnsl_uWFRs7JDTt_wja-RV4A
@@ -74,13 +74,17 @@ Content-Type: application/json
 }
 
 ### Manually set order to paid to trigger React polling update
-PATCH http://localhost:3000/api/orders/6a061cf6ed8ccef17c627f47
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3ODc4NDU3MCwiZXhwIjoxNzc4Nzg2MzcwfQ.o1IMYpSsALv0VeTOJ-lQBNLeLaTYN8heaxg-7nJtTkY
+PATCH http://localhost:3000/api/orders/6a1390139e2b4c7658612568
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3OTk2OTg2MCwiZXhwIjoxNzc5OTcxNjYwfQ.ItpWk348JKMD7NQUIfj2sAYtra4AfQ8RGFIirTIb-zs
 Content-Type: application/json
 
 {
-    "status": "paid"
+    "status": "completed"
 }
+###
+
+PATCH http://localhost:3000/api/orders/mark-paid/6a1836c0c60eee4898fa7833
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFlZjgzMjU5NDA4ODBkYjFlNGY2ZWQiLCJ1c2VybmFtZSI6IkhhYmVldGVjaCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3OTk3MTAyMywiZXhwIjoxNzc5OTcyODIzfQ.6rE8nFhYIF4LUK65r4AaZCBq28ZJGuS9OxeWvGjjdjE
 
 ###
 GET http://localhost:3000/api/orders/69ea3365d56ba9db7570d997

@@ -1,0 +1,62 @@
+.notifications-wrapper {
+    width: 100%;
+    color: var(--coffee-dark);
+}
+.notifications-heading {
+    font-size: 1.5em;
+    font-weight: 700;
+    text-align: right;
+    padding: 1em 2em;
+}
+.no-notifications {
+    text-align: center;
+}
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+}
+.notification-item {
+    background-color: var(--cream-300);
+    padding: 1em 2em;
+}
+.notification-item.read {
+    background-color: var(--cream-200);
+}
+.notification-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.1em;
+}
+.sender-title {
+    display: block;
+    width: 100%;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+.quick-action {
+    display: flex;
+    gap: 0.5em;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+.order-notification-container {
+    background-color: var(--cream-100);
+    position: relative;
+    width: clamp(0px, 80%, 600px);
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 15px;
+}
+.modal-content {
+    padding: 1.5em;
+}
+.order-notification-msg {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+.order-total {
+    font-weight: 700;
+}

@@ -24,7 +24,6 @@ export default function OrderSuccessPage() {
             setStatus("error");
             return;
         }
-
         if (isManual) setIsRefreshing(true);
 
         try {
@@ -109,6 +108,14 @@ export default function OrderSuccessPage() {
                     
                     <div className="navigation-actions">
                         <Link to="/menu"><TextButton>Order More</TextButton></Link>
+                          <div className="survey-request">
+                            <p>
+                                Got a minute? <Link to="/survey"><TextButton
+                                >Please fill out our survey form</TextButton></Link>
+                            </p>
+                            <p>Or <Link to="/contact-support">
+                            <TextButton>contact us here</TextButton></Link> for general enquires, recommendations or feedback</p>
+                        </div>
                     </div>
                 </div>
             )}
@@ -154,6 +161,14 @@ export default function OrderSuccessPage() {
 
                     <div className="navigation-actions">
                         <Link to="/menu"><TextButton>Back to Menu</TextButton></Link>
+                          <div className="survey-request">
+                            <p>
+                                Got a minute? <Link to="/survey"><TextButton
+                                >Please fill out our survey form</TextButton></Link>
+                            </p>
+                            <p>Or <Link to="/contact-support">
+                            <TextButton>contact us here</TextButton></Link> for general enquires, recommendations or feedback</p>
+                        </div>
                     </div>
                 </div>
             )}
@@ -165,6 +180,14 @@ export default function OrderSuccessPage() {
                     <div className="navigation-actions">
                         <TextButton onClick={() => fetchOrder(true)}>Try Again</TextButton>
                         <Link to="/menu"><TextButton>Back to Menu</TextButton></Link>
+                          <div className="survey-request">
+                            <p>
+                                Got a minute? <Link to="/survey"><TextButton
+                                >Please fill out our survey form</TextButton></Link>
+                            </p>
+                            <p>Or <Link to="/contact-support">
+                            <TextButton>contact us here</TextButton></Link> for general enquires, recommendations or feedback</p>
+                        </div>
                     </div>
                 </div>
             )}

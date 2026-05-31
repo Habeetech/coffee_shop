@@ -146,6 +146,14 @@ button:hover {
     color: var(--cream-100);
     transform: scale(1.1);
 }
+.contact-form {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+}
 @media screen and (min-width: 768px) {
     body {
         font-size: 1.7rem;

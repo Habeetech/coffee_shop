@@ -9,22 +9,69 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+export async function sendCustomerSurvey(surveyForm) {
+  try {
+    const responseHtml = Object.entries(surveyForm)
+      .filter(([key]) => !["fullName", "email", "phone", "contactPermission"].includes(key))
+      .map(([key, value]) => {
+        const label = key.replace(/([A-Z])/g, " $1").replace(/^./, c => c.toUpperCase());
+        return `<p><strong>${label}:</strong> ${value || "N/A"}</p>`;
+      })
+      .join("");
+
+    await transporter.sendMail({
+      from: `"Coffee Shop" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      replyTo: surveyForm?.email,
+      subject: "New Customer Survey Response",
+      html: `
+        <h2>New Survey Submission</h2>
+
+        <h3>Contact Information</h3>
+        <p><strong>Name:</strong> ${surveyForm?.fullName || "N/A"}</p>
+        <p><strong>Email:</strong> ${surveyForm?.email || "N/A"}</p>
+        <p><strong>Phone:</strong> ${surveyForm?.phone || "N/A"}</p>
+        <p><strong>Wants Contact:</strong> ${surveyForm?.contactPermission === "yes" ? "Yes" : "No"}</p>
+
+        <hr />
+
+        <h3>Survey Responses</h3>
+        ${responseHtml}
+      `
+    });
+
+  } catch (e) {
+    console.error("EMAIL ERROR:", e);
+    throw e;
+  }
+}
+
+
 export async function sendUserFeedbackEmail(contactForm) {
   try {
     await transporter.sendMail({
       from: `"Coffee Shop" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       replyTo: contactForm?.email,
-      subject: "Customer Feedback Form",
+      subject: "New Customer Feedback",
       html: `
-      <p>Message from ${contactForm?.username}</p>
-      <p>${contactForm?.message}</p>`
-    })
+        <h2>Customer Feedback</h2>
+
+        <p><strong>Name:</strong> ${contactForm?.username || "N/A"}</p>
+        <p><strong>Email:</strong> ${contactForm?.email || "N/A"}</p>
+
+        <hr />
+
+        <h3>Message</h3>
+        <p>${contactForm?.message || "No message provided."}</p>
+      `
+    });
   } catch (e) {
     console.error("EMAIL ERROR:", e);
     throw e;
   }
 }
+
 export async function sendPasswordResetEmail(to, token) {
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 

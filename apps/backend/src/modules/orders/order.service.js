@@ -1,6 +1,8 @@
 import Order from "./order.model.js";
 import AppError from "../../utils/AppError.js";
 import User from "../users/user.model.js";
+import { createNotification } from "../notification/notification.service.js"
+import { sendOrderPaymentConfirmation } from "../../utils/email.js";
 
 export async function createOrder(orderData) {
     const newOrder = await Order.create({
@@ -64,21 +66,43 @@ export async function markOrderAsPaid(id) {
                 returnDocument: "after",
                 runValidators: true
             })
-        const points = paidOrder.items.
-            filter((item) => item.type === "drinks")
+        const points = paidOrder.items
+        .filter((item) => item.type === "drinks")
             .reduce((acc, item) => acc + item.quantity, 0);
         if (paidOrder.userId) {
-            const custormer = await User.findByIdAndUpdate(
+            const customer = await User.findByIdAndUpdate(
                 paidOrder.userId,
-                { $inc: { loyaltyPoints: points } }
+                { $inc: { loyaltyPoints: points } },
+                { returnDocument: "after", runValidators: true }
             );
-            if (!custormer) {
+            if (!customer) {
                 throw new AppError(`No user found for Id - ${paidOrder.userId}`, 404);
             }
+
+            Promise.all([
+
+                 createNotification({
+                    recipientId: paidOrder.userId.toString(),
+                    senderName: "Coffeeshop",
+                    payload: {
+                        eventType: "order",
+                        eventTag: "ORDER RECEIVED",
+                        eventVars: {
+                            customerName: customer.username,
+                            orderId: paidOrder._id.toString()
+                        }
+                    }
+                })
+                    .then(() => console.log("🔔 Real-time notification stored and streamed via WebSocket!"))
+                    .catch(err => console.error("🔔 Notification failed:", err.message))
+                    ,
+                sendOrderPaymentConfirmation(paidOrder.customer.email, paidOrder)
+                    .then(() => console.log(`📧 Confirmation email sent to: ${paidOrder.customer.email}`))
+                    .catch(err => console.error("📧 Email failed:", err.message))
+            ]);
         }
         return paidOrder;
     }
-
 }
 export async function getOrdersByUserId(userId) {
 

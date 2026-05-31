@@ -2,13 +2,14 @@ import CartItem from "./CartItem.jsx";
 import useCartStore from "../../store/useCartStore.js";
 import "./CartPanel.css";
 import { Link } from "react-router-dom"
+import { useRef } from "react";
 
 export default function CartPanel() {
   const carts = useCartStore(state => state.carts);
   const total = useCartStore(state => state.total());
   const clearCart = useCartStore(state => state.clearCart);
   const closeCart = useCartStore(state => state.closeCart);
-
+  const cartIconRef = useRef(null);
   const expandedId = useCartStore(state => state.expandedId);
   const setExpandedId = useCartStore(state => state.setExpandedId);
 

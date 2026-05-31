@@ -1,0 +1,98 @@
+.survey-form-container {
+    font-size: 1.2em;
+}
+.survey-form-container .inline-error {
+    font-size: 0.8em;
+    width: 100%;
+}
+.survey-form button {
+    padding: 1em;
+    font-weight: 700;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.survey-form button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.survey-response {
+    background-color: var(--cream-100);
+    padding: 2.5em 1.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+    width: 90%;
+    border-radius: 10px;
+    position: relative;
+}
+.survey-response > p {
+    color: var(--coffee-dark);
+    font-size: 1.2em;
+    padding: 1.5em;
+}
+.survey-form {
+    width: 100%;
+    background-color: var(--cream-300);
+    padding: 1.5em;
+    color: var(--coffee-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+.survey-form fieldset {
+    background-color: var(--cream-200);
+    padding: 1em;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.survey-form fieldset legend {
+    background-color: var(--cream-300);
+    padding: 0.5em 1em;
+    font-size: 1.3em;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+.survey-input-group h3 {
+    font-size: 1.2em;
+    font-weight: 500;
+    width: 100%;
+}
+
+.survey-input-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.survey-input-group input[type="text"],
+.survey-input-group input[type="tel"],
+.survey-input-group input[type="email"],
+.survey-input-group textarea {
+    background-color: var(--cream-100);
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    border-radius: 10px;
+
+}
+@media screen and (min-width: 480px) {
+    .survey-form button {
+        max-width: 250px;
+    }
+}
+@media screen and (min-width: 768px) {
+    .survey-form button {
+        max-width: 350px;
+    }
+}
+@media screen and (min-width: 1280px) {
+    .survey-form button {
+        max-width: 500px;
+    }
+}

@@ -9,22 +9,43 @@ import profileIcon from "../assets/icons/profile.png"
 import contactIcon from "../assets/icons/contact.png"
 import { getDescription } from "../utils/getDescription.js"
 import "./Navbar.css"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useUserStore from "../store/useUserStore.js"
 import { performLogout } from "../service/authService.js"
 import { useNavigate } from "react-router-dom"
-import bellIcon from "../assets/icons/bell.png"
+import useNotificationStore from "../store/useNotificationStore.js";
 import { AnimatePresence, motion } from "framer-motion"
+import NotificationIcon from "./notification/NotificationIcon.jsx";
+import useSocket from "../context/SocketContext.jsx"
 
 function Navbar({ openSidebar, setOpenSidebar }) {
     const [showMenu, setShowMenu] = useState(false);
+    const unread = useNotificationStore(s => s.unread);
     const user = useUserStore(state => state.user);
+    const socket = useSocket();
+    const fetchNotifications = useNotificationStore(s => s.fetchNotifications);
+    const addNotification = useNotificationStore(s => s.addNotification);
+    console.log("unread", unread);
     const navigate = useNavigate();
     const handleLogoutClick = () => {
         performLogout(navigate, "/");
         setShowMenu(false);
     };
+    useEffect(() => {
+        fetchNotifications();
+    }, [fetchNotifications])
+    useEffect(() => {
+        if (!socket) return;
 
+        socket.on("NEW_NOTIFICATION", (data) => {
+            console.log("New live alert data received:", data);
+            addNotification(data);
+        });
+
+        return () => {
+            socket.off("NEW_NOTIFICATION");
+        };
+    }, [socket, addNotification]);
     return (
         <div className="header-wrapper">
             <header className="header">
@@ -77,11 +98,8 @@ function Navbar({ openSidebar, setOpenSidebar }) {
                     <div className="cart-icon-container">
                         <CartIcon />
                     </div>
-                   {user && <div className="bell-iconwrapper">
-                        <button
-                            className="bell-btn"
-                        >
-                            <img className="bell-icon" src={bellIcon} alt={getDescription(bellIcon)} /></button>
+                    {user && <div className="bell-iconwrapper">
+                        <NotificationIcon />
                     </div>}
                 </div>
             </header>
@@ -104,7 +122,7 @@ function Navbar({ openSidebar, setOpenSidebar }) {
                                 <img className="navbar-icon" src={logoutIcon} alt={getDescription(logoutIcon)} />
                             </button>
                         )}
-                        <a href="#contact"><img className="navbar-icon" src={contactIcon} alt={getDescription(contactIcon)} /></a>
+                        <Link to="/contact-support"><img className="navbar-icon" src={contactIcon} alt={getDescription(contactIcon)} /></Link>
                     </motion.nav>
                 )}
             </AnimatePresence>

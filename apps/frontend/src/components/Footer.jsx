@@ -1,5 +1,5 @@
 import "./Footer.css"
-import { Address } from "../components/Address.jsx";
+import  Address  from "../components/Address.jsx";
 import facebookIcon from "../assets/icons/facebook.png";
 import instagramIcon from "../assets/icons/instagram.png";
 import tiktokIcon from "../assets/icons/tiktok.png";

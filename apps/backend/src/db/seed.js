@@ -4,6 +4,7 @@ import products from "../seeders/productSeed.js";
 import Product from "../modules/products/product.model.js";
 import optionsSeed from "../seeders/optionsSeed.js";
 import drinkOptions from "../modules/drinkOptions/drinkOptions.model.js"
+import Notification from "../modules/notification/notification.model.js"
 import Order from "../modules/orders/order.model.js"
 
 dotenv.config();
@@ -43,6 +44,6 @@ const deleteData = async (model) => {
         await mongoose.connection.close();
     }
 }
-//deleteData(Order);
+deleteData(Notification);
 //seedData(drinkOptions, optionsSeed);
 //seedProducts();

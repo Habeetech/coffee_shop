@@ -1,7 +1,6 @@
 import stripe from "stripe";
 import Order from "./order.model.js";
 import { markOrderAsPaid } from "./order.service.js";
-import { sendOrderPaymentConfirmation } from "../../utils/email.js";
 const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
 
@@ -29,15 +28,8 @@ export default async function stripeWebhookController(req, res) {
         }
 
         if (orderId) {
-            
-            const paidOrder = await markOrderAsPaid(orderId);
-            if (paidOrder) {
-                try {
-                    await sendOrderPaymentConfirmation(paidOrder.customer.email, paidOrder);
-                } catch (emailErr) {
-                    console.error("📧 Email failed to send, but payment was recorded:", emailErr.message);
-                }
-            }
+
+         await markOrderAsPaid(orderId);
         } else {
             console.error("❌ Critical: Could not link this payment to any order in DB.");
         }

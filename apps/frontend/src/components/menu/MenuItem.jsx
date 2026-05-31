@@ -79,7 +79,7 @@ export function MenuItem({ value }) {
                     className="orderitem-btn"
                     onClick={handleQuickAdd}
                 >
-                    Add to cart
+                    Quick Add
                 </button>
 
                 {type === "drinks" && (

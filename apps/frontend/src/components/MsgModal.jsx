@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
-import ModalOverlay from "../components/options/ModalOverlay.jsx"
-import CloseModal from "../components/buttons/CloseModal.jsx"
+import ModalOverlay from "./options/ModalOverlay.jsx"
+import CloseModal from "./buttons/CloseModal.jsx"
 
 export default function MsgModal({ children, onClose }) {
     return (
