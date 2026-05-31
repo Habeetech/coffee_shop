@@ -14,8 +14,6 @@ export default function OptionsModal() {
     const [selections, setSelections] = useState({});
 
     const { size: sizeList, extras: extrasList, ...others } = masterOptions?.options || {};
-    console.log("extras", extrasList);
-    console.log("others", others);
 
     const handleClose = (e) => {
         e.stopPropagation()

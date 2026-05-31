@@ -5,8 +5,6 @@ import AppError from "./AppError.js";
 let io;
 
 export function  init (server) {
-    //const client = process.env.FRONTEND_URLS;
-   // console.log("client", client)
     io = new Server(server, { cors: {
         origin: ['https://coffee-shop-frontend-two-zeta.vercel.app', 'http://localhost:3000'],
         methods: ["GET", "POST"],

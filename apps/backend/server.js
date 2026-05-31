@@ -26,8 +26,3 @@ server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 })
 
-
-
-
-console.log(greet("Backend"));
-console.log("Loaded FRONTEND_URLS:", process.env.FRONTEND_URLS);

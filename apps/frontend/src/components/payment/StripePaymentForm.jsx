@@ -9,6 +9,7 @@ export default function StripePaymentForm({ handleSubmit, isSubmitting, total, m
     const elements = useElements();
     const paymentIntentId = clientSecret.split("_secret_")[0];
     const [errorMsg, setErrorMsg] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleStripeSubmit = async (event) => {
         event.preventDefault();
@@ -17,9 +18,8 @@ export default function StripePaymentForm({ handleSubmit, isSubmitting, total, m
         setErrorMsg(null);
 
         try {
-   
+            setIsLoading(true)
             const order = await handleSubmit(method, paymentIntentId);
-            console.log(order);
             if (!order._id) {
                 throw new Error("Order creation failed.");
             }

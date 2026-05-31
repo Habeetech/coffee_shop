@@ -11,7 +11,7 @@ export default function useApi({ endpoint, method = "GET" }) {
         const options = {
             method: method,
             headers: { "Authorization": `Bearer ${token}`, ...(method !== "GET" && { "Content-Type": "application/json" }) },
-            ...(method !== "GET" && {body: JSON.stringify(data)})
+            ...(method !== "GET" && { body: JSON.stringify(data) })
         };
 
         try {
@@ -22,15 +22,8 @@ export default function useApi({ endpoint, method = "GET" }) {
                 return await response.json()
 
             } else if (response.status === 401) {
-               /*  const success = await attemptRefresh();
-                if (success) {
-                    return await request(data);
-                } else { */
-                    logout();
-                    return;
-               // }
+                logout();
                 return;
-                // try and get a refresh token
             }
             throw new Error("Request Failed");
         } catch (e) {

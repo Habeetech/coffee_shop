@@ -108,9 +108,9 @@ export default function EditProfile() {
                 handleChange("url", res.data);
                 try {
                     setError(null);
-                    const updateRes = await api.put("/api/user/mine", { url: res.data})
+                    const updateRes = await api.put("/api/user/mine", { url: res.data })
                     if (updateRes.status === 200) {
-                        updateUser({url: res.data});
+                        updateUser({ url: res.data });
                         setUserUpdate({})
                     }
                 } catch (e) {
@@ -131,8 +131,7 @@ export default function EditProfile() {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // alert("The form should be submitted. Just temporarily terminating the function early");
-        // return;
+
 
         try {
             setIsLoading(true);
@@ -188,15 +187,15 @@ export default function EditProfile() {
                 </figure>
                 <div className="other-profile-details">
                     <p>{user.role !== "user" ? `${user.username} (${user.role})` : user.username} <TextButton
-                    onClick={() => navigate("/profile/settings?reason=update-username")}
+                        onClick={() => navigate("/profile/settings?reason=update-username")}
                     >Update username</TextButton>
                     </p>
                     <p>Club Points: {user.loyaltyPoints}</p>
                     <p>{user.email} <TextButton
-                    onClick={() => navigate("/profile/settings?reason=update-email")}
+                        onClick={() => navigate("/profile/settings?reason=update-email")}
                     >Update email</TextButton></p>
                     {user.phone && <p>{user.phone} <TextButton
-                    onClick={() => navigate("/profile/settings?reason=update-phone")}
+                        onClick={() => navigate("/profile/settings?reason=update-phone")}
                     >Update phone</TextButton></p>}
                 </div>
             </section>
@@ -239,9 +238,9 @@ export default function EditProfile() {
                             type="text"
                             max={maxDate}
                             min={minDate}
-                            value={userUpdate?.dateOfBirth ?? 
+                            value={userUpdate?.dateOfBirth ??
                                 (userProfile?.dateOfBirth ?
-                                new Date(userProfile?.dateOfBirth).toISOString().split("T")[0] : "")}
+                                    new Date(userProfile?.dateOfBirth).toISOString().split("T")[0] : "")}
                             onFocus={(e) => (e.target.type = "date")}
                             onBlur={(e) => {
                                 if (!e.target.value) e.target.type = "text"

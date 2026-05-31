@@ -141,9 +141,7 @@ export async function changePassword(id, password, newPassword) {
     if (!user) {
         throw new AppError(`No user found for Id - ${id}`, 404);
     }
-    console.log("Incoming password:", password);
-console.log("Incoming newPassword:", newPassword);
-console.log("Stored hash BEFORE:", user.passwordHash);
+
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
 
@@ -154,7 +152,6 @@ console.log("Stored hash BEFORE:", user.passwordHash);
     user.passwordHash = hashNewPassword;
     await user.save();
     const { passwordHash, ...safeUser } = user.toObject();
-console.log("Stored hash AFTER:", user.passwordHash);
 
     return safeUser;
 }

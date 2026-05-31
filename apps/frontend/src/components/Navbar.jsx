@@ -25,7 +25,6 @@ function Navbar({ openSidebar, setOpenSidebar }) {
     const socket = useSocket();
     const fetchNotifications = useNotificationStore(s => s.fetchNotifications);
     const addNotification = useNotificationStore(s => s.addNotification);
-    console.log("unread", unread);
     const navigate = useNavigate();
     const handleLogoutClick = () => {
         performLogout(navigate, "/");

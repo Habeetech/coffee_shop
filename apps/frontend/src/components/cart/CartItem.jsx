@@ -9,7 +9,7 @@ const EMPTY_OPTIONS = {};
 export default function CartItem({ item, isExpanded, onToggle }) {
     const API_URL = import.meta.env.VITE_API_URL;
     const { name, price, quantity, url, options: selectedOptions, notes, identityKey } = item;
-     const imageUrl= !url ? placeholder : `${API_URL}/images${url}`;
+    const imageUrl = !url ? placeholder : `${API_URL}/images${url}`;
     const availableOptions = useOptionsStore(state => state.options?.options || EMPTY_OPTIONS);
     const { size: availableSizes, ...extras } = availableOptions;
 
@@ -20,7 +20,7 @@ export default function CartItem({ item, isExpanded, onToggle }) {
         const categoryOptions = key === "size" ? availableSizes : extras[key];
         const match = categoryOptions?.find(opt => opt.label === newValue);
 
-        if(!match) return;
+        if (!match) return;
 
         const updatedOptions = {
             ...selectedOptions,

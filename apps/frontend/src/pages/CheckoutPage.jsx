@@ -158,7 +158,6 @@ export default function CheckoutPage() {
             return result;
 
         } catch (e) {
-            console.error("Order Failed: ", e);
             setErrorMsg("A problem occured while processing your order. Please try again later")
             return null;
         } finally {
